@@ -3,15 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "vercel-build": "prisma generate && next build",
-    "start": "next start",
-    "lint": "next lint",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "node prisma/seed.js",
-    "test:api": "node tests/api-smoke.test.js"
+    "build": "prisma generate && next build"
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",
