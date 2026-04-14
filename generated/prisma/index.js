@@ -88,6 +88,9 @@ Prisma.NullTypes = {
  * Enums
  */
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 });
 
@@ -187,6 +190,11 @@ exports.Prisma.NullableJsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
@@ -196,11 +204,6 @@ exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
-};
-
-exports.Prisma.QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
 };
 exports.UserRole = exports.$Enums.UserRole = {
   ADMIN: 'ADMIN',
@@ -256,7 +259,7 @@ const config = {
   "datasourceNames": [
     "db"
   ],
-  "activeProvider": "sqlite",
+  "activeProvider": "postgresql",
   "inlineDatasources": {
     "db": {
       "url": {
@@ -265,8 +268,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n  url      = env(\"DATABASE_URL\")\n}\n\nenum UserRole {\n  ADMIN\n  EDITOR\n}\n\nmodel User {\n  id           String   @id @default(cuid())\n  email        String   @unique\n  name         String\n  passwordHash String\n  role         UserRole @default(EDITOR)\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n}\n\nmodel HeroContent {\n  id         String   @id @default(\"singleton\")\n  heading    String\n  subheading String\n  ctaText    String\n  videoUrl   String?\n  updatedAt  DateTime @updatedAt\n}\n\nmodel AboutContent {\n  id        String   @id @default(\"singleton\")\n  vision    String\n  style     String\n  trust     String\n  updatedAt DateTime @updatedAt\n}\n\nmodel ContactContent {\n  id        String   @id @default(\"singleton\")\n  email     String\n  phone     String?\n  whatsapp  String?\n  location  String?\n  updatedAt DateTime @updatedAt\n}\n\nmodel Service {\n  id          String   @id @default(cuid())\n  title       String\n  description String\n  position    Int      @default(0)\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n}\n\nmodel PortfolioItem {\n  id          String   @id @default(cuid())\n  title       String\n  description String\n  videoUrl    String?\n  posterUrl   String?\n  tags        Json?\n  position    Int      @default(0)\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n}\n\nmodel Client {\n  id        String   @id @default(cuid())\n  name      String\n  logoUrl   String?\n  position  Int      @default(0)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel MediaAsset {\n  id        String   @id @default(cuid())\n  url       String\n  fileName  String\n  mimeType  String\n  alt       String?\n  createdAt DateTime @default(now())\n}\n\nmodel TeamMember {\n  id          String   @id @default(cuid())\n  slug        String   @unique\n  name        String\n  subtitle    String?\n  description String\n  position    Int      @default(0)\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n}\n",
-  "inlineSchemaHash": "11a34684c0f36f13d21d9e2418171833add5a0d32990286dfabcde0c1584a859",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nenum UserRole {\n  ADMIN\n  EDITOR\n}\n\nmodel User {\n  id           String   @id @default(cuid())\n  email        String   @unique\n  name         String\n  passwordHash String\n  role         UserRole @default(EDITOR)\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n}\n\nmodel HeroContent {\n  id         String   @id @default(\"singleton\")\n  heading    String\n  subheading String\n  ctaText    String\n  videoUrl   String?\n  updatedAt  DateTime @updatedAt\n}\n\nmodel AboutContent {\n  id        String   @id @default(\"singleton\")\n  vision    String\n  style     String\n  trust     String\n  updatedAt DateTime @updatedAt\n}\n\nmodel ContactContent {\n  id        String   @id @default(\"singleton\")\n  email     String\n  phone     String?\n  whatsapp  String?\n  location  String?\n  updatedAt DateTime @updatedAt\n}\n\nmodel Service {\n  id          String   @id @default(cuid())\n  title       String\n  description String\n  position    Int      @default(0)\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n}\n\nmodel PortfolioItem {\n  id          String   @id @default(cuid())\n  title       String\n  description String\n  videoUrl    String?\n  posterUrl   String?\n  tags        Json?\n  position    Int      @default(0)\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n}\n\nmodel Client {\n  id        String   @id @default(cuid())\n  name      String\n  logoUrl   String?\n  position  Int      @default(0)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel MediaAsset {\n  id        String   @id @default(cuid())\n  url       String\n  fileName  String\n  mimeType  String\n  alt       String?\n  createdAt DateTime @default(now())\n}\n\nmodel TeamMember {\n  id          String   @id @default(cuid())\n  slug        String   @unique\n  name        String\n  subtitle    String?\n  description String\n  position    Int      @default(0)\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n}\n",
+  "inlineSchemaHash": "1dbd79d5a95f26618636c5909fc4ea750926b1b01165f4b99b660ce6c1e133f5",
   "copyEngine": true
 }
 
