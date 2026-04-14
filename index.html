@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cinegrafico Studios</title>
+  <style>
+    :root {
+      --bg: #06070b;
+      --panel: rgba(255, 255, 255, 0.06);
+      --panel-strong: rgba(255, 255, 255, 0.1);
+      --text: #f4f7fb;
+      --muted: #99a3b3;
+      --line: rgba(255, 255, 255, 0.12);
+      --accent: #FFD700;
+      --accent-2: #FFB800;
+      --accent-3: #FFB800;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      --radius: 24px;
+      --max-width: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Roboto, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255, 215, 0, 0.18), transparent 30%),
+        radial-gradient(circle at top right, rgba(255, 184, 0, 0.14), transparent 28%),
+        linear-gradient(180deg, #0a0d14 0%, #06070b 55%, #090b10 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .container {
+      width: min(var(--max-width), calc(100% - 2rem));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(18px);
+      background: rgba(6, 7, 11, 0.68);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.55rem 0;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-logo {
+      height: 5.6rem;
+      width: auto;
+      display: block;
+      filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.55));
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--text);
+    }
+
+    .nav-cta,
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      border-radius: 999px;
+      padding: 0.95rem 1.35rem;
+      font-weight: 600;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .nav-cta {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      box-shadow: 0 18px 38px rgba(255, 184, 0, 0.22);
+    }
+
+    .button-secondary {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+    }
+
+    .nav-cta:hover,
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    main section {
+      padding: 5.5rem 0;
+    }
+
+    .hero {
+      position: relative;
+      padding: 7.25rem 0 6.25rem;
+      overflow: hidden;
+    }
+
+    .hero-media {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero-media video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.02);
+      filter: saturate(0.95) contrast(1.08) brightness(0.65);
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255, 215, 0, 0.12), transparent 45%),
+        radial-gradient(circle at 70% 0%, rgba(255, 184, 0, 0.1), transparent 42%),
+        linear-gradient(180deg, rgba(6, 7, 11, 0.35) 0%, rgba(6, 7, 11, 0.86) 55%, rgba(6, 7, 11, 0.96) 100%);
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 980px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #d6dcf0;
+      font-size: 0.88rem;
+      margin-bottom: 1.3rem;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 0 0.25rem rgba(255, 184, 0, 0.14);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 6vw, 5.75rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      max-width: 11ch;
+      margin-bottom: 1.35rem;
+      text-shadow: 0 18px 60px rgba(0, 0, 0, 0.75);
+    }
+
+    .hero-copy p,
+    .section-header p,
+    .card p,
+    .contact-panel p {
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.75;
+    }
+
+    .hero-copy p {
+      max-width: 60ch;
+      margin-bottom: 2rem;
+      color: rgba(244, 247, 251, 0.82);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .stat {
+      padding: 1.1rem 1.2rem;
+      border-radius: 1.2rem;
+      border: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(10px);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.45rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-media video {
+        display: none;
+      }
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      align-items: end;
+      margin-bottom: 2rem;
+    }
+
+    .section-header h2 {
+      font-size: clamp(2rem, 3vw, 3.2rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      margin-bottom: 0.8rem;
+      max-width: 10ch;
+    }
+
+    .section-header p {
+      max-width: 58ch;
+      margin-bottom: 0;
+    }
+
+    .services-grid,
+    .portfolio-grid {
+      display: grid;
+      gap: 1.2rem;
+    }
+
+    .services-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .portfolio-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card,
+    .portfolio-card,
+    .contact-panel {
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+      box-shadow: var(--shadow);
+    }
+
+    .card {
+      padding: 1.5rem;
+    }
+
+    .card-icon {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 1rem;
+      display: grid;
+      place-items: center;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.18), rgba(255, 184, 0, 0.16));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 1.2rem;
+    }
+
+    .card h3,
+    .portfolio-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .portfolio-card {
+      overflow: hidden;
+      transform: translateY(0);
+      transition: transform 220ms ease, border-color 220ms ease;
+    }
+
+    .portfolio-media {
+      aspect-ratio: 4 / 4.3;
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .portfolio-media video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.02);
+      filter: saturate(0.95) contrast(1.1) brightness(0.72);
+      transition: transform 280ms ease, filter 280ms ease;
+      display: block;
+    }
+
+    .portfolio-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255, 215, 0, 0.14), transparent 45%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.55) 100%);
+      opacity: 1;
+      transition: opacity 280ms ease;
+      pointer-events: none;
+    }
+
+    .portfolio-badge {
+      position: absolute;
+      left: 1.1rem;
+      bottom: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.6rem 0.85rem;
+      border-radius: 999px;
+      color: rgba(255, 255, 255, 0.92);
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 44px rgba(0, 0, 0, 0.45);
+      transition: transform 280ms ease, background 280ms ease, border-color 280ms ease;
+      user-select: none;
+    }
+
+    .portfolio-badge i {
+      width: 0;
+      height: 0;
+      border-left: 10px solid rgba(255, 215, 0, 0.98);
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+      filter: drop-shadow(0 10px 18px rgba(255, 184, 0, 0.18));
+    }
+
+    .portfolio-card:hover,
+    .portfolio-card:focus-within {
+      transform: translateY(-4px);
+      border-color: rgba(255, 215, 0, 0.28);
+    }
+
+    .portfolio-card:hover .portfolio-media video,
+    .portfolio-card:focus-within .portfolio-media video {
+      transform: scale(1.08);
+      filter: saturate(1) contrast(1.12) brightness(0.82);
+    }
+
+    .portfolio-card:hover .portfolio-media::after,
+    .portfolio-card:focus-within .portfolio-media::after {
+      opacity: 0.8;
+    }
+
+    .portfolio-card:hover .portfolio-badge,
+    .portfolio-card:focus-within .portfolio-badge {
+      transform: translateY(-2px);
+      background: rgba(0, 0, 0, 0.35);
+      border-color: rgba(255, 215, 0, 0.22);
+    }
+
+    .portfolio-body {
+      padding: 1.3rem;
+    }
+
+    .portfolio-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    .tag {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.45rem 0.7rem;
+      border-radius: 999px;
+      color: #d7def3;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .clients-track {
+      --client-gap: 1rem;
+      display: flex;
+      gap: var(--client-gap);
+      overflow-x: auto;
+      padding: 0.9rem 0.35rem 1rem;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 215, 0, 0.35) rgba(255, 255, 255, 0.08);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    }
+
+    .clients-track::-webkit-scrollbar {
+      height: 9px;
+    }
+
+    .clients-track::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+    }
+
+    .clients-track::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.88), rgba(255, 184, 0, 0.86));
+      border-radius: 999px;
+    }
+
+    .client-item {
+      flex: 0 0 calc((100% - (var(--client-gap) * 2)) / 3);
+      min-width: 0;
+      scroll-snap-align: center;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.04)),
+        rgba(13, 15, 21, 0.5);
+      box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      padding: 1.65rem 1.2rem;
+      display: grid;
+      place-items: center;
+      min-height: 118px;
+      font-size: clamp(1rem, 1.9vw, 1.25rem);
+      font-weight: 600;
+      letter-spacing: 0.025em;
+      text-align: center;
+      color: rgba(223, 228, 242, 0.92);
+      transform: scale(0.86);
+      opacity: 0.32;
+      transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), opacity 360ms ease, border-color 360ms ease, background 360ms ease;
+      user-select: none;
+      backdrop-filter: blur(14px);
+    }
+
+    .client-logo {
+      width: 180px;
+      max-width: 88%;
+      height: 64px;
+      object-fit: contain;
+      filter: brightness(0) invert(1) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+      opacity: 0.92;
+      margin-bottom: 0.35rem;
+    }
+
+    .client-name {
+      display: block;
+      font-size: 0.86rem;
+      font-weight: 500;
+      letter-spacing: 0.015em;
+      color: rgba(223, 228, 242, 0.72);
+    }
+
+    .client-item.is-center {
+      transform: scale(1.1);
+      opacity: 1;
+      border-color: rgba(255, 215, 0, 0.45);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(255, 215, 0, 0.16), transparent 62%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05)),
+        rgba(16, 17, 23, 0.6);
+      color: #ffffff;
+      box-shadow:
+        0 26px 58px rgba(0, 0, 0, 0.45),
+        0 8px 26px rgba(255, 184, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .contact-panel {
+      padding: 1.6rem;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1.6rem;
+    }
+
+    .contact-item {
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .contact-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .contact-form label {
+      display: grid;
+      gap: 0.5rem;
+      color: #e7ebf6;
+      font-weight: 500;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      border-radius: 1rem;
+      padding: 0.95rem 1rem;
+      font: inherit;
+      outline: none;
+      resize: vertical;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: rgba(255, 184, 0, 0.75);
+      box-shadow: 0 0 0 0.2rem rgba(255, 184, 0, 0.14);
+    }
+
+    .site-footer {
+      padding: 1.75rem 0 2.5rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 1080px) {
+      .contact-wrap,
+      .services-grid,
+      .portfolio-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .client-item {
+        flex-basis: calc((100% - var(--client-gap)) / 2);
+      }
+
+      .section-header {
+        flex-direction: column;
+        align-items: start;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .brand-logo {
+        height: 3.6rem;
+      }
+
+      .nav {
+        flex-wrap: wrap;
+      }
+
+      .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        padding-top: 0.4rem;
+      }
+
+      .contact-wrap,
+      .services-grid,
+      .portfolio-grid,
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .clients-track {
+        --client-gap: 0.85rem;
+      }
+
+      .client-item {
+        flex-basis: 88%;
+        transform: scale(0.95);
+      }
+
+      h1 {
+        max-width: none;
+      }
+
+      main section {
+        padding: 4.25rem 0;
+      }
+
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="Cinegrafico Studios home">
+        <img class="brand-logo" src="assets/cinegrafico-logo.png" alt="Cinegrafico Studios logo" />
+        <span>Cinegrafico Studios</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="about.html">About</a>
+        <a href="#services">Services</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#clients">Clients</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a class="nav-cta" href="#contact">Start a Project</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-media" aria-hidden="true">
+        <video autoplay muted loop playsinline preload="metadata"
+          poster="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1600&q=80">
+          <source src="assets/hero-backdrop.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="hero-overlay" aria-hidden="true"></div>
+
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <span class="eyebrow">Cinematic creative studio</span>
+          <h1>Make your brand feel like a movie.</h1>
+          <p>
+            Cinegrafico Studios crafts premium visuals—film, motion, identity, and web—built to stop the scroll,
+            sharpen positioning, and launch with momentum.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#contact">Start a Project</a>
+            <a class="button button-secondary" href="#portfolio">See the Work</a>
+          </div>
+          <div class="hero-stats" aria-label="Studio highlights">
+            <div class="stat">
+              <strong>Direction</strong>
+              <span>Creative strategy + art direction for premium launches.</span>
+            </div>
+            <div class="stat">
+              <strong>Motion</strong>
+              <span>Title design, trailers, brand films, and cutdowns.</span>
+            </div>
+            <div class="stat">
+              <strong>Design</strong>
+              <span>Identity systems and cinematic web experiences.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <span class="eyebrow">Services</span>
+            <h2>Studio services built for modern storytelling.</h2>
+          </div>
+          <p>
+            From concept to final delivery, we craft visuals that elevate launches, sharpen positioning,
+            and turn attention into momentum.
+          </p>
+        </div>
+
+        <div class="services-grid">
+          <article class="card">
+            <div class="card-icon">01</div>
+            <h3>2D Animation</h3>
+            <p>Frame-by-frame and vector animation for explainers, character loops, brand assets, and social-ready storytelling.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">02</div>
+            <h3>3D Animation</h3>
+            <p>Product visuals, cinematic scenes, simulations, and look-dev—built to elevate launches and premium brand moments.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">03</div>
+            <h3>Video Editing</h3>
+            <p>Rhythm-first cuts, pacing, sound, and finishing—optimized for ads, YouTube, reels, and launch films.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">04</div>
+            <h3>Motion Graphics</h3>
+            <p>Titles, lower thirds, transitions, and brand motion systems that feel modern, bold, and cinematic.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">05</div>
+            <h3>Photography</h3>
+            <p>Studio and lifestyle shoots with premium lighting, composition, and color—crafted for campaigns and web.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">06</div>
+            <h3>Cinematography</h3>
+            <p>Camera direction, lighting, and visual language—designed to give your story depth, texture, and impact.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="portfolio">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <span class="eyebrow">Portfolio</span>
+            <h2>Selected work with cinematic detail and digital clarity.</h2>
+          </div>
+          <p>
+            Every project balances atmosphere and utility, pairing memorable visuals with design choices
+            that support real brand goals.
+          </p>
+        </div>
+
+        <div class="portfolio-grid">
+          <article class="portfolio-card">
+            <div class="portfolio-media">
+              <video class="portfolio-video" muted loop playsinline preload="metadata"
+                poster="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=80">
+                <source src="assets/hero-backdrop.mp4" type="video/mp4" />
+              </video>
+              <div class="portfolio-badge"><i aria-hidden="true"></i><span>Preview</span></div>
+            </div>
+            <div class="portfolio-body">
+              <h3>Monarch Apparel Launch</h3>
+              <p>A dark luxury campaign identity and teaser rollout designed for a fashion drop with high social traction.</p>
+              <div class="portfolio-tags">
+                <span class="tag">Direction</span>
+                <span class="tag">Motion</span>
+                <span class="tag">Launch</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="portfolio-card">
+            <div class="portfolio-media">
+              <video class="portfolio-video" muted loop playsinline preload="metadata"
+                poster="https://images.unsplash.com/photo-1524253482453-3fed8d2fe12b?auto=format&fit=crop&w=1200&q=80">
+                <source src="assets/hero-backdrop.mp4" type="video/mp4" />
+              </video>
+              <div class="portfolio-badge"><i aria-hidden="true"></i><span>Preview</span></div>
+            </div>
+            <div class="portfolio-body">
+              <h3>Arc Light Interiors</h3>
+              <p>Editorial brand storytelling and a refined digital presentation for a premium architecture studio.</p>
+              <div class="portfolio-tags">
+                <span class="tag">Branding</span>
+                <span class="tag">Web</span>
+                <span class="tag">Editorial</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="portfolio-card">
+            <div class="portfolio-media">
+              <video class="portfolio-video" muted loop playsinline preload="metadata"
+                poster="https://images.unsplash.com/photo-1497032205916-ac775f0649ae?auto=format&fit=crop&w=1200&q=80">
+                <source src="assets/hero-backdrop.mp4" type="video/mp4" />
+              </video>
+              <div class="portfolio-badge"><i aria-hidden="true"></i><span>Preview</span></div>
+            </div>
+            <div class="portfolio-body">
+              <h3>Nova Sound Sessions</h3>
+              <p>An event identity system with looping visuals, social cutdowns, and teaser assets for a live performance series.</p>
+              <div class="portfolio-tags">
+                <span class="tag">Events</span>
+                <span class="tag">Visuals</span>
+                <span class="tag">Content</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="clients">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <span class="eyebrow">Clients</span>
+            <h2>Trusted by brands that value cinematic quality.</h2>
+          </div>
+          <p>
+            Scroll through our partners. The centered client stays in focus to create a premium, story-led carousel experience.
+          </p>
+        </div>
+
+        <div class="clients-track" aria-label="Client carousel">
+          <article class="client-item"><span class="client-name">AstraWear</span></article>
+          <article class="client-item"><span class="client-name">NovaSound</span></article>
+          <article class="client-item"><span class="client-name">Lumen Interiors</span></article>
+          <article class="client-item"><span class="client-name">Obsidian Auto</span></article>
+          <article class="client-item"><span class="client-name">Skyline Estates</span></article>
+          <article class="client-item"><span class="client-name">Monarch Apparel</span></article>
+          <article class="client-item"><span class="client-name">Arc Light Studio</span></article>
+          <article class="client-item"><span class="client-name">Pulse Media</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <span class="eyebrow">Contact</span>
+            <h2>Let’s shape your next visual launch.</h2>
+          </div>
+          <p>
+            Share your goals, timeline, and what kind of experience you want to create. We’ll map the right
+            creative direction and production approach.
+          </p>
+        </div>
+
+        <div class="contact-wrap">
+          <article class="contact-panel">
+            <h3>Book a discovery call</h3>
+            <p>For new business, collaborations, or creative partnerships, reach out and we’ll respond with next steps.</p>
+            <div class="contact-list">
+              <div class="contact-item">
+                <span>Email</span>
+                cinegraficostudios@gmail.com
+              </div>
+              <div class="contact-item">
+                <span>Location</span>
+                Lucknow, India and remote worldwide
+              </div>
+              <div class="contact-item">
+                <span>Availability</span>
+                Taking select Q2 and Q3 studio projects
+              </div>
+            </div>
+          </article>
+
+          <article class="contact-panel">
+            <form class="contact-form">
+              <label>
+                Name
+                <input type="text" name="name" placeholder="Your name" />
+              </label>
+              <label>
+                Email
+                <input type="email" name="email" placeholder="you@example.com" />
+              </label>
+              <label>
+                Project details
+                <textarea name="details" rows="5" placeholder="Tell us about your brand, goals, and timeline."></textarea>
+              </label>
+              <button class="button button-primary" type="submit">Send Inquiry</button>
+            </form>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      Cinegrafico Studios © 2026. Crafted for bold visual storytelling.
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+      const renderServicesFromDraft = () => {
+        const servicesGrid = document.querySelector(".services-grid");
+        if (!servicesGrid) return;
+
+        let draft = null;
+        try {
+          const raw = localStorage.getItem("cinegrafico.dashboard.Services");
+          if (raw) draft = JSON.parse(raw);
+        } catch (_e) {
+          draft = null;
+        }
+
+        const entries = Array.isArray(draft?.serviceEntries) ? draft.serviceEntries : [];
+        const validEntries = entries.filter((entry) => String(entry?.title || "").trim() || String(entry?.description || "").trim());
+        if (!validEntries.length) return;
+
+        const markup = validEntries.map((entry, index) => {
+          const title = String(entry?.title || "").trim() || ("Service " + (index + 1));
+          const description = String(entry?.description || "").trim() || "Service description";
+          const number = String(index + 1).padStart(2, "0");
+          return `
+            <article class="card">
+              <div class="card-icon">${number}</div>
+              <h3>${title}</h3>
+              <p>${description}</p>
+            </article>
+          `;
+        }).join("");
+
+        servicesGrid.innerHTML = markup;
+      };
+
+      renderServicesFromDraft();
+
+      if (!reduceMotion) {
+        const cards = document.querySelectorAll(".portfolio-card");
+        for (const card of cards) {
+          const video = card.querySelector("video.portfolio-video");
+          if (!video) continue;
+
+          const play = async () => {
+            try {
+              video.currentTime = 0;
+              await video.play();
+            } catch (_e) {
+              // Ignore autoplay restrictions; poster will show instead.
+            }
+          };
+
+          const stop = () => {
+            video.pause();
+            video.currentTime = 0;
+          };
+
+          card.addEventListener("mouseenter", play);
+          card.addEventListener("focusin", play);
+          card.addEventListener("mouseleave", stop);
+          card.addEventListener("focusout", stop);
+        }
+      }
+
+      const track = document.querySelector(".clients-track");
+      if (track) {
+        const readClientsDraft = () => {
+          try {
+            const raw = localStorage.getItem("cinegrafico.dashboard.Clients");
+            if (!raw) return null;
+            return JSON.parse(raw);
+          } catch (_e) {
+            return null;
+          }
+        };
+
+        const renderClientsFromDraft = (draft) => {
+          if (!draft || !draft.fields) return;
+          const entries = Array.isArray(draft.clientEntries) ? draft.clientEntries : [];
+          const deriveNameFromFile = (fileName) => String(fileName || "")
+            .replace(/\.[^/.]+$/, "")
+            .replace(/[_-]+/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+
+          if (entries.length) {
+            const cards = entries
+              .map((entry, i) => {
+                const name = String(entry?.name || "").trim() || deriveNameFromFile(entry?.fileName) || ("Brand " + (i + 1));
+                const logo = String(entry?.logoDataUrl || "").trim();
+                return `<article class="client-item">${
+                  logo ? `<img class="client-logo" src="${logo}" alt="${name} logo" />` : ""
+                }<span class="client-name">${name}</span></article>`;
+              })
+              .join("");
+            if (cards) {
+              track.innerHTML = cards;
+              return;
+            }
+          }
+
+          const namesText = String(draft.fields.clientNames || "");
+          const names = namesText
+            .split(",")
+            .map((name) => name.trim())
+            .filter(Boolean);
+          const logos = Array.isArray(draft.clientLogoDataUrls) ? draft.clientLogoDataUrls : [];
+          const logoFileNames = Array.isArray(draft.fields.clientLogos) ? draft.fields.clientLogos : [];
+
+          if (!names.length && !logos.length) return;
+
+          const total = Math.max(names.length, logos.length);
+          const cards = [];
+
+          for (let i = 0; i < total; i += 1) {
+            const name = names[i] || deriveNameFromFile(logoFileNames[i]) || "Brand";
+            const logo = logos[i] || "";
+            cards.push(
+              `<article class="client-item">${
+                logo ? `<img class="client-logo" src="${logo}" alt="${name} logo" />` : ""
+              }<span class="client-name">${name}</span></article>`
+            );
+          }
+          track.innerHTML = cards.join("");
+        };
+
+        renderClientsFromDraft(readClientsDraft());
+
+        const originalItems = Array.from(track.querySelectorAll(".client-item"));
+        // Clone the first few cards to create a seamless auto-scroll loop.
+        const cloneCount = Math.min(3, originalItems.length);
+        for (let i = 0; i < cloneCount; i += 1) {
+          track.appendChild(originalItems[i].cloneNode(true));
+        }
+
+        const items = Array.from(track.querySelectorAll(".client-item"));
+        if (items.length) {
+          let rafId = 0;
+          let autoRaf = 0;
+          let paused = false;
+
+          const updateCenter = () => {
+            const trackRect = track.getBoundingClientRect();
+            const centerX = trackRect.left + trackRect.width / 2;
+            let closest = items[0];
+            let minDistance = Infinity;
+
+            for (const item of items) {
+              const rect = item.getBoundingClientRect();
+              const itemCenter = rect.left + rect.width / 2;
+              const distance = Math.abs(centerX - itemCenter);
+              if (distance < minDistance) {
+                minDistance = distance;
+                closest = item;
+              }
+            }
+
+            for (const item of items) {
+              item.classList.toggle("is-center", item === closest);
+            }
+          };
+
+          const requestUpdate = () => {
+            cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(updateCenter);
+          };
+
+          const firstItem = originalItems[0];
+          const itemWidth = firstItem ? firstItem.getBoundingClientRect().width : 0;
+          const trackStyle = window.getComputedStyle(track);
+          const itemGap = parseFloat(trackStyle.columnGap || trackStyle.gap || "0") || 0;
+          const stepSize = itemWidth + itemGap;
+
+          const maxScrollBeforeLoop = Math.max(
+            0,
+            track.scrollWidth - track.clientWidth - stepSize
+          );
+
+          const scrollNext = () => {
+            if (paused || stepSize <= 0) return;
+
+            if (track.scrollLeft >= maxScrollBeforeLoop) {
+              track.scrollTo({ left: 0, behavior: "smooth" });
+            } else {
+              track.scrollTo({ left: track.scrollLeft + stepSize, behavior: "smooth" });
+            }
+          };
+
+          const pauseAuto = () => {
+            paused = true;
+          };
+
+          const resumeAuto = () => {
+            paused = false;
+          };
+
+          if (items[1]) {
+            track.scrollLeft = Math.max(
+              0,
+              items[1].offsetLeft - (track.clientWidth - items[1].offsetWidth) / 2
+            );
+          }
+          requestUpdate();
+          track.addEventListener("scroll", requestUpdate, { passive: true });
+          window.addEventListener("resize", requestUpdate);
+          track.addEventListener("mouseenter", pauseAuto);
+          track.addEventListener("mouseleave", resumeAuto);
+          track.addEventListener("focusin", pauseAuto);
+          track.addEventListener("focusout", resumeAuto);
+          track.addEventListener("pointerdown", pauseAuto);
+          track.addEventListener("pointerup", resumeAuto);
+
+          autoRaf = window.setInterval(scrollNext, 2200);
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

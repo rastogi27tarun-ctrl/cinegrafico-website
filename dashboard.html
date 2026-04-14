@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | Cinegrafico Studios</title>
+  <style>
+    :root {
+      --bg: #07080d;
+      --panel: rgba(255, 255, 255, 0.04);
+      --panel-2: rgba(255, 255, 255, 0.06);
+      --line: rgba(255, 255, 255, 0.11);
+      --text: #f5f7fb;
+      --muted: #9da7b8;
+      --gold-1: #ffd700;
+      --gold-2: #ffb800;
+      --radius: 18px;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(255, 215, 0, 0.12), transparent 34%),
+        radial-gradient(circle at 100% 0%, rgba(255, 184, 0, 0.08), transparent 32%),
+        linear-gradient(180deg, #0a0c13, #07080d 55%);
+      min-height: 100vh;
+    }
+
+    .page {
+      width: min(1240px, calc(100% - 2rem));
+      margin: 1.2rem auto;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(10, 12, 18, 0.72);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: calc(100vh - 2.4rem);
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--line);
+      padding: 1.15rem;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .brand img {
+      height: 2.2rem;
+      width: auto;
+      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.35));
+    }
+
+    .tab-list {
+      display: grid;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .tab-btn {
+      width: 100%;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #d9e0ef;
+      border-radius: 12px;
+      text-align: left;
+      padding: 0.78rem 0.85rem;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+      transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+    }
+
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.09);
+    }
+
+    .tab-btn.active {
+      background:
+        linear-gradient(135deg, rgba(255, 215, 0, 0.17), rgba(255, 184, 0, 0.12));
+      border-color: rgba(255, 215, 0, 0.35);
+      color: #ffffff;
+      transform: translateX(2px);
+    }
+
+    .main {
+      padding: 1.2rem;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 1rem;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 1rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 1.1rem;
+      letter-spacing: 0.01em;
+    }
+
+    .topbar a {
+      text-decoration: none;
+      color: #fff;
+      border-radius: 999px;
+      padding: 0.58rem 0.95rem;
+      font-size: 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 1rem;
+      min-height: 0;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      padding: 1rem;
+    }
+
+    .panel h2 {
+      margin: 0 0 0.55rem;
+      font-size: 1.15rem;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.95rem;
+    }
+
+    .kpi-grid {
+      margin-top: 0.9rem;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.65rem;
+    }
+
+    .kpi {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.7rem;
+      background: var(--panel-2);
+    }
+
+    .kpi strong {
+      display: block;
+      font-size: 1.05rem;
+      margin-bottom: 0.2rem;
+      color: #fff;
+    }
+
+    .kpi span {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .upload-card {
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 0.8rem;
+    }
+
+    .upload-title {
+      margin: 0;
+      font-size: 1rem;
+      color: #fff;
+    }
+
+    .upload-drop {
+      border: 1px dashed rgba(255, 215, 0, 0.42);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255, 215, 0, 0.07), rgba(255, 184, 0, 0.03));
+      min-height: 170px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 1rem;
+      color: #f6f8fb;
+    }
+
+    .upload-drop small { color: var(--muted); display: block; margin-top: 0.4rem; }
+    .upload-drop.is-dragging {
+      border-color: rgba(255, 215, 0, 0.85);
+      background: linear-gradient(180deg, rgba(255, 215, 0, 0.14), rgba(255, 184, 0, 0.08));
+    }
+
+    .status {
+      margin: 0;
+      font-size: 0.84rem;
+      color: var(--muted);
+      min-height: 1.2em;
+    }
+
+    .status.success { color: #9ee6b0; }
+    .status.error { color: #ff9f9f; }
+
+    .field {
+      display: grid;
+      gap: 0.4rem;
+    }
+
+    .field label {
+      font-size: 0.88rem;
+      color: #d9e0ef;
+    }
+
+    .field input, .field textarea {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+      font: inherit;
+      padding: 0.72rem 0.82rem;
+      outline: none;
+      resize: vertical;
+    }
+
+    .field input:focus, .field textarea:focus {
+      border-color: rgba(255, 184, 0, 0.75);
+      box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.13);
+    }
+
+    .form-stack {
+      display: grid;
+      gap: 0.8rem;
+      align-content: start;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+    }
+
+    .inline-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .client-entries-grid {
+      display: grid;
+      gap: 0.55rem;
+      max-height: 300px;
+      overflow: auto;
+      padding-right: 0.25rem;
+    }
+
+    .client-entry-row {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr auto auto;
+      gap: 0.5rem;
+    }
+
+    .service-entry-row {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 0.6rem;
+    }
+
+    .client-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .client-controls small {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .mini-btn {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      color: #f6f8fb;
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.35rem 0.7rem;
+      cursor: pointer;
+    }
+
+    .mini-btn.danger {
+      border-color: rgba(255, 120, 120, 0.38);
+      color: #ffb2b2;
+      background: rgba(255, 92, 92, 0.08);
+    }
+
+    .mini-btn.replace {
+      border-color: rgba(255, 215, 0, 0.4);
+      color: #ffe590;
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    .slot-state {
+      margin-top: 0.3rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .occupied-slots {
+      margin: 0;
+      padding-left: 1rem;
+      color: #dce2f1;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      max-height: 110px;
+      overflow: auto;
+    }
+
+    .occupied-slots.empty {
+      list-style: none;
+      padding-left: 0;
+      color: var(--muted);
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.6rem;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 0.62rem 1rem;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn.secondary {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.03);
+      color: #fff;
+    }
+
+    .btn.primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+      box-shadow: 0 14px 30px rgba(255, 184, 0, 0.22);
+    }
+
+    @media (max-width: 980px) {
+      .page { grid-template-columns: 1fr; }
+      .sidebar { border-right: 0; border-bottom: 1px solid var(--line); }
+      .tab-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .tab-btn { text-align: center; }
+      .content { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .tab-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .kpi-grid { grid-template-columns: 1fr; }
+      .field-row { grid-template-columns: 1fr; }
+      .client-entry-row { grid-template-columns: 1fr; }
+      .service-entry-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="assets/cinegrafico-logo.png" alt="Cinegrafico Studios logo" />
+        <span>Cinegrafico Admin</span>
+      </div>
+      <div class="tab-list" role="tablist" aria-label="Dashboard sections">
+        <button class="tab-btn active" role="tab" data-tab="Hero">Hero</button>
+        <button class="tab-btn" role="tab" data-tab="Services">Services</button>
+        <button class="tab-btn" role="tab" data-tab="Portfolio">Portfolio</button>
+        <button class="tab-btn" role="tab" data-tab="Clients">Clients</button>
+        <button class="tab-btn" role="tab" data-tab="About">About</button>
+        <button class="tab-btn" role="tab" data-tab="Contact">Contact</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h1 id="sectionTitle">Hero Section Dashboard</h1>
+        <a href="index.html">View Site</a>
+      </div>
+
+      <section class="content">
+        <article class="panel">
+          <h2 id="infoHeading">Hero content controls</h2>
+          <p id="infoText">
+            Manage text, media, and visual hierarchy for the hero section. Keep messaging bold, concise, and cinematic.
+          </p>
+          <div class="kpi-grid">
+            <div class="kpi"><strong id="kpi1">Headline</strong><span>Primary title block</span></div>
+            <div class="kpi"><strong id="kpi2">Background</strong><span>Video / visual source</span></div>
+            <div class="kpi"><strong id="kpi3">CTA</strong><span>Main conversion action</span></div>
+          </div>
+        </article>
+
+        <article class="panel upload-card">
+          <h3 class="upload-title" id="uploadTitle">Upload Hero Assets</h3>
+          <div class="upload-drop" id="uploadDrop" role="button" tabindex="0" aria-label="Upload files">
+            <div>
+              Drag & drop files here or click to browse
+              <small id="uploadHint">Supports image/video up to 200MB</small>
+            </div>
+          </div>
+          <input id="dropFileInput" type="file" hidden multiple />
+          <div id="formContainer" class="form-stack"></div>
+          <p id="statusMessage" class="status"></p>
+          <div class="actions">
+            <button class="btn secondary" id="cancelBtn" type="button">Cancel</button>
+            <button class="btn primary" id="uploadBtn" type="button">Upload</button>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
+      const sectionTitle = document.getElementById("sectionTitle");
+      const infoHeading = document.getElementById("infoHeading");
+      const uploadTitle = document.getElementById("uploadTitle");
+      const uploadHint = document.getElementById("uploadHint");
+      const uploadDrop = document.getElementById("uploadDrop");
+      const dropFileInput = document.getElementById("dropFileInput");
+      const statusMessage = document.getElementById("statusMessage");
+      const uploadBtn = document.getElementById("uploadBtn");
+      const cancelBtn = document.getElementById("cancelBtn");
+      const formContainer = document.getElementById("formContainer");
+      const infoText = document.getElementById("infoText");
+      const kpi1 = document.getElementById("kpi1");
+      const kpi2 = document.getElementById("kpi2");
+      const kpi3 = document.getElementById("kpi3");
+      let activeTab = "Hero";
+      let droppedFiles = [];
+      let clientEntryCount = Number(localStorage.getItem("cinegrafico.dashboard.clients.count") || 20);
+      if (!Number.isFinite(clientEntryCount) || clientEntryCount < 20) clientEntryCount = 20;
+      let deletedClientSlots = new Set();
+      let serviceEntryCount = Number(localStorage.getItem("cinegrafico.dashboard.services.count") || 6);
+      if (!Number.isFinite(serviceEntryCount) || serviceEntryCount < 6) serviceEntryCount = 6;
+
+      const buildServicesEntriesHtml = () => {
+        const rows = [];
+        for (let i = 1; i <= serviceEntryCount; i += 1) {
+          rows.push(`
+            <div class="service-entry-row">
+              <div class="field">
+                <label for="serviceTitle${i}">Service ${i} Title</label>
+                <input id="serviceTitle${i}" type="text" placeholder="Service ${i} title" />
+              </div>
+              <div class="field">
+                <label for="serviceDesc${i}">Service ${i} Description</label>
+                <textarea id="serviceDesc${i}" rows="2" placeholder="Describe this service..."></textarea>
+              </div>
+            </div>
+          `);
+        }
+        return `
+          <p class="inline-note">Manage service tabs with title and description.</p>
+          <div class="client-controls">
+            <small>Total services: <strong id="serviceSlotCount">${serviceEntryCount}</strong></small>
+            <button type="button" id="addServiceSlotsBtn" class="mini-btn">Add 3 More Services</button>
+          </div>
+          <div class="client-entries-grid">${rows.join("")}</div>
+        `;
+      };
+
+      const buildClientEntriesHtml = () => {
+        const rows = [];
+        for (let i = 1; i <= clientEntryCount; i += 1) {
+          rows.push(`
+            <div class="client-entry-row">
+              <div class="field">
+                <label for="clientName${i}">Client ${i} Name</label>
+                <input id="clientName${i}" type="text" placeholder="Client ${i} name" />
+                <small class="slot-state" id="clientState${i}"></small>
+              </div>
+              <div class="field">
+                <label for="clientLogo${i}">Client ${i} Logo</label>
+                <input id="clientLogo${i}" type="file" accept=".png,.jpg,.jpeg,.svg,.webp" />
+              </div>
+              <button type="button" class="mini-btn replace" data-replace-slot="${i}">Replace</button>
+              <button type="button" class="mini-btn danger" data-delete-slot="${i}">Delete</button>
+            </div>
+          `);
+        }
+        return `
+          <p class="inline-note">Add at least 20 client logo entries below.</p>
+          <div class="client-controls">
+            <small>Total slots: <strong id="clientSlotCount">${clientEntryCount}</strong></small>
+            <button type="button" id="addClientSlotsBtn" class="mini-btn">Add 5 More Slots</button>
+          </div>
+          <div class="client-entries-grid">${rows.join("")}</div>
+          <ul id="occupiedSlotsList" class="occupied-slots empty"><li>No logos assigned yet.</li></ul>
+        `;
+      };
+
+      const contentMap = {
+        Hero: {
+          heading: "Hero content controls",
+          text: "Manage text, media, and visual hierarchy for the hero section. Keep messaging bold, concise, and cinematic.",
+          upload: "Upload Hero Assets",
+          hint: "Supports image/video up to 200MB",
+          kpis: ["Headline", "Background", "CTA"],
+          formHtml: `
+            <div class="field"><label for="heroHeading">Heading</label><input id="heroHeading" type="text" placeholder="Make your brand feel like a movie." /></div>
+            <div class="field"><label for="heroSubheading">Subheading</label><textarea id="heroSubheading" rows="3" placeholder="Write a strong supporting line for the hero section."></textarea></div>
+            <div class="field"><label for="heroCta">CTA Text</label><input id="heroCta" type="text" placeholder="Start a Project" /></div>
+          `
+        },
+        Services: {
+          heading: "Services content controls",
+          text: "Update service cards, sequencing, and microcopy to keep your offerings clear and premium.",
+          upload: "Upload Services Assets",
+          hint: "Supports icon/image files",
+          kpis: ["Cards", "Ordering", "Descriptions"],
+          formHtml: buildServicesEntriesHtml()
+        },
+        Portfolio: {
+          heading: "Portfolio content controls",
+          text: "Control case studies, video thumbnails, and tags used in the portfolio gallery.",
+          upload: "Upload Portfolio Assets",
+          hint: "Supports video/poster files",
+          kpis: ["Projects", "Thumbnails", "Tags"],
+          formHtml: `
+            <div class="field"><label for="portfolioTitle">Project Title</label><input id="portfolioTitle" type="text" placeholder="Monarch Apparel Launch" /></div>
+            <div class="field"><label for="portfolioVideo">Video Link</label><input id="portfolioVideo" type="url" placeholder="https://example.com/project-video.mp4" /></div>
+          `
+        },
+        Clients: {
+          heading: "Clients content controls",
+          text: "Edit client names, carousel ordering, and highlight behavior for trust and social proof.",
+          upload: "Upload Client Assets",
+          hint: "Supports logos and brand marks",
+          kpis: ["Client list", "Carousel", "Highlight"],
+          formHtml: buildClientEntriesHtml()
+        },
+        About: {
+          heading: "About content controls",
+          text: "Update your studio vision, style language, and trust signals from one clean panel.",
+          upload: "Upload About Assets",
+          hint: "Supports team/studio images",
+          kpis: ["Vision", "Style", "Trust"],
+          formHtml: `
+            <div class="field"><label for="aboutParagraph">Paragraph Text</label><textarea id="aboutParagraph" rows="8" placeholder="Write your about paragraph here..."></textarea></div>
+          `
+        },
+        Contact: {
+          heading: "Contact content controls",
+          text: "Manage contact details and lead capture assets for seamless project inquiries.",
+          upload: "Upload Contact Assets",
+          hint: "Supports supporting docs/images",
+          kpis: ["Email", "Location", "Form"],
+          formHtml: `
+            <div class="field"><label for="contactEmail">Email</label><input id="contactEmail" type="email" placeholder="cinegraficostudios@gmail.com" /></div>
+            <div class="field"><label for="contactPhone">Phone</label><input id="contactPhone" type="tel" placeholder="+91 98765 43210" /></div>
+            <div class="field"><label for="contactWhatsapp">WhatsApp</label><input id="contactWhatsapp" type="tel" placeholder="+91 98765 43210" /></div>
+          `
+        }
+      };
+
+      const renderForm = (tabName) => {
+        const c = contentMap[tabName];
+        if (!c || !formContainer) return;
+        formContainer.innerHTML = c.formHtml || "";
+        setStatus("", "");
+        if (tabName === "Services") {
+          attachServiceControls();
+          hydrateServiceFormFromDraft();
+        }
+        if (tabName === "Clients") {
+          attachClientControls();
+          hydrateClientFormFromDraft();
+          restoreClientDraftSummary();
+        }
+      };
+
+      const getServiceRows = () => {
+        const titleInputs = Array.from(formContainer.querySelectorAll("input[id^='serviceTitle']"));
+        const descInputs = Array.from(formContainer.querySelectorAll("textarea[id^='serviceDesc']"));
+        return { titleInputs, descInputs };
+      };
+
+      const loadServicesDraft = () => {
+        try {
+          const raw = localStorage.getItem("cinegrafico.dashboard.Services");
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch (_e) {
+          return null;
+        }
+      };
+
+      const hydrateServiceFormFromDraft = () => {
+        const parsed = loadServicesDraft();
+        const entries = Array.isArray(parsed?.serviceEntries) ? parsed.serviceEntries : [];
+        if (!entries.length) return;
+        const { titleInputs, descInputs } = getServiceRows();
+        for (const entry of entries) {
+          const slot = Number(entry?.slot || 0);
+          if (!slot) continue;
+          const idx = slot - 1;
+          if (titleInputs[idx]) titleInputs[idx].value = String(entry?.title || "");
+          if (descInputs[idx]) descInputs[idx].value = String(entry?.description || "");
+        }
+      };
+
+      const snapshotServiceRows = () => {
+        const { titleInputs, descInputs } = getServiceRows();
+        const rows = [];
+        for (let i = 0; i < titleInputs.length; i += 1) {
+          rows.push({
+            title: String(titleInputs[i]?.value || ""),
+            desc: String(descInputs[i]?.value || "")
+          });
+        }
+        return rows;
+      };
+
+      const hydrateServiceRows = (rows) => {
+        if (!Array.isArray(rows)) return;
+        const { titleInputs, descInputs } = getServiceRows();
+        for (let i = 0; i < rows.length; i += 1) {
+          if (titleInputs[i]) titleInputs[i].value = rows[i]?.title || "";
+          if (descInputs[i]) descInputs[i].value = rows[i]?.desc || "";
+        }
+      };
+
+      const attachServiceControls = () => {
+        const addBtn = document.getElementById("addServiceSlotsBtn");
+        if (addBtn) {
+          addBtn.addEventListener("click", () => {
+            const existing = snapshotServiceRows();
+            serviceEntryCount += 3;
+            localStorage.setItem("cinegrafico.dashboard.services.count", String(serviceEntryCount));
+            contentMap.Services.formHtml = buildServicesEntriesHtml();
+            renderForm("Services");
+            hydrateServiceRows(existing);
+            setStatus("Added 3 more service tabs.", "");
+          });
+        }
+      };
+
+      const setStatus = (message, type) => {
+        if (!statusMessage) return;
+        statusMessage.textContent = message || "";
+        statusMessage.classList.remove("success", "error");
+        if (type) statusMessage.classList.add(type);
+      };
+
+      const getFileNames = (files) => Array.from(files || []).map((f) => f.name);
+
+      const updateDropHint = () => {
+        const names = getFileNames(droppedFiles);
+        if (!uploadHint) return;
+        uploadHint.textContent = names.length
+          ? names.join(", ")
+          : (contentMap[activeTab]?.hint || "Supports files");
+      };
+
+      const collectFormData = () => {
+        const inputs = formContainer.querySelectorAll("input, textarea");
+        const values = {};
+        for (const el of inputs) {
+          const key = el.id || el.name || "field";
+          if (el.type === "file") {
+            values[key] = getFileNames(el.files);
+          } else {
+            values[key] = el.value?.trim() || "";
+          }
+        }
+        return values;
+      };
+
+      const getClientRows = () => {
+        const nameInputs = Array.from(formContainer.querySelectorAll("input[id^='clientName']"));
+        const logoInputs = Array.from(formContainer.querySelectorAll("input[id^='clientLogo']"));
+        return { nameInputs, logoInputs };
+      };
+
+      const loadClientsDraft = () => {
+        try {
+          const raw = localStorage.getItem("cinegrafico.dashboard.Clients");
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch (_e) {
+          return null;
+        }
+      };
+
+      const setClientSlotState = (slot, message) => {
+        const state = document.getElementById("clientState" + slot);
+        if (state) state.textContent = message || "";
+      };
+
+      const hydrateClientFormFromDraft = () => {
+        const parsed = loadClientsDraft();
+        const entries = Array.isArray(parsed?.clientEntries) ? parsed.clientEntries : [];
+        for (const entry of entries) {
+          const slot = Number(entry?.slot || 0);
+          if (!slot) continue;
+          const nameInput = document.getElementById("clientName" + slot);
+          if (nameInput && entry?.name) nameInput.value = String(entry.name);
+          const fileLabel = entry?.fileName ? String(entry.fileName) : "logo saved";
+          setClientSlotState(slot, "Saved: " + fileLabel);
+        }
+      };
+
+      const updateOccupiedSlots = (entries) => {
+        const list = document.getElementById("occupiedSlotsList");
+        if (!list) return;
+        if (!entries.length) {
+          list.classList.add("empty");
+          list.innerHTML = "<li>No logos assigned yet.</li>";
+          return;
+        }
+
+        list.classList.remove("empty");
+        list.innerHTML = entries
+          .map((entry) => `<li>Slot ${entry.slot}: ${entry.brandName}</li>`)
+          .join("");
+      };
+
+      const collectOccupiedSlotsFromForm = () => {
+        const { nameInputs, logoInputs } = getClientRows();
+        const slots = [];
+        for (let i = 0; i < nameInputs.length; i += 1) {
+          const name = String(nameInputs[i]?.value || "").trim();
+          const file = logoInputs[i]?.files?.[0];
+          if (!name && !file) continue;
+          slots.push({
+            slot: i + 1,
+            brandName: name || file?.name || "Unnamed brand"
+          });
+        }
+        return slots;
+      };
+
+      const restoreClientDraftSummary = () => {
+        if (activeTab !== "Clients") return;
+        const parsed = loadClientsDraft();
+        if (!parsed) return;
+        const entries = Array.isArray(parsed?.clientEntries) ? parsed.clientEntries : [];
+        const slots = entries.map((entry, i) => ({
+          slot: Number(entry?.slot || (i + 1)),
+          brandName: String(entry?.name || entry?.fileName || ("Brand " + (i + 1)))
+        }));
+        updateOccupiedSlots(slots);
+      };
+
+      const attachClientControls = () => {
+        const addBtn = document.getElementById("addClientSlotsBtn");
+        if (addBtn) {
+          addBtn.addEventListener("click", () => {
+            clientEntryCount += 5;
+            localStorage.setItem("cinegrafico.dashboard.clients.count", String(clientEntryCount));
+            contentMap.Clients.formHtml = buildClientEntriesHtml();
+            renderForm("Clients");
+            setStatus("Added 5 more client slots.", "");
+          });
+        }
+
+        const deleteButtons = Array.from(formContainer.querySelectorAll("[data-delete-slot]"));
+        const replaceButtons = Array.from(formContainer.querySelectorAll("[data-replace-slot]"));
+
+        for (const btn of replaceButtons) {
+          btn.addEventListener("click", () => {
+            const slot = Number(btn.getAttribute("data-replace-slot") || "0");
+            if (!slot) return;
+            const logoInput = document.getElementById("clientLogo" + slot);
+            if (logoInput) {
+              logoInput.click();
+            }
+          });
+        }
+
+        for (const btn of deleteButtons) {
+          btn.addEventListener("click", () => {
+            const slot = Number(btn.getAttribute("data-delete-slot") || "0");
+            if (!slot) return;
+            deletedClientSlots.add(slot);
+            const nameInput = document.getElementById("clientName" + slot);
+            const logoInput = document.getElementById("clientLogo" + slot);
+            if (nameInput) nameInput.value = "";
+            if (logoInput) logoInput.value = "";
+            setClientSlotState(slot, "Marked for deletion on next upload.");
+            setStatus("Slot " + slot + " marked for deletion.", "");
+          });
+        }
+
+        const { logoInputs } = getClientRows();
+        for (let i = 0; i < logoInputs.length; i += 1) {
+          const slot = i + 1;
+          logoInputs[i].addEventListener("change", () => {
+            const file = logoInputs[i]?.files?.[0];
+            if (file) {
+              deletedClientSlots.delete(slot);
+              setClientSlotState(slot, "Ready to replace with: " + file.name);
+            }
+          });
+        }
+      };
+
+      const toDataUrl = (file) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = () => reject(new Error("Failed to read file"));
+        reader.readAsDataURL(file);
+      });
+
+      for (const button of tabButtons) {
+        button.addEventListener("click", () => {
+          for (const b of tabButtons) b.classList.remove("active");
+          button.classList.add("active");
+
+          const tabName = button.dataset.tab;
+          const c = contentMap[tabName];
+          if (!c) return;
+          activeTab = tabName;
+          droppedFiles = [];
+          if (tabName !== "Clients") {
+            deletedClientSlots = new Set();
+          }
+
+          sectionTitle.textContent = tabName + " Section Dashboard";
+          infoHeading.textContent = c.heading;
+          infoText.textContent = c.text;
+          uploadTitle.textContent = c.upload;
+          kpi1.textContent = c.kpis[0];
+          kpi2.textContent = c.kpis[1];
+          kpi3.textContent = c.kpis[2];
+          renderForm(tabName);
+          updateDropHint();
+        });
+      }
+
+      if (uploadDrop && dropFileInput) {
+        uploadDrop.addEventListener("click", () => dropFileInput.click());
+        uploadDrop.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            dropFileInput.click();
+          }
+        });
+
+        dropFileInput.addEventListener("change", () => {
+          droppedFiles = Array.from(dropFileInput.files || []);
+          updateDropHint();
+          setStatus(droppedFiles.length ? "Files selected from your device." : "", "");
+        });
+
+        const preventDefaults = (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+        };
+
+        ["dragenter", "dragover", "dragleave", "drop"].forEach((name) => {
+          uploadDrop.addEventListener(name, preventDefaults);
+        });
+        ["dragenter", "dragover"].forEach((name) => {
+          uploadDrop.addEventListener(name, () => uploadDrop.classList.add("is-dragging"));
+        });
+        ["dragleave", "drop"].forEach((name) => {
+          uploadDrop.addEventListener(name, () => uploadDrop.classList.remove("is-dragging"));
+        });
+        uploadDrop.addEventListener("drop", (event) => {
+          droppedFiles = Array.from(event.dataTransfer?.files || []);
+          updateDropHint();
+          setStatus(droppedFiles.length ? "Files dropped successfully." : "", "");
+        });
+      }
+
+      if (cancelBtn) {
+        cancelBtn.addEventListener("click", () => {
+          droppedFiles = [];
+          if (dropFileInput) dropFileInput.value = "";
+          const scopedFiles = formContainer.querySelectorAll("input[type='file']");
+          for (const fileInput of scopedFiles) fileInput.value = "";
+          const scopedFields = formContainer.querySelectorAll("input:not([type='file']), textarea");
+          for (const field of scopedFields) field.value = "";
+          updateDropHint();
+          setStatus("Cleared selected files and form fields.", "");
+        });
+      }
+
+      if (uploadBtn) {
+        uploadBtn.addEventListener("click", async () => {
+          const payload = {
+            tab: activeTab,
+            fields: collectFormData(),
+            droppedFiles: getFileNames(droppedFiles),
+            uploadedAt: new Date().toISOString()
+          };
+          try {
+            if (activeTab === "Services") {
+              const existingDraft = loadServicesDraft();
+              const existingEntries = Array.isArray(existingDraft?.serviceEntries) ? existingDraft.serviceEntries : [];
+              const merged = new Map();
+              for (const entry of existingEntries) {
+                const slot = Number(entry?.slot || 0);
+                if (!slot) continue;
+                merged.set(slot, { slot, title: String(entry?.title || ""), description: String(entry?.description || "") });
+              }
+
+              const { titleInputs, descInputs } = getServiceRows();
+              for (let i = 0; i < titleInputs.length; i += 1) {
+                const slot = i + 1;
+                const title = String(titleInputs[i]?.value || "").trim();
+                const description = String(descInputs[i]?.value || "").trim();
+                const existing = merged.get(slot) || { slot, title: "", description: "" };
+                if (title) existing.title = title;
+                if (description) existing.description = description;
+                if (existing.title || existing.description) merged.set(slot, existing);
+              }
+              payload.serviceEntries = Array.from(merged.values()).sort((a, b) => a.slot - b.slot);
+            }
+
+            if (activeTab === "Clients") {
+              const existingDraft = loadClientsDraft();
+              const existingEntries = Array.isArray(existingDraft?.clientEntries) ? existingDraft.clientEntries : [];
+              const merged = new Map();
+              for (const entry of existingEntries) {
+                const slot = Number(entry?.slot || 0);
+                if (!slot) continue;
+                merged.set(slot, { ...entry, slot });
+              }
+
+              const { nameInputs, logoInputs } = getClientRows();
+              for (let i = 0; i < nameInputs.length; i += 1) {
+                const slot = i + 1;
+                if (deletedClientSlots.has(slot)) {
+                  merged.delete(slot);
+                  continue;
+                }
+                const name = String(nameInputs[i]?.value || "").trim();
+                const logoFile = logoInputs[i]?.files?.[0];
+
+                const entry = merged.get(slot) || { slot, name: "", fileName: "", logoDataUrl: "" };
+                if (name) entry.name = name;
+                if (logoFile && logoFile.type.startsWith("image/")) {
+                  entry.fileName = logoFile.name;
+                  entry.logoDataUrl = await toDataUrl(logoFile);
+                }
+                if (entry.name || entry.fileName || entry.logoDataUrl) {
+                  merged.set(slot, entry);
+                }
+              }
+
+              let nextSlot = Math.max(0, ...Array.from(merged.keys())) + 1;
+              for (const file of droppedFiles || []) {
+                if (!file.type.startsWith("image/")) continue;
+                merged.set(nextSlot, {
+                  slot: nextSlot,
+                  name: "",
+                  fileName: file.name,
+                  logoDataUrl: await toDataUrl(file)
+                });
+                nextSlot += 1;
+              }
+
+              const clientEntries = Array.from(merged.values()).sort((a, b) => a.slot - b.slot);
+              const occupiedSlots = clientEntries.map((entry, i) => ({
+                slot: Number(entry?.slot || (i + 1)),
+                brandName: String(entry?.name || entry?.fileName || ("Brand " + (i + 1)))
+              }));
+              payload.clientEntries = clientEntries;
+              payload.occupiedSlots = occupiedSlots;
+              updateOccupiedSlots(occupiedSlots);
+              deletedClientSlots = new Set();
+            }
+            localStorage.setItem("cinegrafico.dashboard." + activeTab, JSON.stringify(payload));
+            setStatus("Uploaded successfully. Draft saved for " + activeTab + ".", "success");
+          } catch (_err) {
+            setStatus("Upload failed in browser storage. Try fewer files.", "error");
+          }
+        });
+      }
+
+      renderForm("Hero");
+      updateDropHint();
+    })();
+  </script>
+</body>
+</html>

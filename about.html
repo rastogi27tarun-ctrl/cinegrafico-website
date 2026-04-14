@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About | Cinegrafico Studios</title>
+  <style>
+    :root {
+      --bg: #06070b;
+      --text: #f4f7fb;
+      --muted: #99a3b3;
+      --line: rgba(255, 255, 255, 0.12);
+      --accent: #FFD700;
+      --accent-2: #FFB800;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      --radius: 24px;
+      --max-width: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 0%, rgba(255, 215, 0, 0.13), transparent 30%),
+        radial-gradient(circle at 85% 0%, rgba(255, 184, 0, 0.1), transparent 28%),
+        linear-gradient(180deg, #090b10 0%, #06070b 60%, #08090d 100%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(var(--max-width), calc(100% - 2rem)); margin: 0 auto; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(16px);
+      background: rgba(6, 7, 11, 0.68);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-logo {
+      height: 3.1rem;
+      width: auto;
+      display: block;
+      filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.55));
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible { color: var(--text); }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 0.9rem 1.3rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      box-shadow: 0 18px 38px rgba(255, 184, 0, 0.22);
+    }
+
+    main { padding: 4.2rem 0 5rem; }
+
+    .hero h1 {
+      margin: 0 0 1rem;
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      max-width: 12ch;
+      text-shadow: 0 18px 60px rgba(0, 0, 0, 0.75);
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 62ch;
+      font-size: 1.04rem;
+    }
+
+    .about-grid {
+      margin-top: 2.4rem;
+      display: grid;
+      gap: 1.2rem;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .panel {
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+      box-shadow: var(--shadow);
+      padding: 1.4rem;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin-bottom: 1rem;
+      color: #e9edf8;
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 0.52rem;
+      height: 0.52rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 0 0.2rem rgba(255, 184, 0, 0.14);
+    }
+
+    h2 {
+      margin: 0 0 0.8rem;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .trust-list {
+      margin: 1rem 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .trust-list li {
+      padding-top: 0.8rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: #dce2f1;
+      line-height: 1.6;
+    }
+
+    .site-footer {
+      padding: 0 0 2.2rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 980px) {
+      .about-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .nav { flex-wrap: wrap; }
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+        order: 3;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="Cinegrafico Studios home">
+        <img class="brand-logo" src="assets/cinegrafico-logo.png" alt="Cinegrafico Studios logo" />
+        <span>Cinegrafico Studios</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="index.html#services">Services</a>
+        <a href="index.html#portfolio">Portfolio</a>
+        <a href="#vision">Vision</a>
+        <a href="#style">Style</a>
+        <a href="#trust">Trust</a>
+      </nav>
+      <a class="button" href="index.html#contact">Start a Project</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="container hero">
+      <h1>We build visual stories that feel cinematic and sell with clarity.</h1>
+      <p>
+        Cinegrafico Studios combines direction, motion, and production craft to create premium brand experiences.
+        Our work is designed to look bold, move people emotionally, and perform across modern digital platforms.
+      </p>
+    </section>
+
+    <section class="container about-grid">
+      <article class="panel" id="vision">
+        <span class="kicker">Vision</span>
+        <h2>Design the frame. Move the audience.</h2>
+        <p>
+          Our vision is to help ambitious brands communicate like top-tier productions: purposeful, memorable,
+          and emotionally resonant. We treat every campaign as a story world where identity, motion, and tone
+          work together to create lasting brand recall.
+        </p>
+      </article>
+
+      <article class="panel" id="style">
+        <span class="kicker">Style</span>
+        <h2>Premium cinematic, minimal noise.</h2>
+        <p>
+          Our style blends dark luxury palettes, precise typography, dynamic motion, and filmic pacing.
+          Every detail is intentional: from composition and transitions to grading and rhythm. The result is
+          clean, modern visual language with strong atmosphere and unmistakable polish.
+        </p>
+      </article>
+
+      <article class="panel" id="trust">
+        <span class="kicker">Why clients trust us</span>
+        <h2>Reliable creative partner from concept to final delivery.</h2>
+        <p>
+          We combine creative ambition with production discipline, so clients feel confident at every stage.
+        </p>
+        <ul class="trust-list">
+          <li>Clear process and communication with defined timelines and review checkpoints.</li>
+          <li>Consistent quality control across story, design, animation, editing, and final outputs.</li>
+          <li>Strategic thinking focused on business goals, not just aesthetic execution.</li>
+          <li>Flexible collaboration with founders, agencies, and in-house teams.</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">Cinegrafico Studios © 2026. Built for bold visual storytelling.</div>
+  </footer>
+</body>
+</html>
