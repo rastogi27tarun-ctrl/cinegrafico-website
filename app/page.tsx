@@ -4,6 +4,7 @@ import ClientsCarousel from "../components/ClientsCarousel";
 import PortfolioCarousel from "../components/PortfolioCarousel";
 import ContactInquiryForm from "../components/ContactInquiryForm";
 import { getPublicCmsData } from "../lib/cms";
+import { getPortfolioSections } from "../lib/portfolio";
 
 function escapeHtml(value) {
   return String(value || "")
@@ -48,6 +49,7 @@ export default async function Home() {
     clients
   });
   const highlight = portfolio?.[0] || null;
+  const portfolioSections = getPortfolioSections(portfolio);
 
   return (
     <>
@@ -146,7 +148,21 @@ export default async function Home() {
               <span className="section-start-dot-wrap"><span className="section-start-dot" /></span>
             </div>
             <h2 className="home-section-title">Recent work, cut like a reel.</h2>
-            <PortfolioCarousel items={portfolio} />
+            {portfolioSections.map(({ type, items }) => (
+              <div key={type} className="portfolio-type-group" style={{ marginBottom: "1.75rem" }}>
+                <h3
+                  className="home-section-title"
+                  style={{
+                    fontSize: "clamp(1.15rem, 2.4vw, 1.5rem)",
+                    marginBottom: ".65rem",
+                    opacity: 0.92
+                  }}
+                >
+                  {type}
+                </h3>
+                <PortfolioCarousel items={items} ariaLabel={`${type} — portfolio`} />
+              </div>
+            ))}
           </div>
         </section>
 

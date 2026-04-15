@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { isYouTubeUrl, toYouTubeEmbedUrl } from "../lib/media";
 import Link from "next/link";
 
-export default function PortfolioCarousel({ items }) {
+export default function PortfolioCarousel({ items, ariaLabel }) {
   const trackRef = useRef(null);
 
   const portfolioItems = useMemo(() => (Array.isArray(items) ? items : []), [items]);
@@ -71,7 +71,7 @@ export default function PortfolioCarousel({ items }) {
         <button className="button" type="button" onClick={() => scrollByCards(1)} style={{ padding: ".5rem .8rem" }}>Next</button>
       </div>
 
-      <div ref={trackRef} className="portfolio-carousel" aria-label="Portfolio carousel">
+      <div ref={trackRef} className="portfolio-carousel" aria-label={ariaLabel || "Portfolio carousel"}>
         {portfolioItems.map((item) => (
           <article
             key={item.id}

@@ -39,6 +39,15 @@ const ASSETS = {
   }
 };
 
+const ABOUT_VISION =
+  "We aim to deliver high-quality production and post-production services through a skilled and dedicated team. Our vision is to creatively and efficiently meet diverse client needs, turning ideas into impactful visual stories.";
+
+const ABOUT_STYLE =
+  "We blend creativity with cutting-edge technology to deliver visually striking content across production and post-production. Our style combines 2D/3D animation, motion graphics, and cinematic storytelling with modern tools like AI editing. We focus on crafting polished, dynamic visuals that bring ideas to life with clarity and impact.";
+
+const ABOUT_TRUST =
+  "Clients trust us for our skilled team, consistent quality, and attention to detail across every stage of production and post-production. We combine creative vision with reliable execution, ensuring projects are delivered on time and aligned with client goals. Our transparent process and commitment to excellence build lasting, dependable partnerships.";
+
 const DATASETS = {
   development: {
     users: {
@@ -52,9 +61,9 @@ const DATASETS = {
       videoUrl: ASSETS.heroVideo
     },
     about: {
-      vision: "Design the frame. Move the audience.",
-      style: "Premium cinematic with minimal noise.",
-      trust: "Reliable creative partner from concept to final delivery."
+      vision: ABOUT_VISION,
+      style: ABOUT_STYLE,
+      trust: ABOUT_TRUST
     },
     contact: {
       email: "cinegraficostudios@gmail.com",
@@ -75,9 +84,9 @@ const DATASETS = {
       videoUrl: ASSETS.heroVideo
     },
     about: {
-      vision: "Build memorable stories through cinematic craft.",
-      style: "Bold visuals, clean motion systems, and brand-first storytelling.",
-      trust: "Trusted by teams that need dependable creative delivery at high quality."
+      vision: ABOUT_VISION,
+      style: ABOUT_STYLE,
+      trust: ABOUT_TRUST
     },
     contact: {
       email: "hello@cinegrafico.com",
@@ -105,11 +114,11 @@ const SHARED_CONTENT = {
     ["client-seed-5", "Samsung", ASSETS.clients.samsung]
   ],
   portfolioItems: [
-    ["portfolio-seed-0", "Brand Launch Film", "A cinematic launch video crafted for social-first distribution.", ASSETS.portfolio.brandLaunch.video, ASSETS.portfolio.brandLaunch.poster, ["launch", "brand", "film"]],
-    ["portfolio-seed-1", "Product Hero Spot", "High-impact product storytelling with studio lighting and dynamic edits.", ASSETS.portfolio.productHero.video, ASSETS.portfolio.productHero.poster, ["product", "commercial"]],
-    ["portfolio-seed-2", "Festival Recap", "Fast-paced recap edit mixing drone, handheld, and crowd energy.", ASSETS.portfolio.festivalRecap.video, ASSETS.portfolio.festivalRecap.poster, ["event", "recap"]],
-    ["portfolio-seed-3", "Corporate Profile", "Clean and premium profile film focused on team, process, and culture.", ASSETS.portfolio.corporateProfile.video, ASSETS.portfolio.corporateProfile.poster, ["corporate", "profile"]],
-    ["portfolio-seed-4", "Motion Identity Reel", "A short reel featuring logo animations and motion system exploration.", ASSETS.portfolio.motionIdentity.video, ASSETS.portfolio.motionIdentity.poster, ["motion", "identity"]]
+    ["portfolio-seed-0", "Brand Launch Film", "A cinematic launch video crafted for social-first distribution.", ASSETS.portfolio.brandLaunch.video, ASSETS.portfolio.brandLaunch.poster, { projectType: "Films" }],
+    ["portfolio-seed-1", "Product Hero Spot", "High-impact product storytelling with studio lighting and dynamic edits.", ASSETS.portfolio.productHero.video, ASSETS.portfolio.productHero.poster, { projectType: "Films" }],
+    ["portfolio-seed-2", "Festival Recap", "Fast-paced recap edit mixing drone, handheld, and crowd energy.", ASSETS.portfolio.festivalRecap.video, ASSETS.portfolio.festivalRecap.poster, { projectType: "Films" }],
+    ["portfolio-seed-3", "Corporate Profile", "Clean and premium profile film focused on team, process, and culture.", ASSETS.portfolio.corporateProfile.video, ASSETS.portfolio.corporateProfile.poster, { projectType: "Films" }],
+    ["portfolio-seed-4", "Motion Identity Reel", "A short reel featuring logo animations and motion system exploration.", ASSETS.portfolio.motionIdentity.video, ASSETS.portfolio.motionIdentity.poster, { projectType: "Motion Graphics" }]
   ],
   teamMembers: [
     ["creative-director", "Creative Director", "The Creator", "Leads the visual language, story tone, and creative direction across campaigns."],
@@ -163,7 +172,11 @@ async function main() {
 
   await prisma.aboutContent.upsert({
     where: { id: "singleton" },
-    update: {},
+    update: {
+      vision: dataset.about.vision,
+      style: dataset.about.style,
+      trust: dataset.about.trust
+    },
     create: {
       id: "singleton",
       vision: dataset.about.vision,

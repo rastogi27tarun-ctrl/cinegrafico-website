@@ -1,13 +1,12 @@
 import PublicHeader from "../../components/PublicHeader";
 import { getPublicCmsData } from "../../lib/cms";
 import { isYouTubeUrl, toYouTubeEmbedUrl } from "../../lib/media";
+import { getPortfolioSections } from "../../lib/portfolio";
 import Link from "next/link";
-
-const PROJECT_TYPES = ["Photography", "Films", "Animation", "Motion Graphics", "Documentary", "Music Video", "Editing", "Podcast", "AI Video"];
 
 export default async function PortfolioPage() {
   const { portfolio } = await getPublicCmsData();
-  const groupedPortfolio = groupPortfolioByType(portfolio);
+  const portfolioSections = getPortfolioSections(portfolio);
 
   return (
     <>
@@ -24,10 +23,7 @@ export default async function PortfolioPage() {
               Explore the complete collection of projects.
             </p>
 
-            {PROJECT_TYPES.map((type) => {
-              const items = groupedPortfolio[type] || [];
-              if (!items.length) return null;
-              return (
+            {portfolioSections.map(({ type, items }) => (
                 <section key={type} style={{ marginBottom: "1.25rem" }}>
                   <h2 style={{ marginTop: 0 }}>{type}</h2>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "1rem" }}>
@@ -72,32 +68,10 @@ export default async function PortfolioPage() {
                     ))}
                   </div>
                 </section>
-              );
-            })}
+            ))}
           </div>
         </section>
       </main>
     </>
   );
-}
-
-function normalizeTags(tags) {
-  if (!tags || typeof tags !== "object" || Array.isArray(tags)) return {};
-  return tags;
-}
-
-function getProjectType(item) {
-  const tags = normalizeTags(item?.tags);
-  return String(tags.projectType || "Photography");
-}
-
-function groupPortfolioByType(items) {
-  const grouped = {};
-  for (const type of PROJECT_TYPES) grouped[type] = [];
-  for (const item of items || []) {
-    const type = getProjectType(item);
-    if (!grouped[type]) grouped[type] = [];
-    grouped[type].push(item);
-  }
-  return grouped;
 }

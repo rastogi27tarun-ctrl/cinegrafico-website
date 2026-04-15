@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { PORTFOLIO_PROJECT_TYPES as PROJECT_TYPES, getPortfolioProjectType } from "../../lib/portfolio";
 
 const TABS = ["Hero", "Highlight", "Services", "Portfolio", "Clients", "About", "Team", "Contact"];
-const PROJECT_TYPES = ["Photography", "Films", "Animation", "Motion Graphics", "Documentary", "Music Video", "Editing", "Podcast", "AI Video"];
 
 export default function AdminClient() {
   const [tab, setTab] = useState("Hero");
@@ -786,11 +786,6 @@ function withPortfolioRelatedPhotos(item, photos) {
       relatedPhotos: photos.map((v) => String(v ?? ""))
     }
   };
-}
-
-function getPortfolioProjectType(item) {
-  const tags = normalizeTags(item?.tags);
-  return String(tags.projectType || PROJECT_TYPES[0]);
 }
 
 function withPortfolioProjectType(item, type) {
