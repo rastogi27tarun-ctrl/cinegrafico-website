@@ -36,27 +36,15 @@ function resolveServiceSkin(title) {
   return "";
 }
 
-function resolveTeamImage(member) {
-  const slug = String(member?.slug || "").toLowerCase();
-  const name = String(member?.name || "").toLowerCase();
-  if (slug === "creative-director") return "/assets/team-creative-director.png";
-  if (slug === "head-of-production") return "/assets/team-architect.png";
-  if (slug === "photographer") return "/assets/team-eye.png";
-  if (slug === "manager") return "/assets/team-operator.png";
-  if (name.includes("creative lead") && (name.includes("graphic") || name.includes("design"))) return "/assets/team-creative-lead-graphics.png";
-  return "";
-}
-
 export default async function Home() {
-  const { hero, about, contact, services, portfolio, clients, teamMembers } = await getPublicCmsData();
+  const { hero, about, contact, services, portfolio, clients } = await getPublicCmsData();
   console.log("CMS DATA →", {
     hero,
     about,
     contact,
     services,
     portfolio,
-    clients,
-    teamMembers
+    clients
   });
   const highlight = portfolio?.[0] || null;
 
@@ -150,32 +138,6 @@ export default async function Home() {
                 <h3>Trust</h3>
                 <p dangerouslySetInnerHTML={{ __html: renderStyledText(about?.trust) }} />
               </article>
-            </div>
-          </div>
-        </section>
-
-        <section id="team" className="section">
-          <div className="container">
-            <div className="section-start-chip">
-              <span className="section-start-label">Team</span>
-              <span className="section-start-dot-wrap"><span className="section-start-dot" /></span>
-            </div>
-            <h2 className="home-section-title">People behind the frame.</h2>
-            <div className="home-team-grid">
-              {(teamMembers || []).map((member) => (
-                <article key={member.id} className="panel team-card">
-                  {resolveTeamImage(member) ? (
-                    <img src={resolveTeamImage(member)} alt={member.name || "Team member"} className="team-photo" />
-                  ) : (
-                    <div className="team-photo" />
-                  )}
-                  <div className="home-team-copy">
-                    <h3>{member.name || "Team member"}</h3>
-                    <p className="home-team-subtitle">{member.subtitle || "Creative Specialist"}</p>
-                    <p>{member.description || "Profile description coming soon."}</p>
-                  </div>
-                </article>
-              ))}
             </div>
           </div>
         </section>

@@ -74,6 +74,7 @@ export default function PublicHeader() {
             );
           })}
           <a href="/about">About</a>
+          <a href="/team">Team</a>
         </nav>
       </div>
     </header>
