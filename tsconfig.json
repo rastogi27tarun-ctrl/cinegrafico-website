@@ -16,11 +16,13 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "paths": {
-      "@/": [
-        "./"
+      "@/*": [
+        "./*"
       ]
     },
+    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
