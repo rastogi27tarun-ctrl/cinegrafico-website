@@ -112,7 +112,7 @@ const SHARED_CONTENT = {
     ["portfolio-seed-4", "Motion Identity Reel", "A short reel featuring logo animations and motion system exploration.", ASSETS.portfolio.motionIdentity.video, ASSETS.portfolio.motionIdentity.poster, ["motion", "identity"]]
   ],
   teamMembers: [
-    ["creative-director", "Creative Director", "The Visionary", "Leads the visual language, story tone, and creative direction across campaigns."],
+    ["creative-director", "Creative Director", "The Creator", "Leads the visual language, story tone, and creative direction across campaigns."],
     ["head-of-production", "Head of Production", "The Architect", "Builds the execution blueprint from planning to delivery, ensuring quality at every stage."],
     ["cinematographer", "Cinematographer", "The Lens", "Designs camera movement and lighting to shape mood, emotion, and visual impact."],
     ["editor", "Editor", "The Rhythm", "Crafts pacing and emotional flow through structure, timing, and seamless transitions."],
