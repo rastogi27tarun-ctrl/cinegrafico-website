@@ -1,6 +1,5 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { v2 as cloudinary } from "cloudinary";
 import { db } from "../../../lib/db";
 import { requireEditor } from "../../../lib/api-auth";
 
@@ -24,31 +23,30 @@ export async function POST(req) {
   const safeName = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
   const canUseCloudinary =
     Boolean(process.env.CLOUDINARY_CLOUD_NAME) &&
-    Boolean(process.env.CLOUDINARY_API_KEY) &&
-    Boolean(process.env.CLOUDINARY_API_SECRET);
+    Boolean(process.env.CLOUDINARY_UPLOAD_PRESET);
 
   if (canUseCloudinary) {
-    cloudinary.config({
-      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-      api_key: process.env.CLOUDINARY_API_KEY,
-      api_secret: process.env.CLOUDINARY_API_SECRET,
-      secure: true
-    });
-
-    const folder = process.env.CLOUDINARY_UPLOAD_FOLDER || "cinegrafico";
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET;
     const resourceType = String(file.type || "").startsWith("video/") ? "video" : "image";
 
-    const uploadedUrl = await new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        { folder, public_id: safeName.replace(/\.[^/.]+$/, ""), resource_type: resourceType, overwrite: false },
-        (error, result) => {
-          if (error || !result?.secure_url) return reject(error || new Error("Cloud upload failed"));
-          resolve(result.secure_url);
-        }
-      );
-      stream.end(buffer);
-    });
-    url = String(uploadedUrl);
+    const cloudinaryFormData = new FormData();
+    cloudinaryFormData.append("file", file);
+    cloudinaryFormData.append("upload_preset", uploadPreset);
+
+    const cloudinaryRes = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`,
+      {
+        method: "POST",
+        body: cloudinaryFormData
+      }
+    );
+    const cloudinaryData = await cloudinaryRes.json();
+    if (!cloudinaryRes.ok || !cloudinaryData?.secure_url) {
+      return Response.json({ error: cloudinaryData?.error?.message || "Cloud upload failed" }, { status: 500 });
+    }
+
+    url = String(cloudinaryData.secure_url);
   } else {
     const uploadsDir = path.join(process.cwd(), "public", "uploads");
     await mkdir(uploadsDir, { recursive: true });

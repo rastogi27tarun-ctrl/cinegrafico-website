@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 export default function ClientsCarousel({ clients }) {
   const trackRef = useRef(null);
   const [centerIndex, setCenterIndex] = useState(0);
+  const [failedLogoIds, setFailedLogoIds] = useState({});
 
   const slides = useMemo(() => {
     const base = Array.isArray(clients) ? clients : [];
@@ -49,12 +50,13 @@ export default function ClientsCarousel({ clients }) {
       const first = allCards[0];
       const gap = parseFloat(getComputedStyle(track).gap || "0") || 0;
       const stepSize = first.getBoundingClientRect().width + gap;
-      const maxBeforeLoop = Math.max(0, track.scrollWidth - track.clientWidth - stepSize);
+      const maxScrollLeft = Math.max(0, track.scrollWidth - track.clientWidth);
+      const nextScrollLeft = track.scrollLeft + stepSize;
 
-      if (track.scrollLeft >= maxBeforeLoop) {
+      if (nextScrollLeft >= maxScrollLeft - 2) {
         track.scrollTo({ left: 0, behavior: "smooth" });
       } else {
-        track.scrollTo({ left: track.scrollLeft + stepSize, behavior: "smooth" });
+        track.scrollTo({ left: nextScrollLeft, behavior: "smooth" });
       }
     };
 
@@ -107,10 +109,19 @@ export default function ClientsCarousel({ clients }) {
           {slides.map((c, i) => {
             const highlighted = i === centerIndex;
             const name = c?.name || "Brand";
+            const logoKey = `${c?.id || "client"}-${i}`;
+            const showLogo = Boolean(c?.logoUrl) && !failedLogoIds[logoKey];
             return (
               <article key={`${c.id}-${i}`} className={`client-slide ${highlighted ? "is-center" : ""}`}>
-                {c?.logoUrl ? (
-                  <img src={c.logoUrl} alt={`${name} logo`} className="client-slide-logo" />
+                {showLogo ? (
+                  <img
+                    src={c.logoUrl}
+                    alt={`${name} logo`}
+                    className="client-slide-logo"
+                    onError={() => {
+                      setFailedLogoIds((prev) => ({ ...prev, [logoKey]: true }));
+                    }}
+                  />
                 ) : (
                   <div className="client-slide-fallback">{name.slice(0, 2).toUpperCase()}</div>
                 )}

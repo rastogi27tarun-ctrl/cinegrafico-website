@@ -34,7 +34,7 @@ export default function PortfolioCarousel({ items }) {
       const nextLeft = track.scrollLeft + step;
       const maxLeft = track.scrollWidth - track.clientWidth;
 
-      if (nextLeft >= maxLeft - 4) {
+      if (nextLeft >= maxLeft - 2) {
         track.scrollTo({ left: 0, behavior: "smooth" });
       } else {
         track.scrollTo({ left: nextLeft, behavior: "smooth" });
@@ -109,8 +109,8 @@ export default function PortfolioCarousel({ items }) {
                   preload="auto"
                   className="portfolio-preview-video"
                 />
-              ) : item.posterUrl ? (
-                <img src={item.posterUrl} alt={item.title || "Portfolio item"} className="portfolio-preview-image" />
+              ) : resolvePortfolioPoster(item) ? (
+                <img src={resolvePortfolioPoster(item)} alt={item.title || "Portfolio item"} className="portfolio-preview-image" />
               ) : (
                 <div className="portfolio-preview-empty" />
               )}
@@ -129,4 +129,12 @@ export default function PortfolioCarousel({ items }) {
       </div>
     </div>
   );
+}
+
+function resolvePortfolioPoster(item) {
+  if (item?.posterUrl) return item.posterUrl;
+  const tags = item?.tags && typeof item.tags === "object" && !Array.isArray(item.tags) ? item.tags : {};
+  const related = Array.isArray(tags.relatedPhotos) ? tags.relatedPhotos : [];
+  const firstValid = related.find((url) => String(url || "").trim().length > 0);
+  return firstValid ? String(firstValid) : "";
 }

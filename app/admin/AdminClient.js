@@ -45,8 +45,30 @@ export default function AdminClient() {
     const fd = new FormData();
     fd.append("file", file);
     const res = await fetch("/api/upload", { method: "POST", body: fd });
-    if (!res.ok) throw new Error("Upload failed");
-    return (await res.json()).url;
+    const payload = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(payload?.error || "Upload failed");
+    return payload.url;
+  };
+
+  const safeUploadFile = async (file, label) => {
+    try {
+      return await uploadFile(file);
+    } catch (error) {
+      setStatus(`${label} upload failed: ${error?.message || "Unknown error"}`);
+      return "";
+    }
+  };
+
+  const requestJson = async (url, options, successMessage = "", reloadAfter = false) => {
+    const res = await fetch(url, options);
+    const payload = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      setStatus(payload?.error || "Request failed");
+      return { ok: false, payload };
+    }
+    if (reloadAfter) await loadAll();
+    if (successMessage) setStatus(successMessage);
+    return { ok: true, payload };
   };
 
   const sectionForm = useMemo(() => {
@@ -54,8 +76,11 @@ export default function AdminClient() {
       return (
         <form onSubmit={async (e) => {
           e.preventDefault();
-          await fetch("/api/cms/hero", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(hero) });
-          setStatus("Hero saved");
+          await requestJson(
+            "/api/cms/hero",
+            { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(hero) },
+            "Hero saved"
+          );
         }}>
           <Field label="Heading" value={hero.heading || ""} onChange={(v) => setHero({ ...hero, heading: v })} />
           <Field label="Subheading" value={hero.subheading || ""} onChange={(v) => setHero({ ...hero, subheading: v })} textarea />
@@ -69,7 +94,8 @@ export default function AdminClient() {
               onChange={async (e) => {
                 const file = e.target.files?.[0];
                 if (!file) return;
-                const videoUrl = await uploadFile(file);
+                const videoUrl = await safeUploadFile(file, "Hero video");
+                if (!videoUrl) return;
                 setHero({ ...hero, videoUrl });
                 setStatus("Hero video uploaded. Click Save Hero to publish.");
               }}
@@ -84,8 +110,11 @@ export default function AdminClient() {
       return (
         <form onSubmit={async (e) => {
           e.preventDefault();
-          await fetch("/api/cms/about", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(about) });
-          setStatus("About saved");
+          await requestJson(
+            "/api/cms/about",
+            { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(about) },
+            "About saved"
+          );
         }}>
           <StylizedTextarea label="Vision" value={about.vision || ""} onChange={(v) => setAbout({ ...about, vision: v })} />
           <StylizedTextarea label="Style" value={about.style || ""} onChange={(v) => setAbout({ ...about, style: v })} />
@@ -103,7 +132,7 @@ export default function AdminClient() {
         <form onSubmit={async (e) => {
           e.preventDefault();
           if (!highlighted.id) {
-            await fetch("/api/cms/portfolio", {
+            const created = await requestJson("/api/cms/portfolio", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -115,16 +144,18 @@ export default function AdminClient() {
                 position: 0
               })
             });
+            if (!created.ok) return;
             await loadAll();
             setStatus("Highlight project created");
             return;
           }
 
-          await fetch(`/api/cms/portfolio/${highlighted.id}`, {
+          const saved = await requestJson(`/api/cms/portfolio/${highlighted.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(highlighted)
           });
+          if (!saved.ok) return;
           await loadAll();
           setStatus("Highlight project saved");
         }}>
@@ -170,7 +201,8 @@ export default function AdminClient() {
               onChange={async (e) => {
                 const file = e.target.files?.[0];
                 if (!file) return;
-                const videoUrl = await uploadFile(file);
+                const videoUrl = await safeUploadFile(file, "Highlight video");
+                if (!videoUrl) return;
                 if (!portfolio.length) {
                   setPortfolio([{ id: "", title: "", description: "", videoUrl, posterUrl: "", tags: {} }]);
                 } else {
@@ -199,7 +231,8 @@ export default function AdminClient() {
               onChange={async (e) => {
                 const file = e.target.files?.[0];
                 if (!file) return;
-                const posterUrl = await uploadFile(file);
+                const posterUrl = await safeUploadFile(file, "Highlight poster");
+                if (!posterUrl) return;
                 if (!portfolio.length) {
                   setPortfolio([{ id: "", title: "", description: "", videoUrl: "", posterUrl, tags: {} }]);
                 } else {
@@ -259,8 +292,11 @@ export default function AdminClient() {
       return (
         <form onSubmit={async (e) => {
           e.preventDefault();
-          await fetch("/api/cms/contact", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(contact) });
-          setStatus("Contact saved");
+          await requestJson(
+            "/api/cms/contact",
+            { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(contact) },
+            "Contact saved"
+          );
         }}>
           <Field label="Email" value={contact.email || ""} onChange={(v) => setContact({ ...contact, email: v })} />
           <Field label="Phone" value={contact.phone || ""} onChange={(v) => setContact({ ...contact, phone: v })} />
@@ -281,20 +317,21 @@ export default function AdminClient() {
               <Field label="Description" value={item.description || ""} onChange={(v) => setTeam(team.map((m) => m.id === item.id ? { ...m, description: v } : m))} textarea />
               <div style={{ display: "flex", gap: ".5rem" }}>
                 <button className="button" type="button" onClick={async () => {
-                  await fetch(`/api/cms/team/${item.id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(item) });
-                  setStatus(`Team member ${i + 1} saved`);
+                  await requestJson(
+                    `/api/cms/team/${item.id}`,
+                    { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(item) },
+                    `Team member ${i + 1} saved`
+                  );
                 }}>Save</button>
                 <button className="button" type="button" onClick={async () => {
-                  await fetch(`/api/cms/team/${item.id}`, { method: "DELETE" });
-                  await loadAll();
-                  setStatus(`Team member ${i + 1} removed`);
+                  await requestJson(`/api/cms/team/${item.id}`, { method: "DELETE" }, `Team member ${i + 1} removed`, true);
                 }}>Delete</button>
               </div>
             </div>
           ))}
           <button className="button" type="button" onClick={async () => {
             const nextIndex = team.length + 1;
-            await fetch("/api/cms/team", {
+            await requestJson("/api/cms/team", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -304,9 +341,7 @@ export default function AdminClient() {
                 description: "",
                 position: team.length
               })
-            });
-            await loadAll();
-            setStatus("Added new team member tab");
+            }, "Added new team member tab", true);
           }}>Add Team Member</button>
         </div>
       );
@@ -322,19 +357,25 @@ export default function AdminClient() {
               <Field label="Description" value={item.description} onChange={(v) => setServices(services.map((s) => s.id === item.id ? { ...s, description: v } : s))} textarea />
               <div style={{ display: "flex", gap: ".5rem" }}>
                 <button className="button" onClick={async () => {
-                  await fetch(`/api/cms/services/${item.id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(item) });
-                  setStatus(`Service ${i + 1} saved`);
+                  await requestJson(
+                    `/api/cms/services/${item.id}`,
+                    { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(item) },
+                    `Service ${i + 1} saved`
+                  );
                 }}>Save</button>
                 <button className="button" type="button" onClick={async () => {
-                  await fetch(`/api/cms/services/${item.id}`, { method: "DELETE" });
-                  await loadAll();
+                  await requestJson(`/api/cms/services/${item.id}`, { method: "DELETE" }, `Service ${i + 1} removed`, true);
                 }}>Delete</button>
               </div>
             </div>
           ))}
           <button className="button" onClick={async () => {
-            await fetch("/api/cms/services", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: "New Service", description: "Describe service", position: services.length }) });
-            await loadAll();
+            await requestJson(
+              "/api/cms/services",
+              { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: "New Service", description: "Describe service", position: services.length }) },
+              "Service added",
+              true
+            );
           }}>Add Service</button>
         </div>
       );
@@ -362,7 +403,7 @@ export default function AdminClient() {
                 setStatus("Please enter a project title.");
                 return;
               }
-              await fetch("/api/cms/portfolio", {
+              const res = await fetch("/api/cms/portfolio", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -372,6 +413,11 @@ export default function AdminClient() {
                   position: portfolio.length
                 })
               });
+              if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                setStatus(err.error || "Failed to add new portfolio project.");
+                return;
+              }
               setNewPortfolioTitle("");
               setNewPortfolioDescription("");
               await loadAll();
@@ -421,7 +467,8 @@ export default function AdminClient() {
                         onChange={async (e) => {
                           const file = e.target.files?.[0];
                           if (!file) return;
-                          const uploadedUrl = await uploadFile(file);
+                          const uploadedUrl = await safeUploadFile(file, `Related photo ${idx + 1}`);
+                          if (!uploadedUrl) return;
                           const nextPhotos = [...getPortfolioRelatedPhotos(item)];
                           nextPhotos[idx] = uploadedUrl;
                           const nextItem = withPortfolioRelatedPhotos(item, nextPhotos);
@@ -462,7 +509,8 @@ export default function AdminClient() {
                 <input type="file" accept="video/*" onChange={async (e) => {
                   const file = e.target.files?.[0];
                   if (!file) return;
-                  const videoUrl = await uploadFile(file);
+                  const videoUrl = await safeUploadFile(file, `${item.title} video`);
+                  if (!videoUrl) return;
                   setPortfolio(portfolio.map((p) => p.id === item.id ? { ...p, videoUrl } : p));
                   setStatus(`Uploaded video for ${item.title}. Click Save to publish.`);
                 }} />
@@ -472,26 +520,39 @@ export default function AdminClient() {
                 <input type="file" accept="image/*" onChange={async (e) => {
                   const file = e.target.files?.[0];
                   if (!file) return;
-                  const posterUrl = await uploadFile(file);
+                  const posterUrl = await safeUploadFile(file, `${item.title} poster`);
+                  if (!posterUrl) return;
                   setPortfolio(portfolio.map((p) => p.id === item.id ? { ...p, posterUrl } : p));
                   setStatus(`Uploaded poster for ${item.title}. Click Save to publish.`);
                 }} />
               </div>
               <div style={{ display: "flex", gap: ".5rem" }}>
                 <button className="button" onClick={async () => {
-                  await fetch(`/api/cms/portfolio/${item.id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(item) });
-                  setStatus(`Portfolio ${i + 1} saved`);
+                  await requestJson(
+                    `/api/cms/portfolio/${item.id}`,
+                    { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(item) },
+                    `Portfolio ${i + 1} saved`
+                  );
                 }}>Save</button>
                 <button className="button" type="button" onClick={async () => {
-                  await fetch(`/api/cms/portfolio/${item.id}`, { method: "DELETE" });
-                  await loadAll();
+                  await requestJson(`/api/cms/portfolio/${item.id}`, { method: "DELETE" }, `Portfolio ${i + 1} removed`, true);
                 }}>Delete</button>
               </div>
             </div>
           ))}
           <button className="button" type="button" onClick={async () => {
-            await fetch("/api/cms/portfolio", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: "New Project", description: "Project description", position: portfolio.length }) });
+            const res = await fetch("/api/cms/portfolio", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ title: "New Project", description: "Project description", position: portfolio.length })
+            });
+            if (!res.ok) {
+              const err = await res.json().catch(() => ({}));
+              setStatus(err.error || "Failed to add portfolio item.");
+              return;
+            }
             await loadAll();
+            setStatus("Portfolio item added.");
           }}>Add Portfolio Item</button>
         </div>
       );
@@ -502,37 +563,48 @@ export default function AdminClient() {
         {clients.map((item, i) => (
           <div key={item.id} className="panel" style={{ padding: ".75rem" }}>
             <Field label={`Client ${i + 1} Name`} value={item.name} onChange={(v) => setClients(clients.map((c) => c.id === item.id ? { ...c, name: v } : c))} />
+            <Field
+              label="Logo URL"
+              value={item.logoUrl || ""}
+              onChange={(v) => setClients(clients.map((c) => c.id === item.id ? { ...c, logoUrl: v } : c))}
+            />
             <div style={{ marginBottom: ".5rem" }}>
               <label>Replace Logo</label>
               <input type="file" accept="image/*" onChange={async (e) => {
                 const file = e.target.files?.[0];
                 if (!file) return;
-                const logoUrl = await uploadFile(file);
+                const logoUrl = await safeUploadFile(file, `${item.name} logo`);
+                if (!logoUrl) return;
                 const next = { ...item, logoUrl };
                 setClients(clients.map((c) => c.id === item.id ? next : c));
-                await fetch(`/api/cms/clients/${item.id}`, {
+                await requestJson(`/api/cms/clients/${item.id}`, {
                   method: "PUT",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify(next)
-                });
-                setStatus(`Uploaded and saved logo for ${item.name}`);
+                }, `Uploaded and saved logo for ${item.name}`);
               }} />
             </div>
             <div style={{ display: "flex", gap: ".5rem" }}>
               <button className="button" onClick={async () => {
-                await fetch(`/api/cms/clients/${item.id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(item) });
-                setStatus(`Client ${i + 1} saved`);
+                await requestJson(
+                  `/api/cms/clients/${item.id}`,
+                  { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(item) },
+                  `Client ${i + 1} saved`
+                );
               }}>Save</button>
               <button className="button" type="button" onClick={async () => {
-                await fetch(`/api/cms/clients/${item.id}`, { method: "DELETE" });
-                await loadAll();
+                await requestJson(`/api/cms/clients/${item.id}`, { method: "DELETE" }, `Client ${i + 1} removed`, true);
               }}>Delete</button>
             </div>
           </div>
         ))}
         <button className="button" onClick={async () => {
-          await fetch("/api/cms/clients", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: "New Client", position: clients.length }) });
-          await loadAll();
+          await requestJson(
+            "/api/cms/clients",
+            { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: "New Client", position: clients.length }) },
+            "Client added",
+            true
+          );
         }}>Add Client</button>
       </div>
     );
