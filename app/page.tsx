@@ -91,12 +91,13 @@ export default async function Home() {
             </div>
             <h2 className="home-section-title">Production and post, built for story and scale.</h2>
             <div className="home-services-grid">
-              {(services || []).map((service) => (
+              {(services || []).map((service, index) => (
                 <article
                   key={service.id}
                   className={`panel service-card ${resolveServiceSkin(service.title)}`}
                   style={{ padding: "1rem" }}
                 >
+                  <span className="service-card-index">{String(index + 1).padStart(2, "0")}</span>
                   <h3>{service.title || "Service"}</h3>
                   <p>{service.description || "Service details coming soon."}</p>
                 </article>
