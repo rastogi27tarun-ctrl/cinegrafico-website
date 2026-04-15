@@ -30,7 +30,7 @@ export default function Home() {
       {highlight && <HighlightShowcase item={highlight} />}
 
       {/* CLIENTS */}
-      <ClientsCarousel items={clients} />
+      <ClientsCarousel clients={clients} />
 
       {/* PORTFOLIO */}
       <PortfolioCarousel items={portfolio} />
