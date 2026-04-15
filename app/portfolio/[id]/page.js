@@ -1,7 +1,7 @@
-import PublicHeader from "@/components/PublicHeader";
-import { db } from "@/lib/db";
-import { isYouTubeUrl, toYouTubeEmbedUrl } from "@/lib/media";
-import RelatedPhotosGallery from "@/components/RelatedPhotosGallery";
+import PublicHeader from "../../../components/PublicHeader";
+import { db } from "../../../lib/db";
+import { isYouTubeUrl, toYouTubeEmbedUrl } from "../../../lib/media";
+import RelatedPhotosGallery from "../../../components/RelatedPhotosGallery";
 
 function getRelatedPhotos(item) {
   const tags = item?.tags;

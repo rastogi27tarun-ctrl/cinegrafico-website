@@ -1,8 +1,8 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { v2 as cloudinary } from "cloudinary";
-import { db } from "@/lib/db";
-import { requireEditor } from "@/lib/api-auth";
+import { db } from "../../../lib/db";
+import { requireEditor } from "../../../lib/api-auth";
 
 export async function POST(req) {
   const guard = await requireEditor();

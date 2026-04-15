@@ -1,5 +1,5 @@
-import { db } from "@/lib/db";
-import { requireAdmin } from "@/lib/api-auth";
+import { db } from "../../../../lib/db";
+import { requireAdmin } from "../../../../lib/api-auth";
 
 export async function GET() {
   const guard = await requireAdmin();

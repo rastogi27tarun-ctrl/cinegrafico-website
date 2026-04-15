@@ -1,5 +1,5 @@
-import PublicHeader from "@/components/PublicHeader";
-import { getPublicCmsData } from "@/lib/cms";
+import PublicHeader from "../../components/PublicHeader";
+import { getPublicCmsData } from "../../lib/cms";
 
 function escapeHtml(value) {
   return String(value || "")

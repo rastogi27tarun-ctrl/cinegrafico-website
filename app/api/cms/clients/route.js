@@ -1,5 +1,5 @@
-import { db } from "@/lib/db";
-import { requireEditor } from "@/lib/api-auth";
+import { db } from "../../../../lib/db";
+import { requireEditor } from "../../../../lib/api-auth";
 
 export async function GET() {
   const data = await db.client.findMany({ orderBy: { position: "asc" } });

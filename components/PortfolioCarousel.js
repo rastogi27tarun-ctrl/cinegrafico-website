@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { isYouTubeUrl, toYouTubeEmbedUrl } from "@/lib/media";
+import { isYouTubeUrl, toYouTubeEmbedUrl } from "../lib/media";
 import Link from "next/link";
 
 export default function PortfolioCarousel({ items }) {

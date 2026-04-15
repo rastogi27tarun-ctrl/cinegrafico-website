@@ -1,5 +1,5 @@
-import { db } from "@/lib/db";
-import { requireEditor } from "@/lib/api-auth";
+import { db } from "../../../../../lib/db";
+import { requireEditor } from "../../../../../lib/api-auth";
 
 export async function PUT(req, { params }) {
   const guard = await requireEditor();

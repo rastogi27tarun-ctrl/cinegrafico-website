@@ -1,6 +1,6 @@
-import PublicHeader from "@/components/PublicHeader";
-import { getPublicCmsData } from "@/lib/cms";
-import { isYouTubeUrl, toYouTubeEmbedUrl } from "@/lib/media";
+import PublicHeader from "../../components/PublicHeader";
+import { getPublicCmsData } from "../../lib/cms";
+import { isYouTubeUrl, toYouTubeEmbedUrl } from "../../lib/media";
 import Link from "next/link";
 
 const PROJECT_TYPES = ["Photography", "Films", "Animation", "Motion Graphics", "Documentary", "Music Video", "Editing", "Podcast", "AI Video"];

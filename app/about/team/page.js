@@ -1,5 +1,5 @@
-import PublicHeader from "@/components/PublicHeader";
-import { getPublicCmsData } from "@/lib/cms";
+import PublicHeader from "../../../components/PublicHeader";
+import { getContent } from "../../../lib/cms";
 
 const TEAM_CONTENT = {
   "creative-director": {
@@ -26,7 +26,7 @@ const TEAM_CONTENT = {
 
 export default async function TeamMemberPage({ searchParams }) {
   const params = await searchParams;
-  const { teamMembers } = await getPublicCmsData();
+  const { teamMembers } = await getContent();
   const dbMember = (teamMembers || []).find((m) => m.slug === params?.member);
   const fallback = TEAM_CONTENT[params?.member] || {
     name: "Team Member",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { isYouTubeUrl, toYouTubeEmbedUrl } from "@/lib/media";
+import { isYouTubeUrl, toYouTubeEmbedUrl } from "../lib/media";
 
 export default function HighlightShowcase({ item }) {
   const [mediaOrientation, setMediaOrientation] = useState("horizontal");

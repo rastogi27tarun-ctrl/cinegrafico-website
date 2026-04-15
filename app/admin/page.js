@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { auth, signOut } from "@/lib/auth";
+import { auth, signOut } from "../../lib/auth";
 import AdminClient from "./AdminClient";
 
 async function logoutAction() {

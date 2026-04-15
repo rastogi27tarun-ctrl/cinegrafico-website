@@ -1,5 +1,5 @@
-import { db } from "@/lib/db";
-import { requireEditor } from "@/lib/api-auth";
+import { db } from "../../../../lib/db";
+import { requireEditor } from "../../../../lib/api-auth";
 
 export async function GET() {
   const data = await db.contactContent.findUnique({ where: { id: "singleton" } });
