@@ -1,8 +1,12 @@
 import LoginForm from "./LoginForm";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function LoginPage({ searchParams }) {
   const params = await searchParams;
-  const callbackUrl = params?.callbackUrl || "/admin";
+  const rawCallbackUrl = params?.callbackUrl || "/admin";
+  const callbackUrl = String(rawCallbackUrl).startsWith("/") ? String(rawCallbackUrl) : "/admin";
   return (
     <main className="section">
       <div className="container">

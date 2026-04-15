@@ -2,8 +2,14 @@
   "name": "cinegrafico-cms",
   "version": "1.0.0",
   "private": true,
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "scripts": {
-    "build": "prisma generate && next build"
+    "build": "prisma generate && next build",
+    "seed": "node prisma/seed.js",
+    "seed:dev": "NODE_ENV=development node prisma/seed.js",
+    "seed:prod": "NODE_ENV=production node prisma/seed.js"
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",

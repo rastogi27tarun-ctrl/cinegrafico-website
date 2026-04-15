@@ -2,6 +2,9 @@ import { redirect } from "next/navigation";
 import { auth, signOut } from "../../lib/auth";
 import AdminClient from "./AdminClient";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 async function logoutAction() {
   "use server";
   await signOut({ redirectTo: "/login" });

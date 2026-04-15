@@ -1,24 +1,25 @@
 "use server";
 
+import { AuthError } from "next-auth";
 import { signIn } from "../../lib/auth";
 
 export async function loginAction(_prevState, formData) {
   const email = String(formData.get("email") || "");
   const password = String(formData.get("password") || "");
   const callbackUrl = String(formData.get("callbackUrl") || "/admin");
+  const redirectTo = callbackUrl.startsWith("/") ? callbackUrl : "/admin";
+
   try {
-    const result = await signIn("credentials", {
+    await signIn("credentials", {
       email,
       password,
-      redirect: false
+      redirectTo
     });
-
-    if (result?.error) {
+    return { ok: true, error: "" };
+  } catch (error) {
+    if (error instanceof AuthError) {
       return { ok: false, error: "Invalid credentials" };
     }
-
-    return { ok: true, redirectTo: callbackUrl };
-  } catch (_e) {
-    return { ok: false, error: "Invalid credentials" };
+    throw error;
   }
 }
