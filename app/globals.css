@@ -547,6 +547,22 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.08;
 }
 
+.home-about-intro {
+  margin: 0 0 1.75rem;
+  max-width: 72ch;
+}
+
+.home-about-intro p {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  line-height: 1.75;
+  font-size: 1.02rem;
+}
+
+.home-about-intro p:last-child {
+  margin-bottom: 0;
+}
+
 .home-services-grid,
 .home-team-grid,
 .home-about-grid {
@@ -628,31 +644,194 @@ a { color: inherit; text-decoration: none; }
 }
 
 .home-contact-panel {
-  padding: 1rem;
-  display: grid;
-  gap: 1rem;
+  padding: 1.35rem 1.45rem;
   background:
     radial-gradient(circle at 0% 0%, rgba(255, 215, 0, 0.14), transparent 38%),
     linear-gradient(165deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
 }
 
-.home-contact-copy {
+.home-contact-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.25rem 2.5rem;
+  align-items: start;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.home-contact-headline {
+  margin: 0;
+  font-weight: 700;
+  text-align: left;
+}
+
+.home-contact-lede {
   margin: 0;
   color: var(--muted);
-  line-height: 1.7;
-  max-width: 70ch;
+  line-height: 1.75;
+  font-size: 1.02rem;
+  text-align: right;
+  max-width: 48ch;
+  justify-self: end;
 }
 
-.home-contact-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
+.home-contact-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.5rem 2rem;
+  align-items: start;
 }
 
-.home-contact-meta {
+.home-contact-company-box {
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  border-radius: 14px;
+  padding: 1.15rem 1.2rem;
+  background: rgba(7, 8, 13, 0.5);
+}
+
+.home-contact-company-list {
   margin: 0;
-  color: rgba(255, 255, 255, 0.74);
+}
+
+.home-contact-company-item {
+  margin-bottom: 0.85rem;
+}
+
+.home-contact-company-item:last-of-type {
+  margin-bottom: 0;
+}
+
+.home-contact-company-item dt {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 215, 0, 0.85);
+  margin-bottom: 0.25rem;
+}
+
+.home-contact-company-item dd {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: rgba(244, 247, 251, 0.92);
+}
+
+.home-contact-company-item a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.home-contact-company-item a:hover {
+  color: #ffd700;
+}
+
+.home-contact-availability {
+  margin: 1.1rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: rgba(255, 215, 0, 0.92);
+}
+
+.home-contact-location {
+  margin: 0.75rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.home-contact-location-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 0.2rem;
+}
+
+.home-contact-inquiry-box {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.15rem 1.2rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.home-contact-inquiry-title {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.home-contact-inquiry-form {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.home-contact-field {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.home-contact-field-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.home-contact-inquiry-form input,
+.home-contact-inquiry-form textarea {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(7, 8, 13, 0.55);
+  color: var(--text);
+  padding: 0.55rem 0.7rem;
+  font: inherit;
   font-size: 0.95rem;
+}
+
+.home-contact-inquiry-form textarea {
+  resize: vertical;
+  min-height: 5.5rem;
+}
+
+.home-contact-inquiry-form input::placeholder,
+.home-contact-inquiry-form textarea::placeholder {
+  color: rgba(153, 163, 179, 0.65);
+}
+
+.home-contact-inquiry-submit {
+  justify-self: start;
+  margin-top: 0.15rem;
+}
+
+@media (max-width: 900px) {
+  .home-contact-top {
+    grid-template-columns: 1fr;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 1.25rem;
+  }
+
+  .home-contact-lede {
+    text-align: left;
+    justify-self: stretch;
+    max-width: none;
+  }
+
+  .home-contact-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 1024px) {

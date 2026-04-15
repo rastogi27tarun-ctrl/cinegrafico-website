@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 const SECTION_LINKS = [
   { id: "project-highlight", label: "Project in Highlight" },
   { id: "services", label: "Services" },
+  { id: "about", label: "About" },
   { id: "portfolio", label: "Portfolio" },
   { id: "clients", label: "Clients" },
   { id: "contact", label: "Contact" }
@@ -12,10 +13,12 @@ const SECTION_LINKS = [
 
 export default function PublicHeader() {
   const [activeId, setActiveId] = useState("");
+  const [pathname, setPathname] = useState("/");
 
   useEffect(() => {
     const fromHash = window.location.hash?.replace("#", "");
     if (fromHash) setActiveId(fromHash);
+    setPathname(window.location.pathname || "/");
 
     const getSections = () =>
       SECTION_LINKS.map((item) => document.getElementById(item.id)).filter(Boolean);
@@ -39,13 +42,19 @@ export default function PublicHeader() {
       }
       setActiveId(bestId);
     };
+    const updatePathname = () => setPathname(window.location.pathname || "/");
 
     updateActiveByScroll();
+    updatePathname();
     window.addEventListener("scroll", updateActiveByScroll, { passive: true });
     window.addEventListener("resize", updateActiveByScroll);
+    window.addEventListener("hashchange", updateActiveByScroll);
+    window.addEventListener("popstate", updatePathname);
     return () => {
       window.removeEventListener("scroll", updateActiveByScroll);
       window.removeEventListener("resize", updateActiveByScroll);
+      window.removeEventListener("hashchange", updateActiveByScroll);
+      window.removeEventListener("popstate", updatePathname);
     };
   }, []);
 
@@ -73,8 +82,12 @@ export default function PublicHeader() {
               </a>
             );
           })}
-          <a href="/about">About</a>
-          <a href="/team">Team</a>
+          <a href="/team" className={`main-tab-link ${pathname.startsWith("/team") ? "is-active" : ""}`}>
+            <span>Team</span>
+            <span className={`main-tab-dot-wrap ${pathname.startsWith("/team") ? "is-active" : ""}`}>
+              <span className={`main-tab-dot ${pathname.startsWith("/team") ? "is-active" : ""}`} />
+            </span>
+          </a>
         </nav>
       </div>
     </header>
