@@ -71,11 +71,40 @@ export default function HighlightShowcase({ item }) {
         )}
       </div>
 
-      <div className="panel" style={{ padding: "1rem", display: "grid", alignContent: "center" }}>
-        <h2 style={{ marginTop: 0, marginBottom: ".4rem", fontSize: titleSize, lineHeight: 1.1 }}>
+      <div
+        className="panel"
+        style={{
+          padding: "1rem",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          gap: "0.65rem"
+        }}
+      >
+        <h2
+          style={{
+            margin: 0,
+            fontSize: titleSize,
+            lineHeight: 1.1,
+            textAlign: "center",
+            width: "100%"
+          }}
+        >
           {item?.title || "Project in Highlight"}
         </h2>
-        <p style={{ color: "var(--muted)", margin: 0, lineHeight: 1.7, fontSize: copySize }}>
+        <p
+          style={{
+            color: "var(--muted)",
+            margin: 0,
+            lineHeight: 1.7,
+            fontSize: copySize,
+            width: "100%",
+            textAlign: "justify",
+            textAlignLast: "center",
+            hyphens: "auto",
+            WebkitHyphens: "auto"
+          }}
+        >
           {item?.description || "Showcase your strongest cinematic project here."}
         </p>
       </div>
