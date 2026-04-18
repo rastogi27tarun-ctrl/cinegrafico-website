@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { PORTFOLIO_PROJECT_TYPES as PROJECT_TYPES, getPortfolioProjectType } from "../../lib/portfolio";
+import {
+  PORTFOLIO_PROJECT_TYPES as PROJECT_TYPES,
+  getPortfolioProjectType,
+  getPortfolioSections
+} from "../../lib/portfolio";
 
 const TABS = ["Hero", "Highlight", "Services", "Portfolio", "Clients", "About", "Team", "Contact"];
 
@@ -382,6 +386,9 @@ export default function AdminClient() {
     }
 
     if (tab === "Portfolio") {
+      const portfolioSections = getPortfolioSections(portfolio);
+      const portfolioDisplayOrder = portfolioSections.flatMap((s) => s.items);
+      const displayIndexById = new Map(portfolioDisplayOrder.map((item, idx) => [item.id, idx + 1]));
       return (
         <div style={{ display: "grid", gap: ".75rem" }}>
           <div className="panel" style={{ padding: ".85rem" }}>
@@ -427,7 +434,20 @@ export default function AdminClient() {
             </button>
           </div>
 
-          {portfolio.map((item, i) => (
+          {portfolioSections.map(({ type, items }) => (
+            <div key={type} style={{ display: "grid", gap: ".75rem" }}>
+              <h3
+                style={{
+                  margin: 0,
+                  fontSize: ".95rem",
+                  fontWeight: 600,
+                  color: "rgba(255, 255, 255, 0.72)",
+                  letterSpacing: "0.04em"
+                }}
+              >
+                {type}
+              </h3>
+              {items.map((item) => (
             <div key={item.id} className="panel" style={{ padding: ".75rem" }}>
               <Field label="Project Title" value={item.title} onChange={(v) => setPortfolio(portfolio.map((p) => p.id === item.id ? { ...p, title: v } : p))} />
               <div style={{ marginBottom: ".65rem" }}>
@@ -531,13 +551,15 @@ export default function AdminClient() {
                   await requestJson(
                     `/api/cms/portfolio/${item.id}`,
                     { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(item) },
-                    `Portfolio ${i + 1} saved`
+                    `Portfolio ${displayIndexById.get(item.id) ?? ""} saved`
                   );
                 }}>Save</button>
                 <button className="button" type="button" onClick={async () => {
-                  await requestJson(`/api/cms/portfolio/${item.id}`, { method: "DELETE" }, `Portfolio ${i + 1} removed`, true);
+                  await requestJson(`/api/cms/portfolio/${item.id}`, { method: "DELETE" }, `Portfolio ${displayIndexById.get(item.id) ?? ""} removed`, true);
                 }}>Delete</button>
               </div>
+            </div>
+              ))}
             </div>
           ))}
           <button className="button" type="button" onClick={async () => {
