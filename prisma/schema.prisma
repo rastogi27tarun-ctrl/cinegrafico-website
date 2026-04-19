@@ -93,6 +93,7 @@ model TeamMember {
   name        String
   subtitle    String?
   description String
+  photoUrl    String?
   position    Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

@@ -16,6 +16,7 @@ export async function POST(req) {
       name: body.name ?? "New Team Member",
       subtitle: body.subtitle ?? "",
       description: body.description ?? "",
+      photoUrl: body.photoUrl ?? null,
       position: Number(body.position ?? 0)
     }
   });

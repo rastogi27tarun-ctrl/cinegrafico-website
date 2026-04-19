@@ -7,7 +7,42 @@ import {
   getPortfolioSections
 } from "../../lib/portfolio";
 
-const TABS = ["Hero", "Highlight", "Services", "Portfolio", "Clients", "About", "Team", "Contact"];
+const NAV_SECTIONS = [
+  {
+    label: "Home",
+    items: [
+      { id: "Hero", label: "Banner & video" },
+      { id: "Highlight", label: "Project highlight" }
+    ]
+  },
+  {
+    label: "Work",
+    items: [
+      { id: "Services", label: "Services" },
+      { id: "Portfolio", label: "Portfolio" },
+      { id: "Clients", label: "Clients" }
+    ]
+  },
+  {
+    label: "About",
+    items: [
+      { id: "About", label: "About" },
+      { id: "Team", label: "Team" }
+    ]
+  },
+  {
+    label: "Contact",
+    items: [{ id: "Contact", label: "Contact" }]
+  }
+];
+
+function getTabLabel(tabId) {
+  for (const g of NAV_SECTIONS) {
+    const item = g.items.find((i) => i.id === tabId);
+    if (item) return item.label;
+  }
+  return tabId;
+}
 
 export default function AdminClient() {
   const [tab, setTab] = useState("Hero");
@@ -319,12 +354,48 @@ export default function AdminClient() {
 
     if (tab === "Team") {
       return (
-        <div style={{ display: "grid", gap: ".75rem" }}>
+        <div className="admin-team" style={{ display: "grid", gap: ".75rem" }}>
           {team.map((item, i) => (
             <div key={item.id} className="panel" style={{ padding: ".75rem" }}>
               <Field label={`Member ${i + 1} Name`} value={item.name || ""} onChange={(v) => setTeam(team.map((m) => m.id === item.id ? { ...m, name: v } : m))} />
               <Field label="Tagline" value={item.subtitle || ""} onChange={(v) => setTeam(team.map((m) => m.id === item.id ? { ...m, subtitle: v } : m))} />
               <Field label="Description" value={item.description || ""} onChange={(v) => setTeam(team.map((m) => m.id === item.id ? { ...m, description: v } : m))} textarea />
+              <Field
+                label="Photo URL"
+                value={item.photoUrl || ""}
+                onChange={(v) => setTeam(team.map((m) => (m.id === item.id ? { ...m, photoUrl: v } : m)))}
+              />
+              <div className="admin-file-row">
+                <label>Upload photo</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const photoUrl = await safeUploadFile(file, `${item.name || "Team"} photo`);
+                    if (!photoUrl) return;
+                    setTeam(team.map((m) => (m.id === item.id ? { ...m, photoUrl } : m)));
+                    setStatus(`Photo uploaded for ${item.name || "member"}. Click Save to publish.`);
+                  }}
+                />
+              </div>
+              {item.photoUrl ? (
+                <div style={{ marginBottom: ".65rem" }}>
+                  <span style={{ fontSize: ".78rem", color: "var(--muted)" }}>Preview</span>
+                  <img
+                    src={item.photoUrl}
+                    alt=""
+                    style={{
+                      display: "block",
+                      marginTop: ".35rem",
+                      maxWidth: "min(200px, 100%)",
+                      borderRadius: "12px",
+                      border: "1px solid var(--line)"
+                    }}
+                  />
+                </div>
+              ) : null}
               <div style={{ display: "flex", gap: ".5rem" }}>
                 <button className="button" type="button" onClick={async () => {
                   await requestJson(
@@ -395,199 +466,240 @@ export default function AdminClient() {
       const portfolioSections = getPortfolioSections(portfolio);
       const portfolioDisplayOrder = portfolioSections.flatMap((s) => s.items);
       const displayIndexById = new Map(portfolioDisplayOrder.map((item, idx) => [item.id, idx + 1]));
-      return (
-        <div style={{ display: "grid", gap: ".75rem" }}>
-          <div className="panel" style={{ padding: ".85rem" }}>
-            <h3 style={{ marginTop: 0, marginBottom: ".45rem" }}>Add New Portfolio Title</h3>
-            <p style={{ marginTop: 0, color: "var(--muted)", fontSize: ".92rem" }}>
-              Adds a new project entry without replacing existing ones.
-            </p>
-            <Field label="New Project Title" value={newPortfolioTitle} onChange={setNewPortfolioTitle} />
-            <div style={{ marginBottom: ".65rem" }}>
-              <label>Project Type</label>
-              <select value={newPortfolioType} onChange={(e) => setNewPortfolioType(e.target.value)} style={{ width: "100%" }}>
-                {PROJECT_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
-              </select>
-            </div>
-            <Field label="Short description (new project)" value={newPortfolioDescription} onChange={setNewPortfolioDescription} textarea rows={3} />
-            <button className="button" type="button" onClick={async () => {
-              const title = (newPortfolioTitle || "").trim();
-              if (!title) {
-                setStatus("Please enter a project title.");
-                return;
-              }
-              const res = await fetch("/api/cms/portfolio", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  title,
-                  description: (newPortfolioDescription || "").trim() || "Project description",
-                  tags: { projectType: newPortfolioType },
-                  position: portfolio.length
-                })
-              });
-              if (!res.ok) {
-                const err = await res.json().catch(() => ({}));
-                setStatus(err.error || "Failed to add new portfolio project.");
-                return;
-              }
-              setNewPortfolioTitle("");
-              setNewPortfolioDescription("");
-              await loadAll();
-              setStatus("New portfolio project added.");
-            }}>
-              Add Title
-            </button>
-          </div>
 
-          {portfolioSections.map(({ type, items }) => (
-            <div key={type} style={{ display: "grid", gap: ".75rem" }}>
-              <h3
-                style={{
-                  margin: 0,
-                  fontSize: ".95rem",
-                  fontWeight: 600,
-                  color: "rgba(255, 255, 255, 0.72)",
-                  letterSpacing: "0.04em"
-                }}
-              >
-                {type}
-              </h3>
-              {items.map((item) => (
-            <div key={item.id} className="panel" style={{ padding: ".75rem" }}>
-              <Field label="Project Title" value={item.title} onChange={(v) => setPortfolio(portfolio.map((p) => p.id === item.id ? { ...p, title: v } : p))} />
-              <div style={{ marginBottom: ".65rem" }}>
-                <label>Project Type</label>
+      return (
+        <div className="admin-portfolio" style={{ display: "grid", gap: "1rem" }}>
+          <details className="admin-portfolio-add panel" open>
+            <summary className="admin-portfolio-summary admin-portfolio-summary--add">Add a project</summary>
+            <div style={{ padding: ".25rem .5rem 1rem", display: "grid", gap: ".65rem" }}>
+              <p style={{ margin: 0, color: "var(--muted)", fontSize: ".88rem", lineHeight: 1.45 }}>
+                Creates a new entry. Edit highlight copy under <strong>Home → Project highlight</strong> for the first item.
+              </p>
+              <Field label="Title" value={newPortfolioTitle} onChange={setNewPortfolioTitle} />
+              <div style={{ marginBottom: 0 }}>
+                <label>Type</label>
                 <select
-                  value={getPortfolioProjectType(item)}
-                  onChange={(e) => {
-                    const nextItem = withPortfolioProjectType(item, e.target.value);
-                    setPortfolio(portfolio.map((p) => p.id === item.id ? nextItem : p));
-                  }}
-                  style={{ width: "100%" }}
+                  className="admin-form-select"
+                  value={newPortfolioType}
+                  onChange={(e) => setNewPortfolioType(e.target.value)}
+                  aria-label="New project type"
                 >
-                  {PROJECT_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
+                  {PROJECT_TYPES.map((ptype) => <option key={ptype} value={ptype}>{ptype}</option>)}
                 </select>
               </div>
-              <Field
-                label="Short description (cards & carousel)"
-                value={item.description}
-                onChange={(v) => setPortfolio(portfolio.map((p) => p.id === item.id ? { ...p, description: v } : p))}
-                textarea
-                rows={3}
-              />
-              <Field label="Video URL" value={item.videoUrl || ""} onChange={(v) => setPortfolio(portfolio.map((p) => p.id === item.id ? { ...p, videoUrl: v } : p))} />
-              <Field label="Poster URL" value={item.posterUrl || ""} onChange={(v) => setPortfolio(portfolio.map((p) => p.id === item.id ? { ...p, posterUrl: v } : p))} />
-              <div className="panel" style={{ padding: ".65rem", marginBottom: ".6rem" }}>
-                <p style={{ marginTop: 0, marginBottom: ".45rem", color: "var(--muted)" }}>Related Photos (for project detail page)</p>
-                {getPortfolioRelatedPhotos(item).map((photoUrl, idx) => (
-                  <div key={`${item.id}-photo-${idx}`} style={{ marginBottom: ".45rem", display: "grid", gap: ".35rem" }}>
-                    <Field
-                      label={`Photo ${idx + 1} URL`}
-                      value={photoUrl}
-                      onChange={(v) => {
-                        const nextPhotos = [...getPortfolioRelatedPhotos(item)];
-                        nextPhotos[idx] = v;
-                        const nextItem = withPortfolioRelatedPhotos(item, nextPhotos);
-                        setPortfolio(portfolio.map((p) => p.id === item.id ? nextItem : p));
-                      }}
-                    />
-                    <div style={{ display: "flex", gap: ".45rem" }}>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={async (e) => {
-                          const file = e.target.files?.[0];
-                          if (!file) return;
-                          const uploadedUrl = await safeUploadFile(file, `Related photo ${idx + 1}`);
-                          if (!uploadedUrl) return;
-                          const nextPhotos = [...getPortfolioRelatedPhotos(item)];
-                          nextPhotos[idx] = uploadedUrl;
-                          const nextItem = withPortfolioRelatedPhotos(item, nextPhotos);
-                          setPortfolio(portfolio.map((p) => p.id === item.id ? nextItem : p));
-                          setStatus(`Uploaded related photo ${idx + 1} for ${item.title}. Click Save to publish.`);
-                        }}
-                      />
-                      <button
-                        className="button"
-                        type="button"
-                        onClick={() => {
-                          const nextPhotos = getPortfolioRelatedPhotos(item).filter((_, i2) => i2 !== idx);
-                          const nextItem = withPortfolioRelatedPhotos(item, nextPhotos);
-                          setPortfolio(portfolio.map((p) => p.id === item.id ? nextItem : p));
-                        }}
-                        style={{ padding: ".45rem .7rem" }}
-                      >
-                        Remove
-                      </button>
+              <Field label="Short description (cards & carousel)" value={newPortfolioDescription} onChange={setNewPortfolioDescription} textarea rows={3} />
+              <button
+                className="button"
+                type="button"
+                onClick={async () => {
+                  const title = (newPortfolioTitle || "").trim();
+                  if (!title) {
+                    setStatus("Please enter a project title.");
+                    return;
+                  }
+                  const res = await fetch("/api/cms/portfolio", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      title,
+                      description: (newPortfolioDescription || "").trim() || "Project description",
+                      tags: { projectType: newPortfolioType },
+                      position: portfolio.length
+                    })
+                  });
+                  if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    setStatus(err.error || "Failed to add new portfolio project.");
+                    return;
+                  }
+                  setNewPortfolioTitle("");
+                  setNewPortfolioDescription("");
+                  await loadAll();
+                  setStatus("Project added.");
+                }}
+              >
+                Add project
+              </button>
+            </div>
+          </details>
+
+          {portfolioSections.map(({ type, items }) => (
+            <details key={type} className="admin-portfolio-type panel" open>
+              <summary className="admin-portfolio-summary">
+                {type}
+                <span className="admin-portfolio-count">{items.length}</span>
+              </summary>
+              <div style={{ display: "grid", gap: ".65rem", padding: ".35rem .5rem 1rem" }}>
+                {items.map((item) => (
+                  <details key={item.id} className="admin-portfolio-item panel">
+                    <summary className="admin-portfolio-item-summary">
+                      <span className="admin-portfolio-item-title">{item.title?.trim() || "Untitled project"}</span>
+                      <span className="admin-portfolio-item-type">{getPortfolioProjectType(item)}</span>
+                    </summary>
+                    <div style={{ padding: ".5rem .5rem .85rem", display: "grid", gap: ".75rem" }}>
+                      <details className="admin-nested" open>
+                        <summary className="admin-nested-summary">Basic info</summary>
+                        <div style={{ paddingTop: ".5rem", display: "grid", gap: ".6rem" }}>
+                          <Field label="Title" value={item.title} onChange={(v) => setPortfolio(portfolio.map((p) => (p.id === item.id ? { ...p, title: v } : p)))} />
+                          <div style={{ marginBottom: 0 }}>
+                            <label>Type</label>
+                            <select
+                              className="admin-form-select"
+                              value={getPortfolioProjectType(item)}
+                              onChange={(e) => {
+                                const nextItem = withPortfolioProjectType(item, e.target.value);
+                                setPortfolio(portfolio.map((p) => (p.id === item.id ? nextItem : p)));
+                              }}
+                              aria-label={`Type for ${item.title || "project"}`}
+                            >
+                              {PROJECT_TYPES.map((ptype) => <option key={ptype} value={ptype}>{ptype}</option>)}
+                            </select>
+                          </div>
+                          <Field
+                            label="Short description (cards & carousel)"
+                            value={item.description}
+                            onChange={(v) => setPortfolio(portfolio.map((p) => (p.id === item.id ? { ...p, description: v } : p)))}
+                            textarea
+                            rows={3}
+                          />
+                        </div>
+                      </details>
+
+                      <details className="admin-nested">
+                        <summary className="admin-nested-summary">Video & poster</summary>
+                        <div style={{ paddingTop: ".5rem", display: "grid", gap: ".6rem" }}>
+                          <Field label="Video URL" value={item.videoUrl || ""} onChange={(v) => setPortfolio(portfolio.map((p) => (p.id === item.id ? { ...p, videoUrl: v } : p)))} />
+                          <Field label="Poster URL" value={item.posterUrl || ""} onChange={(v) => setPortfolio(portfolio.map((p) => (p.id === item.id ? { ...p, posterUrl: v } : p)))} />
+                          <div className="admin-file-row">
+                            <label>Upload video</label>
+                            <input
+                              type="file"
+                              accept="video/*"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                const videoUrl = await safeUploadFile(file, `${item.title} video`);
+                                if (!videoUrl) return;
+                                setPortfolio(portfolio.map((p) => (p.id === item.id ? { ...p, videoUrl } : p)));
+                                setStatus(`Video uploaded for ${item.title || "project"}. Save to publish.`);
+                              }}
+                            />
+                          </div>
+                          <div className="admin-file-row">
+                            <label>Upload poster</label>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                const posterUrl = await safeUploadFile(file, `${item.title} poster`);
+                                if (!posterUrl) return;
+                                setPortfolio(portfolio.map((p) => (p.id === item.id ? { ...p, posterUrl } : p)));
+                                setStatus(`Poster uploaded for ${item.title || "project"}. Save to publish.`);
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </details>
+
+                      <details className="admin-nested">
+                        <summary className="admin-nested-summary">Related photos (detail page)</summary>
+                        <div style={{ paddingTop: ".5rem", display: "grid", gap: ".55rem" }}>
+                          {getPortfolioRelatedPhotos(item).map((photoUrl, idx) => (
+                            <div key={`${item.id}-photo-${idx}`} className="admin-related-photo">
+                              <Field
+                                label={`Photo ${idx + 1} URL`}
+                                value={photoUrl}
+                                onChange={(v) => {
+                                  const nextPhotos = [...getPortfolioRelatedPhotos(item)];
+                                  nextPhotos[idx] = v;
+                                  const nextItem = withPortfolioRelatedPhotos(item, nextPhotos);
+                                  setPortfolio(portfolio.map((p) => (p.id === item.id ? nextItem : p)));
+                                }}
+                              />
+                              <div style={{ display: "flex", flexWrap: "wrap", gap: ".45rem", alignItems: "center" }}>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    if (!file) return;
+                                    const uploadedUrl = await safeUploadFile(file, `Related photo ${idx + 1}`);
+                                    if (!uploadedUrl) return;
+                                    const nextPhotos = [...getPortfolioRelatedPhotos(item)];
+                                    nextPhotos[idx] = uploadedUrl;
+                                    const nextItem = withPortfolioRelatedPhotos(item, nextPhotos);
+                                    setPortfolio(portfolio.map((p) => (p.id === item.id ? nextItem : p)));
+                                    setStatus(`Photo ${idx + 1} uploaded. Save to publish.`);
+                                  }}
+                                />
+                                <button
+                                  className="button"
+                                  type="button"
+                                  onClick={() => {
+                                    const nextPhotos = getPortfolioRelatedPhotos(item).filter((_, i2) => i2 !== idx);
+                                    const nextItem = withPortfolioRelatedPhotos(item, nextPhotos);
+                                    setPortfolio(portfolio.map((p) => (p.id === item.id ? nextItem : p)));
+                                  }}
+                                  style={{ padding: ".4rem .65rem" }}
+                                >
+                                  Remove slot
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                          <button
+                            className="button"
+                            type="button"
+                            onClick={() => {
+                              const nextPhotos = [...getPortfolioRelatedPhotos(item), ""];
+                              const nextItem = withPortfolioRelatedPhotos(item, nextPhotos);
+                              setPortfolio(portfolio.map((p) => (p.id === item.id ? nextItem : p)));
+                            }}
+                            style={{ padding: ".45rem .75rem", justifySelf: "start" }}
+                          >
+                            Add photo slot
+                          </button>
+                        </div>
+                      </details>
+
+                      <div className="admin-portfolio-actions">
+                        <button
+                          className="button"
+                          type="button"
+                          onClick={async () => {
+                            await requestJson(
+                              `/api/cms/portfolio/${item.id}`,
+                              { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(item) },
+                              `Project ${displayIndexById.get(item.id) ?? ""} saved`
+                            );
+                          }}
+                        >
+                          Save
+                        </button>
+                        <button
+                          className="button"
+                          type="button"
+                          onClick={async () => {
+                            await requestJson(
+                              `/api/cms/portfolio/${item.id}`,
+                              { method: "DELETE" },
+                              `Project ${displayIndexById.get(item.id) ?? ""} removed`,
+                              true
+                            );
+                          }}
+                          style={{ background: "rgba(255,80,80,0.25)", color: "#fff" }}
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  </details>
                 ))}
-                <button
-                  className="button"
-                  type="button"
-                  onClick={() => {
-                    const nextPhotos = [...getPortfolioRelatedPhotos(item), ""];
-                    const nextItem = withPortfolioRelatedPhotos(item, nextPhotos);
-                    setPortfolio(portfolio.map((p) => p.id === item.id ? nextItem : p));
-                  }}
-                  style={{ padding: ".45rem .7rem" }}
-                >
-                  Add Related Photo
-                </button>
               </div>
-              <div style={{ marginBottom: ".5rem" }}>
-                <label>Upload Video (local disk)</label>
-                <input type="file" accept="video/*" onChange={async (e) => {
-                  const file = e.target.files?.[0];
-                  if (!file) return;
-                  const videoUrl = await safeUploadFile(file, `${item.title} video`);
-                  if (!videoUrl) return;
-                  setPortfolio(portfolio.map((p) => p.id === item.id ? { ...p, videoUrl } : p));
-                  setStatus(`Uploaded video for ${item.title}. Click Save to publish.`);
-                }} />
-              </div>
-              <div style={{ marginBottom: ".5rem" }}>
-                <label>Upload Poster (local disk)</label>
-                <input type="file" accept="image/*" onChange={async (e) => {
-                  const file = e.target.files?.[0];
-                  if (!file) return;
-                  const posterUrl = await safeUploadFile(file, `${item.title} poster`);
-                  if (!posterUrl) return;
-                  setPortfolio(portfolio.map((p) => p.id === item.id ? { ...p, posterUrl } : p));
-                  setStatus(`Uploaded poster for ${item.title}. Click Save to publish.`);
-                }} />
-              </div>
-              <div style={{ display: "flex", gap: ".5rem" }}>
-                <button className="button" onClick={async () => {
-                  await requestJson(
-                    `/api/cms/portfolio/${item.id}`,
-                    { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(item) },
-                    `Portfolio ${displayIndexById.get(item.id) ?? ""} saved`
-                  );
-                }}>Save</button>
-                <button className="button" type="button" onClick={async () => {
-                  await requestJson(`/api/cms/portfolio/${item.id}`, { method: "DELETE" }, `Portfolio ${displayIndexById.get(item.id) ?? ""} removed`, true);
-                }}>Delete</button>
-              </div>
-            </div>
-              ))}
-            </div>
+            </details>
           ))}
-          <button className="button" type="button" onClick={async () => {
-            const res = await fetch("/api/cms/portfolio", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ title: "New Project", description: "Project description", position: portfolio.length })
-            });
-            if (!res.ok) {
-              const err = await res.json().catch(() => ({}));
-              setStatus(err.error || "Failed to add portfolio item.");
-              return;
-            }
-            await loadAll();
-            setStatus("Portfolio item added.");
-          }}>Add Portfolio Item</button>
         </div>
       );
     }
@@ -645,57 +757,62 @@ export default function AdminClient() {
   }, [tab, hero, about, contact, services, portfolio, clients, team, newPortfolioTitle, newPortfolioDescription, newPortfolioType]);
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: "1rem" }}>
-      <aside className="panel" style={{ padding: ".75rem", height: "fit-content" }}>
-        {TABS.map((t) => (
-          <button
-            key={t}
-            onClick={() => { setTab(t); setStatus(""); }}
-            style={{
-              width: "100%",
-              textAlign: "left",
-              marginBottom: ".5rem",
-              padding: ".62rem .68rem",
-              borderRadius: "12px",
-              border: "1px solid var(--line)",
-              color: "#fff",
-              background: tab === t ? "linear-gradient(135deg, rgba(255,215,0,.16), rgba(255,184,0,.08))" : "rgba(255,255,255,.015)"
+    <div style={{ display: "grid", gap: "1rem" }}>
+      <div
+        className="panel admin-dash-toolbar"
+        style={{
+          padding: ".85rem 1rem",
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          gap: "1rem"
+        }}
+      >
+        <label style={{ display: "grid", gap: ".35rem", flex: "1 1 220px", minWidth: "min(100%, 240px)" }}>
+          <span style={{ fontSize: ".72rem", color: "rgba(255,255,255,.55)", textTransform: "uppercase", letterSpacing: ".07em" }}>
+            Section
+          </span>
+          <select
+            className="admin-nav-select"
+            value={tab}
+            onChange={(e) => {
+              setTab(e.target.value);
+              setStatus("");
             }}
+            aria-label="Choose CMS section"
           >
-            <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: ".6rem" }}>
-              <span style={{ display: "grid", lineHeight: 1.15 }}>
-                <span style={{ fontSize: ".68rem", color: "rgba(255,255,255,.6)", textTransform: "uppercase", letterSpacing: ".06em" }}>
-                  Heading
-                </span>
-                <span style={{ fontSize: ".95rem", fontWeight: 600 }}>{t === "Hero" ? "" : t}</span>
-              </span>
-              <span
-                style={{
-                  width: "1.1rem",
-                  height: "1.1rem",
-                  borderRadius: "999px",
-                  display: "grid",
-                  placeItems: "center",
-                  background: tab === t ? "rgba(255, 215, 0, 0.2)" : "rgba(255, 215, 0, 0.08)"
-                }}
-              >
-                <span
-                  style={{
-                    width: ".5rem",
-                    height: ".5rem",
-                    borderRadius: "999px",
-                    background: "#ffd700",
-                    boxShadow: tab === t ? "0 0 0 4px rgba(255, 215, 0, 0.08)" : "none"
-                  }}
-                />
-              </span>
-            </span>
-          </button>
-        ))}
-      </aside>
-      <section className="panel" style={{ padding: "1rem" }}>
-        <h2 style={{ marginTop: 0 }}>{tab}</h2>
-        {status && <p style={{ color: "var(--muted)" }}>{status}</p>}
+            {NAV_SECTIONS.map((group) => (
+              <optgroup key={group.label} label={group.label}>
+                {group.items.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.label}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+        </label>
+        {status ? (
+          <p style={{ margin: 0, color: "var(--muted)", fontSize: ".9rem", flex: "1 1 200px", textAlign: "right" }}>{status}</p>
+        ) : (
+          <p style={{ margin: 0, color: "rgba(255,255,255,.35)", fontSize: ".85rem", flex: "1 1 200px", textAlign: "right" }}>
+            Select a section to edit
+          </p>
+        )}
+      </div>
+      <section className="panel admin-dash-panel" style={{ padding: "1rem 1.1rem" }}>
+        <h2 style={{ marginTop: 0, marginBottom: ".35rem", fontSize: "clamp(1.15rem, 2.5vw, 1.35rem)" }}>{getTabLabel(tab)}</h2>
+        <p style={{ marginTop: 0, marginBottom: "1rem", color: "var(--muted)", fontSize: ".88rem" }}>
+          {tab === "Portfolio" && "Projects, ordering, and media."}
+          {tab === "Hero" && "Homepage banner headline, copy, and background video."}
+          {tab === "Highlight" && "Featured project on the home page (first portfolio item)." }
+          {tab === "Services" && "Service cards and ordering."}
+          {tab === "Clients" && "Client logos and carousel."}
+          {tab === "About" && "Vision, style, and trust blocks."}
+          {tab === "Team" && "Team member profiles, photos, and bios for /team and About."}
+          {tab === "Contact" && "Email, phone, and location shown on the site."}
+        </p>
         {sectionForm}
       </section>
     </div>

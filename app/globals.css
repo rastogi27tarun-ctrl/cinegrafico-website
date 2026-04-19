@@ -922,3 +922,185 @@ a { color: inherit; text-decoration: none; }
   .client-slide { flex-basis: 88%; }
   .portfolio-card { flex-basis: 100%; }
 }
+
+/* Admin dashboard */
+.admin-nav-select {
+  width: 100%;
+  max-width: 360px;
+  padding: 0.55rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: #fff;
+  color: #0a0a0a;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.admin-nav-select:hover {
+  border-color: rgba(255, 215, 0, 0.45);
+}
+
+.admin-nav-select:focus {
+  outline: none;
+  border-color: rgba(255, 215, 0, 0.55);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.15);
+}
+
+.admin-nav-select optgroup {
+  font-weight: 600;
+  color: #0a0a0a;
+  background: #fff;
+}
+
+.admin-nav-select option {
+  color: #0a0a0a;
+  background: #fff;
+}
+
+.admin-form-select {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.5rem 0.65rem;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: #fff;
+  color: #0a0a0a;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+.admin-form-select:focus {
+  outline: none;
+  border-color: rgba(255, 215, 0, 0.55);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.12);
+}
+
+.admin-dash-panel label {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* Admin — Portfolio tab */
+.admin-portfolio summary {
+  list-style: none;
+}
+
+.admin-portfolio summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-portfolio-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 12px;
+  user-select: none;
+}
+
+.admin-portfolio-summary:hover {
+  background: rgba(255, 215, 0, 0.06);
+}
+
+.admin-portfolio-summary--add {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.admin-portfolio-count {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(255, 215, 0, 0.12);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.admin-portfolio-item-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  padding: 0.55rem 0.75rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.admin-portfolio-item-title {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.admin-portfolio-item-type {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.admin-nested {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.admin-nested-summary {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.72);
+  cursor: pointer;
+  user-select: none;
+}
+
+.admin-nested-summary:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.admin-nested[open] > .admin-nested-summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.admin-nested > *:not(summary) {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-bottom: 0.65rem;
+}
+
+.admin-file-row {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.admin-file-row label {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.admin-file-row input[type="file"] {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.admin-related-photo {
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-related-photo:last-of-type {
+  border-bottom: 0;
+}
+
+.admin-portfolio-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+}

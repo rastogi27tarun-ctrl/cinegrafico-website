@@ -13,6 +13,7 @@ export async function PUT(req, { params }) {
       name: body.name ?? "",
       subtitle: body.subtitle ?? "",
       description: body.description ?? "",
+      photoUrl: body.photoUrl ? String(body.photoUrl).trim() : null,
       position: Number(body.position ?? 0)
     }
   });
