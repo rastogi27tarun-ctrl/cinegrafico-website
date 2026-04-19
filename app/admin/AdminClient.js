@@ -69,15 +69,23 @@ export default function AdminClient() {
   });
 
   const loadAll = async () => {
+    const fetchJson = async (url) => {
+      try {
+        const r = await fetch(url);
+        return await r.json();
+      } catch {
+        return null;
+      }
+    };
     const [h, a, c, hi, s, p, cl, tm] = await Promise.all([
-      fetch("/api/cms/hero").then((r) => r.json()),
-      fetch("/api/cms/about").then((r) => r.json()),
-      fetch("/api/cms/contact").then((r) => r.json()),
-      fetch("/api/cms/hiring").then((r) => r.json()),
-      fetch("/api/cms/services").then((r) => r.json()),
-      fetch("/api/cms/portfolio").then((r) => r.json()),
-      fetch("/api/cms/clients").then((r) => r.json()),
-      fetch("/api/cms/team").then((r) => r.json())
+      fetchJson("/api/cms/hero"),
+      fetchJson("/api/cms/about"),
+      fetchJson("/api/cms/contact"),
+      fetchJson("/api/cms/hiring"),
+      fetchJson("/api/cms/services"),
+      fetchJson("/api/cms/portfolio"),
+      fetchJson("/api/cms/clients"),
+      fetchJson("/api/cms/team")
     ]);
     setHero(h || {});
     setAbout(a || {});
@@ -125,7 +133,11 @@ export default function AdminClient() {
     const res = await fetch(url, options);
     const payload = await res.json().catch(() => ({}));
     if (!res.ok) {
-      setStatus(payload?.error || "Request failed");
+      const errMsg =
+        typeof payload?.error === "string"
+          ? payload.error
+          : payload?.message || `Request failed (${res.status})`;
+      setStatus(errMsg);
       return { ok: false, payload };
     }
     if (reloadAfter) await loadAll();

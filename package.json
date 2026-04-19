@@ -7,6 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "postinstall": "prisma generate",
     "build": "prisma generate && next build",
     "seed": "node prisma/seed.js",
     "seed:dev": "NODE_ENV=development node prisma/seed.js",
