@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { isYouTubeUrl, toYouTubeEmbedUrl } from "../lib/media";
+import { getHighlightBody } from "../lib/highlight";
 
 export default function HighlightShowcase({ item }) {
   const [mediaOrientation, setMediaOrientation] = useState("horizontal");
@@ -32,8 +33,8 @@ export default function HighlightShowcase({ item }) {
       ? { gridTemplateColumns: "minmax(0,1fr) minmax(0,1.25fr)" }
       : { gridTemplateColumns: "minmax(0,2.25fr) minmax(0,.75fr)" };
 
-  const titleSize = orientation === "vertical" ? "clamp(1.45rem,2.8vw,2.15rem)" : "clamp(1.15rem,2vw,1.55rem)";
-  const copySize = orientation === "vertical" ? "1rem" : ".92rem";
+  const titleSize = orientation === "vertical" ? "clamp(1.55rem,3vw,2.35rem)" : "clamp(1.25rem,2.2vw,1.75rem)";
+  const copySize = orientation === "vertical" ? "clamp(1.05rem,2.2vw,1.2rem)" : "clamp(1rem,1.8vw,1.12rem)";
 
   return (
     <div style={{ display: "grid", gap: "1rem", ...layoutStyle }}>
@@ -74,11 +75,11 @@ export default function HighlightShowcase({ item }) {
       <div
         className="panel"
         style={{
-          padding: "1rem",
+          padding: "clamp(1.1rem,2.5vw,1.65rem)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          gap: "0.65rem"
+          gap: "0.75rem"
         }}
       >
         <h2
@@ -94,10 +95,11 @@ export default function HighlightShowcase({ item }) {
         </h2>
         <p
           style={{
-            color: "var(--muted)",
+            color: "var(--text, #f4f7fb)",
             margin: 0,
-            lineHeight: 1.7,
+            lineHeight: 1.75,
             fontSize: copySize,
+            fontWeight: 400,
             width: "100%",
             textAlign: "justify",
             textAlignLast: "center",
@@ -105,7 +107,7 @@ export default function HighlightShowcase({ item }) {
             WebkitHyphens: "auto"
           }}
         >
-          {item?.description || "Showcase your strongest cinematic project here."}
+          {getHighlightBody(item) || "Showcase your strongest cinematic project here."}
         </p>
       </div>
     </div>

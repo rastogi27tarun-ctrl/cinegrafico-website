@@ -141,7 +141,7 @@ export default function AdminClient() {
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 title: highlighted.title || "Project in Highlight",
-                description: highlighted.description || "Showcase your strongest cinematic project here.",
+                description: highlighted.description || "",
                 videoUrl: highlighted.videoUrl || "",
                 posterUrl: highlighted.posterUrl || "",
                 tags: normalizeTags(highlighted.tags),
@@ -174,17 +174,23 @@ export default function AdminClient() {
               setPortfolio(portfolio.map((p, i) => (i === 0 ? { ...p, title: v } : p)));
             }}
           />
+          <p style={{ margin: "0 0 .5rem", fontSize: ".85rem", color: "var(--muted, #888)" }}>
+            <strong>Full story</strong> for the home Highlight (large on the site). A <strong>short</strong> line for
+            cards and carousel is edited under <strong>Portfolio</strong> (same item, first in the list).
+          </p>
           <Field
-            label="Highlight Description"
-            value={highlighted.description || ""}
+            label="Highlight description (home — full story)"
+            value={getHighlightSetting(highlighted, "highlightDescription", "")}
             onChange={(v) => {
+              const next = withHighlightSetting(highlighted, "highlightDescription", v);
               if (!portfolio.length) {
-                setPortfolio([{ id: "", title: "", description: v, videoUrl: "", posterUrl: "", tags: {} }]);
+                setPortfolio([{ id: "", title: "", description: "", videoUrl: "", posterUrl: "", tags: next.tags }]);
                 return;
               }
-              setPortfolio(portfolio.map((p, i) => (i === 0 ? { ...p, description: v } : p)));
+              setPortfolio(portfolio.map((p, i) => (i === 0 ? next : p)));
             }}
             textarea
+            rows={12}
           />
           <Field
             label="Highlight Video URL"
@@ -403,7 +409,7 @@ export default function AdminClient() {
                 {PROJECT_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
               </select>
             </div>
-            <Field label="New Project Description" value={newPortfolioDescription} onChange={setNewPortfolioDescription} textarea />
+            <Field label="Short description (new project)" value={newPortfolioDescription} onChange={setNewPortfolioDescription} textarea rows={3} />
             <button className="button" type="button" onClick={async () => {
               const title = (newPortfolioTitle || "").trim();
               if (!title) {
@@ -463,7 +469,13 @@ export default function AdminClient() {
                   {PROJECT_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
                 </select>
               </div>
-              <Field label="Description" value={item.description} onChange={(v) => setPortfolio(portfolio.map((p) => p.id === item.id ? { ...p, description: v } : p))} textarea />
+              <Field
+                label="Short description (cards & carousel)"
+                value={item.description}
+                onChange={(v) => setPortfolio(portfolio.map((p) => p.id === item.id ? { ...p, description: v } : p))}
+                textarea
+                rows={3}
+              />
               <Field label="Video URL" value={item.videoUrl || ""} onChange={(v) => setPortfolio(portfolio.map((p) => p.id === item.id ? { ...p, videoUrl: v } : p))} />
               <Field label="Poster URL" value={item.posterUrl || ""} onChange={(v) => setPortfolio(portfolio.map((p) => p.id === item.id ? { ...p, posterUrl: v } : p))} />
               <div className="panel" style={{ padding: ".65rem", marginBottom: ".6rem" }}>
@@ -690,12 +702,12 @@ export default function AdminClient() {
   );
 }
 
-function Field({ label, value, onChange, textarea = false }) {
+function Field({ label, value, onChange, textarea = false, rows = 3 }) {
   return (
     <div style={{ marginBottom: ".65rem" }}>
       <label>{label}</label>
       {textarea ? (
-        <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={3} style={{ width: "100%" }} />
+        <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={rows} style={{ width: "100%" }} />
       ) : (
         <input value={value} onChange={(e) => onChange(e.target.value)} style={{ width: "100%" }} />
       )}

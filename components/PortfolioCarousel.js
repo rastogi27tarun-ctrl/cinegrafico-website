@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { isYouTubeUrl, toYouTubeEmbedUrl } from "../lib/media";
+import { getPortfolioCardSummary } from "../lib/highlight";
 import Link from "next/link";
 
 export default function PortfolioCarousel({ items, ariaLabel }) {
@@ -117,7 +118,20 @@ export default function PortfolioCarousel({ items, ariaLabel }) {
             </div>
             <div className="portfolio-card-body">
               <h3>{item.title || "Untitled Project"}</h3>
-              <p>{item.description || "No description yet."}</p>
+              <p
+                style={{
+                  fontSize: ".82rem",
+                  lineHeight: 1.45,
+                  color: "var(--muted)",
+                  margin: 0,
+                  display: "-webkit-box",
+                  WebkitLineClamp: 4,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden"
+                }}
+              >
+                {getPortfolioCardSummary(item) || "No description yet."}
+              </p>
               <div style={{ marginTop: ".6rem" }}>
                 <Link href={`/portfolio/${item.id}`} className="button" style={{ padding: ".45rem .75rem" }}>
                   Open Project

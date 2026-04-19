@@ -2,6 +2,7 @@ import PublicHeader from "../../../components/PublicHeader";
 import { db } from "../../../lib/db";
 import { isYouTubeUrl, toYouTubeEmbedUrl } from "../../../lib/media";
 import RelatedPhotosGallery from "../../../components/RelatedPhotosGallery";
+import { getHighlightBody } from "../../../lib/highlight";
 
 function getRelatedPhotos(item) {
   const tags = item?.tags;
@@ -67,7 +68,7 @@ export default async function PortfolioDetailPage({ params }) {
                   <RelatedPhotosGallery photos={relatedPhotos} title={item.title || "Project"} />
                 </section>
               )}
-              <p style={{ marginBottom: 0, color: "var(--muted)", lineHeight: 1.75 }}>{item.description || "No description yet."}</p>
+              <p style={{ marginBottom: 0, color: "var(--muted)", lineHeight: 1.75, fontSize: "clamp(1rem,1.6vw,1.12rem)" }}>{getHighlightBody(item) || "No description yet."}</p>
             </div>
           </article>
         </div>

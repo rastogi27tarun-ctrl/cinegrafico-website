@@ -3,6 +3,7 @@ import { getPublicCmsData } from "../../lib/cms";
 import { isYouTubeUrl, toYouTubeEmbedUrl } from "../../lib/media";
 import { getPortfolioSections } from "../../lib/portfolio";
 import Link from "next/link";
+import { getPortfolioCardSummary } from "../../lib/highlight";
 
 export default async function PortfolioPage() {
   const { portfolio } = await getPublicCmsData();
@@ -57,7 +58,20 @@ export default async function PortfolioPage() {
                         )}
                         <div style={{ padding: "1rem" }}>
                           <h3 style={{ margin: 0 }}>{item.title || "Untitled Project"}</h3>
-                          <p style={{ color: "var(--muted)", marginBottom: 0 }}>{item.description || "No description yet."}</p>
+                          <p
+                            style={{
+                              color: "var(--muted)",
+                              marginBottom: 0,
+                              fontSize: ".85rem",
+                              lineHeight: 1.45,
+                              display: "-webkit-box",
+                              WebkitLineClamp: 4,
+                              WebkitBoxOrient: "vertical",
+                              overflow: "hidden"
+                            }}
+                          >
+                            {getPortfolioCardSummary(item) || "No description yet."}
+                          </p>
                           <div style={{ marginTop: ".7rem" }}>
                             <Link href={`/portfolio/${item.id}`} className="button" style={{ padding: ".45rem .75rem" }}>
                               Open Project
