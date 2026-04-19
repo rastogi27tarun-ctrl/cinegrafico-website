@@ -197,6 +197,20 @@ async function main() {
     }
   });
 
+  await prisma.hiringContent.upsert({
+    where: { id: "singleton" },
+    update: {},
+    create: {
+      id: "singleton",
+      isVisible: false,
+      roleTitle: "",
+      profileDescription: "",
+      whoCanApply: "",
+      applyButtonLabel: "Apply",
+      applyUrl: ""
+    }
+  });
+
   const serviceIds = [];
   for (let i = 0; i < SHARED_CONTENT.services.length; i += 1) {
     const [title, description] = SHARED_CONTENT.services[i];

@@ -15,6 +15,15 @@ export default function PublicHeader() {
   const [activeId, setActiveId] = useState("");
   const [pathname, setPathname] = useState("/");
 
+  const [hiringNavVisible, setHiringNavVisible] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/cms/hiring")
+      .then((r) => r.json())
+      .then((data) => setHiringNavVisible(Boolean(data?.isVisible)))
+      .catch(() => setHiringNavVisible(false));
+  }, []);
+
   useEffect(() => {
     const fromHash = window.location.hash?.replace("#", "");
     if (fromHash) setActiveId(fromHash);
@@ -88,6 +97,14 @@ export default function PublicHeader() {
               <span className={`main-tab-dot ${pathname.startsWith("/team") ? "is-active" : ""}`} />
             </span>
           </a>
+          {hiringNavVisible ? (
+            <a href="/hiring" className={`main-tab-link ${pathname.startsWith("/hiring") ? "is-active" : ""}`}>
+              <span>Hiring</span>
+              <span className={`main-tab-dot-wrap ${pathname.startsWith("/hiring") ? "is-active" : ""}`}>
+                <span className={`main-tab-dot ${pathname.startsWith("/hiring") ? "is-active" : ""}`} />
+              </span>
+            </a>
+          ) : null}
         </nav>
       </div>
     </header>

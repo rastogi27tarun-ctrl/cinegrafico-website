@@ -27,7 +27,8 @@ const NAV_SECTIONS = [
     label: "About",
     items: [
       { id: "About", label: "About" },
-      { id: "Team", label: "Team" }
+      { id: "Team", label: "Team" },
+      { id: "Hiring", label: "Hiring" }
     ]
   },
   {
@@ -58,12 +59,21 @@ export default function AdminClient() {
   const [newPortfolioTitle, setNewPortfolioTitle] = useState("");
   const [newPortfolioDescription, setNewPortfolioDescription] = useState("");
   const [newPortfolioType, setNewPortfolioType] = useState(PROJECT_TYPES[0]);
+  const [hiring, setHiring] = useState({
+    isVisible: false,
+    roleTitle: "",
+    profileDescription: "",
+    whoCanApply: "",
+    applyButtonLabel: "Apply",
+    applyUrl: ""
+  });
 
   const loadAll = async () => {
-    const [h, a, c, s, p, cl, tm] = await Promise.all([
+    const [h, a, c, hi, s, p, cl, tm] = await Promise.all([
       fetch("/api/cms/hero").then((r) => r.json()),
       fetch("/api/cms/about").then((r) => r.json()),
       fetch("/api/cms/contact").then((r) => r.json()),
+      fetch("/api/cms/hiring").then((r) => r.json()),
       fetch("/api/cms/services").then((r) => r.json()),
       fetch("/api/cms/portfolio").then((r) => r.json()),
       fetch("/api/cms/clients").then((r) => r.json()),
@@ -72,6 +82,19 @@ export default function AdminClient() {
     setHero(h || {});
     setAbout(a || {});
     setContact(c || {});
+    setHiring((prev) => {
+      if (!hi || typeof hi !== "object") {
+        return prev;
+      }
+      return {
+        isVisible: Boolean(hi.isVisible),
+        roleTitle: hi.roleTitle ?? "",
+        profileDescription: hi.profileDescription ?? "",
+        whoCanApply: hi.whoCanApply ?? "",
+        applyButtonLabel: (hi.applyButtonLabel && String(hi.applyButtonLabel).trim()) || "Apply",
+        applyUrl: hi.applyUrl ?? ""
+      };
+    });
     setServices(Array.isArray(s) ? s : []);
     setPortfolio(Array.isArray(p) ? p : []);
     setClients(Array.isArray(cl) ? cl : []);
@@ -348,6 +371,72 @@ export default function AdminClient() {
           <Field label="WhatsApp" value={contact.whatsapp || ""} onChange={(v) => setContact({ ...contact, whatsapp: v })} />
           <Field label="Location" value={contact.location || ""} onChange={(v) => setContact({ ...contact, location: v })} />
           <button className="button">Save Contact</button>
+        </form>
+      );
+    }
+
+    if (tab === "Hiring") {
+      return (
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            await requestJson(
+              "/api/cms/hiring",
+              { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(hiring) },
+              "Hiring page saved"
+            );
+          }}
+        >
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: ".55rem",
+              marginBottom: "1rem",
+              cursor: "pointer",
+              fontSize: ".95rem"
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={Boolean(hiring.isVisible)}
+              onChange={(e) => setHiring({ ...hiring, isVisible: e.target.checked })}
+            />
+            Show &quot;Hiring&quot; in the main site navigation (header)
+          </label>
+          <p style={{ marginTop: 0, marginBottom: "1rem", color: "var(--muted)", fontSize: ".86rem", lineHeight: 1.5 }}>
+            When off, the page stays at <strong>/hiring</strong> with a short message; turn on to publish the role and nav link.
+          </p>
+          <Field
+            label="Hiring for (profile / post title)"
+            value={hiring.roleTitle || ""}
+            onChange={(v) => setHiring({ ...hiring, roleTitle: v })}
+          />
+          <Field
+            label="About the role / profile"
+            value={hiring.profileDescription || ""}
+            onChange={(v) => setHiring({ ...hiring, profileDescription: v })}
+            textarea
+            rows={10}
+          />
+          <Field
+            label="Who can apply"
+            value={hiring.whoCanApply || ""}
+            onChange={(v) => setHiring({ ...hiring, whoCanApply: v })}
+            textarea
+            rows={6}
+          />
+          <Field
+            label="Apply button label"
+            value={hiring.applyButtonLabel || "Apply"}
+            onChange={(v) => setHiring({ ...hiring, applyButtonLabel: v })}
+          />
+          <Field
+            label="Apply button URL (Google Form, email mailto:, or careers link)"
+            value={hiring.applyUrl || ""}
+            onChange={(v) => setHiring({ ...hiring, applyUrl: v })}
+          />
+          <button className="button">Save Hiring page</button>
         </form>
       );
     }
@@ -754,7 +843,7 @@ export default function AdminClient() {
         }}>Add Client</button>
       </div>
     );
-  }, [tab, hero, about, contact, services, portfolio, clients, team, newPortfolioTitle, newPortfolioDescription, newPortfolioType]);
+  }, [tab, hero, about, contact, hiring, services, portfolio, clients, team, newPortfolioTitle, newPortfolioDescription, newPortfolioType]);
 
   return (
     <div style={{ display: "grid", gap: "1rem" }}>
@@ -812,6 +901,7 @@ export default function AdminClient() {
           {tab === "About" && "Vision, style, and trust blocks."}
           {tab === "Team" && "Team member profiles, photos, and bios for /team and About."}
           {tab === "Contact" && "Email, phone, and location shown on the site."}
+          {tab === "Hiring" && "/hiring job post, apply link, and nav visibility."}
         </p>
         {sectionForm}
       </section>

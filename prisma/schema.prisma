@@ -48,6 +48,17 @@ model ContactContent {
   updatedAt DateTime @updatedAt
 }
 
+model HiringContent {
+  id                  String   @id @default("singleton")
+  isVisible           Boolean  @default(false)
+  roleTitle           String   @default("")
+  profileDescription  String   @default("")
+  whoCanApply         String   @default("")
+  applyButtonLabel    String   @default("Apply")
+  applyUrl            String   @default("")
+  updatedAt           DateTime @updatedAt
+}
+
 model Service {
   id          String   @id @default(cuid())
   title       String
