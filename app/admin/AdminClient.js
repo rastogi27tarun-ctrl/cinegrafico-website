@@ -667,7 +667,7 @@ export default function AdminClient() {
                 <span style={{ fontSize: ".68rem", color: "rgba(255,255,255,.6)", textTransform: "uppercase", letterSpacing: ".06em" }}>
                   Heading
                 </span>
-                <span style={{ fontSize: ".95rem", fontWeight: 600 }}>{t}</span>
+                <span style={{ fontSize: ".95rem", fontWeight: 600 }}>{t === "Hero" ? "" : t}</span>
               </span>
               <span
                 style={{

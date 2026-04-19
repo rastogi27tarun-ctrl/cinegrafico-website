@@ -65,10 +65,6 @@ export default async function Home() {
           </div>
           <div className="home-hero-overlay" />
           <div className="container home-hero-content">
-            <div className="section-start-chip">
-              <span className="section-start-label">Hero</span>
-              <span className="section-start-dot-wrap"><span className="section-start-dot" /></span>
-            </div>
             <h1>{hero?.heading || "Make your brand feel like a movie."}</h1>
             <p>{hero?.subheading || "Cinematic visuals, identity, and motion for brands that want to stand out."}</p>
             <a href="#contact" className="button">{hero?.ctaText || "Start a Project"}</a>
