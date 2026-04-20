@@ -1,4 +1,8 @@
 import PublicHeader from "../components/PublicHeader";
+import Intro from "../components/Intro";
+import HeroParallax from "../components/HeroParallax";
+import RevealSection from "../components/RevealSection";
+import MotionHeading from "../components/MotionHeading";
 import HighlightShowcase from "../components/HighlightShowcase";
 import ClientsCarousel from "../components/ClientsCarousel";
 import PortfolioCarousel from "../components/PortfolioCarousel";
@@ -53,42 +57,29 @@ export default async function Home() {
 
   return (
     <>
+      <Intro />
       <PublicHeader />
       <main>
-        <section className="section home-hero" id="hero">
-          <div className="home-hero-media">
-            {hero?.videoUrl ? (
-              <video src={hero.videoUrl} autoPlay muted loop playsInline />
-            ) : (
-              <div className="home-hero-fallback" />
-            )}
-          </div>
-          <div className="home-hero-overlay" />
-          <div className="container home-hero-content">
-            <h1>{hero?.heading || "Make your brand feel like a movie."}</h1>
-            <p>{hero?.subheading || "Cinematic visuals, identity, and motion for brands that want to stand out."}</p>
-            <a href="#contact" className="button">{hero?.ctaText || "Start a Project"}</a>
-          </div>
-        </section>
+        <HeroParallax hero={hero} />
 
-        <section id="project-highlight" className="section">
+        <RevealSection id="project-highlight">
           <div className="container">
             <div className="section-start-chip">
               <span className="section-start-label">Highlight</span>
               <span className="section-start-dot-wrap"><span className="section-start-dot" /></span>
             </div>
-            <h2 className="home-section-title">Project in Highlight</h2>
+            <MotionHeading className="home-section-title">Project in Highlight</MotionHeading>
             <HighlightShowcase item={highlight} />
           </div>
-        </section>
+        </RevealSection>
 
-        <section id="services" className="section">
+        <RevealSection id="services">
           <div className="container">
             <div className="section-start-chip">
               <span className="section-start-label">Services</span>
               <span className="section-start-dot-wrap"><span className="section-start-dot" /></span>
             </div>
-            <h2 className="home-section-title">Production and post, built for story and scale.</h2>
+            <MotionHeading className="home-section-title">Production and post, built for story and scale.</MotionHeading>
             <div className="home-services-grid">
               {(services || []).map((service, index) => (
                 <article
@@ -103,15 +94,15 @@ export default async function Home() {
               ))}
             </div>
           </div>
-        </section>
+        </RevealSection>
 
-        <section id="about" className="section">
+        <RevealSection id="about">
           <div className="container">
             <div className="section-start-chip">
               <span className="section-start-label">About</span>
               <span className="section-start-dot-wrap"><span className="section-start-dot" /></span>
             </div>
-            <h2 className="home-section-title">Our lens, language, and creative discipline.</h2>
+            <MotionHeading className="home-section-title">Our lens, language, and creative discipline.</MotionHeading>
             <div className="home-about-intro">
               <p>
                 At Cinegrafico Studios, our team&apos;s expertise in visual storytelling through motion graphics and film production shapes captivating narratives that resonate with audiences globally. My role as a founder and motion graphic designer builds on a foundation of commercial photography and visual design to create compelling content that fosters deep connections.
@@ -135,7 +126,7 @@ export default async function Home() {
               </article>
             </div>
           </div>
-        </section>
+        </RevealSection>
 
         <section id="portfolio" className="section">
           <div className="container">
@@ -143,7 +134,7 @@ export default async function Home() {
               <span className="section-start-label">Portfolio</span>
               <span className="section-start-dot-wrap"><span className="section-start-dot" /></span>
             </div>
-            <h2 className="home-section-title">Recent work, cut like a reel.</h2>
+            <MotionHeading className="home-section-title">Recent work, cut like a reel.</MotionHeading>
             {portfolioSections.map(({ type, items }) => (
               <div key={type} className="portfolio-type-group" style={{ marginBottom: "1.75rem" }}>
                 <h3
@@ -164,7 +155,7 @@ export default async function Home() {
 
         <ClientsCarousel clients={clients} />
 
-        <section id="contact" className="section">
+        <RevealSection id="contact">
           <div className="container">
             <div className="section-start-chip">
               <span className="section-start-label">Contact</span>
@@ -172,7 +163,7 @@ export default async function Home() {
             </div>
             <div className="panel home-contact-panel">
               <div className="home-contact-top">
-                <h2 className="home-section-title home-contact-headline">Let us build your next cinematic story.</h2>
+                <MotionHeading className="home-section-title home-contact-headline">Let us build your next cinematic story.</MotionHeading>
                 <p className="home-contact-lede">
                   Share your brief and timeline. We will map the creative direction, production plan, and delivery flow.
                 </p>
@@ -222,7 +213,7 @@ export default async function Home() {
               </div>
             </div>
           </div>
-        </section>
+        </RevealSection>
       </main>
     </>
   );

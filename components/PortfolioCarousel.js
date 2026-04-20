@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
+import { motion } from "framer-motion";
 import { isYouTubeUrl, toYouTubeEmbedUrl } from "../lib/media";
 import { getPortfolioCardSummary } from "../lib/highlight";
 import Link from "next/link";
@@ -73,10 +74,13 @@ export default function PortfolioCarousel({ items, ariaLabel }) {
       </div>
 
       <div ref={trackRef} className="portfolio-carousel" aria-label={ariaLabel || "Portfolio carousel"}>
-        {portfolioItems.map((item) => (
-          <article
+        {portfolioItems.map((item, index) => (
+          <motion.article
             key={item.id}
             className="panel portfolio-card"
+            initial={{ opacity: 0, y: 80 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: Math.min(index * 0.06, 0.36) }}
             onMouseEnter={(e) => {
               const video = e.currentTarget.querySelector("video");
               if (!video) return;
@@ -138,7 +142,7 @@ export default function PortfolioCarousel({ items, ariaLabel }) {
                 </Link>
               </div>
             </div>
-          </article>
+          </motion.article>
         ))}
       </div>
     </div>
