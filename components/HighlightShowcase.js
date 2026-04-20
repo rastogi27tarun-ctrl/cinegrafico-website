@@ -100,7 +100,6 @@ export default function HighlightShowcase({ item }) {
         <p
           className={`highlight-showcase-body ${isExpandedOnMobile ? "is-expanded" : ""}`}
           style={{
-            color: "var(--text, #f4f7fb)",
             margin: 0,
             lineHeight: 1.75,
             fontSize: copySize,

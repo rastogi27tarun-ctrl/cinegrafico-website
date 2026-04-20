@@ -14,38 +14,20 @@ export default function Intro() {
     }
 
     window.sessionStorage.setItem("cg_intro_seen", "1");
-    const introAudio = new Audio("/sounds/intro-whoosh.mp3");
-    const targetVolume = 0.35;
-    introAudio.volume = 0;
-    introAudio.play().catch(() => {
-      // Autoplay can be blocked by browser policies.
-    });
+    const playSound = () => {
+      const audio = new Audio("/sound/intro-whoosh.mp3");
+      setTimeout(() => {
+        audio.play().catch(() => {});
+      }, 300);
+      window.removeEventListener("scroll", playSound);
+    };
 
-    const fadeInStepMs = 50;
-    const fadeInAmount = targetVolume / 8;
-    const fadeInTimer = window.setInterval(() => {
-      introAudio.volume = Math.min(targetVolume, introAudio.volume + fadeInAmount);
-      if (introAudio.volume >= targetVolume) window.clearInterval(fadeInTimer);
-    }, fadeInStepMs);
-
-    const fadeOutTimer = window.setTimeout(() => {
-      const fadeOutStepMs = 50;
-      const fadeOutAmount = targetVolume / 8;
-      const fadeOutInterval = window.setInterval(() => {
-        introAudio.volume = Math.max(0, introAudio.volume - fadeOutAmount);
-        if (introAudio.volume <= 0) {
-          window.clearInterval(fadeOutInterval);
-        }
-      }, fadeOutStepMs);
-    }, 2000);
+    window.addEventListener("scroll", playSound);
 
     const timer = setTimeout(() => setShow(false), 2500);
     return () => {
-      window.clearInterval(fadeInTimer);
-      window.clearTimeout(fadeOutTimer);
+      window.removeEventListener("scroll", playSound);
       clearTimeout(timer);
-      introAudio.pause();
-      introAudio.currentTime = 0;
     };
   }, []);
 
