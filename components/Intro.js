@@ -44,7 +44,7 @@ export default function Intro() {
             animate={{ opacity: 1, scale: 1, letterSpacing: "0.05em" }}
             transition={{ duration: 1.2 }}
           >
-            CINEGRAFICO
+            CINEGRAFICO STUDIOS
           </motion.h1>
         </motion.div>
       )}
