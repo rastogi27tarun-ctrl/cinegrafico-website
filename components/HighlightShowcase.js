@@ -8,6 +8,7 @@ export default function HighlightShowcase({ item }) {
   const [mediaOrientation, setMediaOrientation] = useState("horizontal");
   const previewMode = getHighlightSetting(item, "previewMode", "auto");
   const manualAspectRatio = getHighlightSetting(item, "aspectRatio", "16/9");
+  const heading = getHighlightSetting(item, "heading", item?.title || "Project in Highlight");
 
   const hasVideo = Boolean(item?.videoUrl);
   const hasImage = Boolean(item?.posterUrl);
@@ -91,7 +92,7 @@ export default function HighlightShowcase({ item }) {
             width: "100%"
           }}
         >
-          {item?.title || "Project in Highlight"}
+          {heading}
         </h2>
         <p
           style={{

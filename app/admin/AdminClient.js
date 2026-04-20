@@ -235,13 +235,14 @@ export default function AdminClient() {
         }}>
           <Field
             label="Highlight Title"
-            value={highlighted.title || ""}
+            value={getHighlightSetting(highlighted, "heading", highlighted.title || "")}
             onChange={(v) => {
+              const next = withHighlightSetting(highlighted, "heading", v);
               if (!portfolio.length) {
-                setPortfolio([{ id: "", title: v, description: "", videoUrl: "", posterUrl: "", tags: {} }]);
+                setPortfolio([{ id: "", title: "", description: "", videoUrl: "", posterUrl: "", tags: next.tags }]);
                 return;
               }
-              setPortfolio(portfolio.map((p, i) => (i === 0 ? { ...p, title: v } : p)));
+              setPortfolio(portfolio.map((p, i) => (i === 0 ? next : p)));
             }}
           />
           <p style={{ margin: "0 0 .5rem", fontSize: ".85rem", color: "var(--muted, #888)" }}>

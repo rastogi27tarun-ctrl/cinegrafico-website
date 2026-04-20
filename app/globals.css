@@ -93,6 +93,44 @@ a { color: inherit; text-decoration: none; }
   cursor: pointer;
 }
 
+.public-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  background: rgba(7, 8, 13, 0.62);
+}
+
+.public-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+}
+
+.public-header-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.public-header-logo {
+  height: 2.2rem;
+  width: auto;
+  display: block;
+}
+
+.public-header-nav {
+  display: flex;
+  gap: 1rem;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+
 .main-tab-link {
   display: inline-flex;
   align-items: center;
@@ -911,16 +949,102 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (max-width: 760px) {
+  .container {
+    width: min(1180px, calc(100% - 1.2rem));
+  }
+  .section {
+    padding: 3.2rem 0;
+  }
+  .panel {
+    border-radius: 14px;
+  }
+  .button {
+    padding: 0.68rem 0.95rem;
+    font-size: 0.92rem;
+  }
+  .public-header-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.55rem;
+    padding: 0.6rem 0;
+  }
+  .public-header-brand {
+    font-size: 0.95rem;
+    justify-content: center;
+  }
+  .public-header-logo {
+    height: 1.85rem;
+  }
+  .public-header-nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.2rem;
+    gap: 0.8rem;
+    scrollbar-width: thin;
+  }
+  .main-tab-link {
+    white-space: nowrap;
+    font-size: 0.9rem;
+  }
   .home-hero {
     min-height: 72vh;
   }
   .home-hero-content {
     padding-bottom: 3.2rem;
   }
+  .home-hero-content h1 {
+    line-height: 1.02;
+  }
+  .home-section-title {
+    margin-bottom: 0.65rem;
+  }
   .clients-copy { grid-template-columns: 1fr; }
   .clients-heading { text-align: left; }
   .client-slide { flex-basis: 88%; }
   .portfolio-card { flex-basis: 100%; }
+}
+
+@media (max-width: 560px) {
+  .section {
+    padding: 2.75rem 0;
+  }
+  .public-header-brand {
+    font-size: 0.88rem;
+  }
+  .main-tab-link {
+    font-size: 0.84rem;
+  }
+  .main-tab-dot-wrap {
+    width: 0.78rem;
+    height: 0.78rem;
+  }
+  .main-tab-dot {
+    width: 0.36rem;
+    height: 0.36rem;
+  }
+  .home-hero {
+    min-height: 66vh;
+  }
+  .home-hero-content {
+    padding-bottom: 2.4rem;
+  }
+  .home-hero-content p {
+    line-height: 1.55;
+  }
+  .clients-subcopy {
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+  .home-contact-panel {
+    padding: 1rem 0.95rem;
+  }
+  .home-contact-company-box,
+  .home-contact-inquiry-box {
+    padding: 0.95rem 0.9rem;
+  }
+  .portfolio-card-body {
+    padding: 0.8rem 0.82rem 0.9rem;
+  }
 }
 
 /* Admin dashboard */

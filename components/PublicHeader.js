@@ -68,13 +68,13 @@ export default function PublicHeader() {
   }, []);
 
   return (
-    <header style={{ position: "sticky", top: 0, backdropFilter: "blur(14px)", borderBottom: "1px solid var(--line)", zIndex: 10 }}>
-      <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.75rem 0" }}>
-        <a href="/" style={{ display: "flex", alignItems: "center", gap: ".6rem", fontWeight: 700 }}>
-          <img src="/assets/cinegrafico-logo.png" alt="logo" style={{ height: "2.2rem" }} />
+    <header className="public-header">
+      <div className="container public-header-inner">
+        <a href="/" className="public-header-brand">
+          <img src="/assets/cinegrafico-logo.png" alt="logo" className="public-header-logo" />
           Cinegrafico Studios
         </a>
-        <nav style={{ display: "flex", gap: "1rem", color: "var(--muted)", flexWrap: "wrap" }}>
+        <nav className="public-header-nav">
           {SECTION_LINKS.map((item) => {
             const isActive = activeId === item.id;
             return (
