@@ -959,6 +959,14 @@ a { color: inherit; text-decoration: none; }
   margin-top: 0.15rem;
 }
 
+.highlight-read-more-btn {
+  display: none;
+  align-self: center;
+  margin-top: 0.2rem;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.86rem;
+}
+
 @media (max-width: 900px) {
   .home-contact-top {
     grid-template-columns: 1fr;
@@ -1095,6 +1103,20 @@ a { color: inherit; text-decoration: none; }
   }
   .portfolio-card-body {
     padding: 0.8rem 0.82rem 0.9rem;
+  }
+  .highlight-showcase-body {
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .highlight-showcase-body.is-expanded {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
+  .highlight-read-more-btn {
+    display: inline-flex;
   }
 }
 

@@ -6,9 +6,12 @@ import { getHighlightBody } from "../lib/highlight";
 
 export default function HighlightShowcase({ item }) {
   const [mediaOrientation, setMediaOrientation] = useState("horizontal");
+  const [isExpandedOnMobile, setIsExpandedOnMobile] = useState(false);
   const previewMode = getHighlightSetting(item, "previewMode", "auto");
   const manualAspectRatio = getHighlightSetting(item, "aspectRatio", "16/9");
   const heading = getHighlightSetting(item, "heading", item?.title || "Project in Highlight");
+  const highlightBody = getHighlightBody(item) || "Showcase your strongest cinematic project here.";
+  const shouldShowMobileReadMore = highlightBody.length > 220;
 
   const hasVideo = Boolean(item?.videoUrl);
   const hasImage = Boolean(item?.posterUrl);
@@ -95,6 +98,7 @@ export default function HighlightShowcase({ item }) {
           {heading}
         </h2>
         <p
+          className={`highlight-showcase-body ${isExpandedOnMobile ? "is-expanded" : ""}`}
           style={{
             color: "var(--text, #f4f7fb)",
             margin: 0,
@@ -108,8 +112,18 @@ export default function HighlightShowcase({ item }) {
             WebkitHyphens: "auto"
           }}
         >
-          {getHighlightBody(item) || "Showcase your strongest cinematic project here."}
+          {highlightBody}
         </p>
+        {shouldShowMobileReadMore ? (
+          <button
+            type="button"
+            className="button highlight-read-more-btn"
+            onClick={() => setIsExpandedOnMobile((prev) => !prev)}
+            aria-expanded={isExpandedOnMobile}
+          >
+            {isExpandedOnMobile ? "Show less" : "Continue reading"}
+          </button>
+        ) : null}
       </div>
     </div>
   );
