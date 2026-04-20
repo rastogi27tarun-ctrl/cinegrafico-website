@@ -131,6 +131,41 @@ a { color: inherit; text-decoration: none; }
   flex-wrap: wrap;
 }
 
+.public-header-toggle {
+  display: none;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.24rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+.public-header-toggle-bar {
+  width: 1rem;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+
+.public-header-toggle.is-open .public-header-toggle-bar:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.public-header-toggle.is-open .public-header-toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.public-header-toggle.is-open .public-header-toggle-bar:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
 .main-tab-link {
   display: inline-flex;
   align-items: center;
@@ -963,23 +998,36 @@ a { color: inherit; text-decoration: none; }
     font-size: 0.92rem;
   }
   .public-header-inner {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.55rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
     padding: 0.6rem 0;
+    position: relative;
   }
   .public-header-brand {
     font-size: 0.95rem;
-    justify-content: center;
   }
   .public-header-logo {
     height: 1.85rem;
   }
+  .public-header-toggle {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
   .public-header-nav {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    padding: 0.55rem 0.45rem 0.35rem;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    gap: 0.72rem;
+  }
+  .public-header-nav.is-open {
+    display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
-    padding-bottom: 0.2rem;
-    gap: 0.8rem;
     scrollbar-width: thin;
   }
   .main-tab-link {
@@ -1010,6 +1058,9 @@ a { color: inherit; text-decoration: none; }
   }
   .public-header-brand {
     font-size: 0.88rem;
+    max-width: calc(100% - 3rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .main-tab-link {
     font-size: 0.84rem;
