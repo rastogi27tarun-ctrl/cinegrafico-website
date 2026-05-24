@@ -426,9 +426,27 @@ export default function AdminClient() {
                     <p style={{ margin: "0 0 .25rem", whiteSpace: "pre-wrap" }}>
                       <strong>Project:</strong> {row.project || "—"}
                     </p>
-                    <p style={{ margin: 0 }}>
+                    <p style={{ margin: "0 0 .65rem" }}>
                       <strong>Budget:</strong> {row.budget || "—"}
                     </p>
+                    <button
+                      className="button"
+                      type="button"
+                      onClick={async () => {
+                        if (!window.confirm("Delete this inquiry? This cannot be undone.")) return;
+                        const result = await requestJson(
+                          `/api/cms/inquiries/${row.id}`,
+                          { method: "DELETE" },
+                          "Inquiry deleted"
+                        );
+                        if (result.ok) {
+                          setInquiries((prev) => prev.filter((item) => item.id !== row.id));
+                        }
+                      }}
+                      style={{ background: "rgba(255,80,80,0.25)", color: "#fff", padding: ".4rem .75rem" }}
+                    >
+                      Delete
+                    </button>
                   </article>
                 ))}
               </div>
