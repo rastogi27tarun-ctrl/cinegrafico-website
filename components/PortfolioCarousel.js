@@ -138,7 +138,7 @@ export default function PortfolioCarousel({ items, ariaLabel }) {
               </p>
               <div style={{ marginTop: ".6rem" }}>
                 <Link href={`/portfolio/${item.id}`} className="button" style={{ padding: ".45rem .75rem" }}>
-                  Open Project
+                  View in Detail
                 </Link>
               </div>
             </div>

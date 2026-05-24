@@ -74,7 +74,7 @@ export default async function PortfolioPage() {
                           </p>
                           <div style={{ marginTop: ".7rem" }}>
                             <Link href={`/portfolio/${item.id}`} className="button" style={{ padding: ".45rem .75rem" }}>
-                              Open Project
+                              View in Detail
                             </Link>
                           </div>
                         </div>
