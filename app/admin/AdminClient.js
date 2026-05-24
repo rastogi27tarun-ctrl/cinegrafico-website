@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import AdminSortableList from "../../components/AdminSortableList";
 import {
   PORTFOLIO_PROJECT_TYPES as PROJECT_TYPES,
   getPortfolioProjectType,
-  getPortfolioSections
+  getPortfolioSections,
+  mergePortfolioSectionOrder
 } from "../../lib/portfolio";
 
 const NAV_SECTIONS = [
@@ -52,6 +54,7 @@ export default function AdminClient() {
   const [hero, setHero] = useState({ heading: "", subheading: "", ctaText: "", videoUrl: "" });
   const [about, setAbout] = useState({ vision: "", style: "", trust: "" });
   const [contact, setContact] = useState({ email: "", phone: "", whatsapp: "", location: "" });
+  const [inquiries, setInquiries] = useState([]);
   const [services, setServices] = useState([]);
   const [portfolio, setPortfolio] = useState([]);
   const [clients, setClients] = useState([]);
@@ -77,7 +80,7 @@ export default function AdminClient() {
         return null;
       }
     };
-    const [h, a, c, hi, s, p, cl, tm] = await Promise.all([
+    const [h, a, c, hi, s, p, cl, tm, inq] = await Promise.all([
       fetchJson("/api/cms/hero"),
       fetchJson("/api/cms/about"),
       fetchJson("/api/cms/contact"),
@@ -85,7 +88,8 @@ export default function AdminClient() {
       fetchJson("/api/cms/services"),
       fetchJson("/api/cms/portfolio"),
       fetchJson("/api/cms/clients"),
-      fetchJson("/api/cms/team")
+      fetchJson("/api/cms/team"),
+      fetchJson("/api/cms/inquiries")
     ]);
     setHero(h || {});
     setAbout(a || {});
@@ -107,6 +111,7 @@ export default function AdminClient() {
     setPortfolio(Array.isArray(p) ? p : []);
     setClients(Array.isArray(cl) ? cl : []);
     setTeam(Array.isArray(tm) ? tm : []);
+    setInquiries(Array.isArray(inq) ? inq : []);
   };
 
   useEffect(() => { loadAll(); }, []);
@@ -127,6 +132,19 @@ export default function AdminClient() {
       setStatus(`${label} upload failed: ${error?.message || "Unknown error"}`);
       return "";
     }
+  };
+
+  const persistListOrder = async (resource, items, setItems, successMessage = "Order saved") => {
+    const ids = items.map((item) => item.id);
+    const result = await requestJson(`/api/cms/${resource}/reorder`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ids })
+    }, successMessage);
+    if (result.ok) {
+      setItems(items.map((item, position) => ({ ...item, position })));
+    }
+    return result;
   };
 
   const requestJson = async (url, options, successMessage = "", reloadAfter = false) => {
@@ -371,20 +389,52 @@ export default function AdminClient() {
 
     if (tab === "Contact") {
       return (
-        <form onSubmit={async (e) => {
-          e.preventDefault();
-          await requestJson(
-            "/api/cms/contact",
-            { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(contact) },
-            "Contact saved"
-          );
-        }}>
-          <Field label="Email" value={contact.email || ""} onChange={(v) => setContact({ ...contact, email: v })} />
-          <Field label="Phone" value={contact.phone || ""} onChange={(v) => setContact({ ...contact, phone: v })} />
-          <Field label="WhatsApp" value={contact.whatsapp || ""} onChange={(v) => setContact({ ...contact, whatsapp: v })} />
-          <Field label="Location" value={contact.location || ""} onChange={(v) => setContact({ ...contact, location: v })} />
-          <button className="button">Save Contact</button>
-        </form>
+        <div style={{ display: "grid", gap: "1.25rem" }}>
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            await requestJson(
+              "/api/cms/contact",
+              { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(contact) },
+              "Contact saved"
+            );
+          }}>
+            <Field label="Email" value={contact.email || ""} onChange={(v) => setContact({ ...contact, email: v })} />
+            <Field label="Phone" value={contact.phone || ""} onChange={(v) => setContact({ ...contact, phone: v })} />
+            <Field label="WhatsApp" value={contact.whatsapp || ""} onChange={(v) => setContact({ ...contact, whatsapp: v })} />
+            <Field label="Location" value={contact.location || ""} onChange={(v) => setContact({ ...contact, location: v })} />
+            <button className="button">Save Contact</button>
+          </form>
+
+          <div>
+            <h3 style={{ margin: "0 0 .5rem", fontSize: "1rem" }}>Inquiries from the website</h3>
+            <p style={{ margin: "0 0 .75rem", color: "var(--muted)", fontSize: ".86rem" }}>
+              Submissions from the home page contact form (email, project, budget).
+            </p>
+            {inquiries.length === 0 ? (
+              <p style={{ margin: 0, color: "var(--muted)", fontSize: ".88rem" }}>No inquiries yet.</p>
+            ) : (
+              <div className="admin-inquiries-list" style={{ display: "grid", gap: ".65rem" }}>
+                {inquiries.map((row) => (
+                  <article key={row.id} className="panel" style={{ padding: ".75rem" }}>
+                    <p style={{ margin: "0 0 .35rem", fontSize: ".78rem", color: "var(--muted)" }}>
+                      {row.createdAt ? new Date(row.createdAt).toLocaleString() : ""}
+                    </p>
+                    <p style={{ margin: "0 0 .25rem" }}>
+                      <strong>Email:</strong>{" "}
+                      <a href={`mailto:${row.email}`}>{row.email}</a>
+                    </p>
+                    <p style={{ margin: "0 0 .25rem", whiteSpace: "pre-wrap" }}>
+                      <strong>Project:</strong> {row.project || "—"}
+                    </p>
+                    <p style={{ margin: 0 }}>
+                      <strong>Budget:</strong> {row.budget || "—"}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       );
     }
 
@@ -457,8 +507,13 @@ export default function AdminClient() {
     if (tab === "Team") {
       return (
         <div className="admin-team" style={{ display: "grid", gap: ".75rem" }}>
-          {team.map((item, i) => (
-            <div key={item.id} className="panel" style={{ padding: ".75rem" }}>
+          <AdminSortableList
+            items={team}
+            onReorder={setTeam}
+            onPersist={(items) => persistListOrder("team", items, setTeam, "Team order saved")}
+          >
+            {(item, i) => (
+            <div className="panel" style={{ padding: ".75rem" }}>
               <Field label={`Member ${i + 1} Name`} value={item.name || ""} onChange={(v) => setTeam(team.map((m) => m.id === item.id ? { ...m, name: v } : m))} />
               <Field label="Tagline" value={item.subtitle || ""} onChange={(v) => setTeam(team.map((m) => m.id === item.id ? { ...m, subtitle: v } : m))} />
               <Field label="Description" value={item.description || ""} onChange={(v) => setTeam(team.map((m) => m.id === item.id ? { ...m, description: v } : m))} textarea />
@@ -511,7 +566,8 @@ export default function AdminClient() {
                 }}>Delete</button>
               </div>
             </div>
-          ))}
+            )}
+          </AdminSortableList>
           <button className="button" type="button" onClick={async () => {
             const nextIndex = team.length + 1;
             await requestJson("/api/cms/team", {
@@ -534,8 +590,13 @@ export default function AdminClient() {
     if (tab === "Services") {
       return (
         <div style={{ display: "grid", gap: ".75rem" }}>
-          {services.map((item, i) => (
-            <div key={item.id} className="panel" style={{ padding: ".75rem" }}>
+          <AdminSortableList
+            items={services}
+            onReorder={setServices}
+            onPersist={(items) => persistListOrder("services", items, setServices, "Services order saved")}
+          >
+            {(item, i) => (
+            <div className="panel" style={{ padding: ".75rem" }}>
               <Field label={`Service ${i + 1} Title`} value={item.title} onChange={(v) => setServices(services.map((s) => s.id === item.id ? { ...s, title: v } : s))} />
               <Field label="Description" value={item.description} onChange={(v) => setServices(services.map((s) => s.id === item.id ? { ...s, description: v } : s))} textarea />
               <div style={{ display: "flex", gap: ".5rem" }}>
@@ -551,7 +612,8 @@ export default function AdminClient() {
                 }}>Delete</button>
               </div>
             </div>
-          ))}
+            )}
+          </AdminSortableList>
           <button className="button" onClick={async () => {
             await requestJson(
               "/api/cms/services",
@@ -571,6 +633,9 @@ export default function AdminClient() {
 
       return (
         <div className="admin-portfolio" style={{ display: "grid", gap: "1rem" }}>
+          <p className="admin-sortable-hint" style={{ margin: 0 }}>
+            Drag the ⋮⋮ handle on any project to reorder within its type. Order saves automatically and updates the public site.
+          </p>
           <details className="admin-portfolio-add panel" open>
             <summary className="admin-portfolio-summary admin-portfolio-summary--add">Add a project</summary>
             <div style={{ padding: ".25rem .5rem 1rem", display: "grid", gap: ".65rem" }}>
@@ -632,8 +697,24 @@ export default function AdminClient() {
                 <span className="admin-portfolio-count">{items.length}</span>
               </summary>
               <div style={{ display: "grid", gap: ".65rem", padding: ".35rem .5rem 1rem" }}>
-                {items.map((item) => (
-                  <details key={item.id} className="admin-portfolio-item panel">
+                <AdminSortableList
+                  items={items}
+                  hint=""
+                  className="admin-sortable--nested"
+                  onReorder={(reordered) =>
+                    setPortfolio((prev) => mergePortfolioSectionOrder(prev, type, reordered))
+                  }
+                  onPersist={async (reordered) => {
+                    let next;
+                    setPortfolio((prev) => {
+                      next = mergePortfolioSectionOrder(prev, type, reordered);
+                      return next;
+                    });
+                    await persistListOrder("portfolio", next, setPortfolio, "Portfolio order saved");
+                  }}
+                >
+                  {(item) => (
+                  <details className="admin-portfolio-item panel">
                     <summary className="admin-portfolio-item-summary">
                       <span className="admin-portfolio-item-title">{item.title?.trim() || "Untitled project"}</span>
                       <span className="admin-portfolio-item-type">{getPortfolioProjectType(item)}</span>
@@ -798,7 +879,8 @@ export default function AdminClient() {
                       </div>
                     </div>
                   </details>
-                ))}
+                  )}
+                </AdminSortableList>
               </div>
             </details>
           ))}
@@ -808,8 +890,13 @@ export default function AdminClient() {
 
     return (
       <div style={{ display: "grid", gap: ".75rem" }}>
-        {clients.map((item, i) => (
-          <div key={item.id} className="panel" style={{ padding: ".75rem" }}>
+        <AdminSortableList
+          items={clients}
+          onReorder={setClients}
+          onPersist={(items) => persistListOrder("clients", items, setClients, "Clients order saved")}
+        >
+          {(item, i) => (
+          <div className="panel" style={{ padding: ".75rem" }}>
             <Field label={`Client ${i + 1} Name`} value={item.name} onChange={(v) => setClients(clients.map((c) => c.id === item.id ? { ...c, name: v } : c))} />
             <Field
               label="Logo URL"
@@ -845,7 +932,8 @@ export default function AdminClient() {
               }}>Delete</button>
             </div>
           </div>
-        ))}
+          )}
+        </AdminSortableList>
         <button className="button" onClick={async () => {
           await requestJson(
             "/api/cms/clients",
@@ -856,7 +944,7 @@ export default function AdminClient() {
         }}>Add Client</button>
       </div>
     );
-  }, [tab, hero, about, contact, hiring, services, portfolio, clients, team, newPortfolioTitle, newPortfolioDescription, newPortfolioType]);
+  }, [tab, hero, about, contact, inquiries, hiring, services, portfolio, clients, team, newPortfolioTitle, newPortfolioDescription, newPortfolioType]);
 
   return (
     <div style={{ display: "grid", gap: "1rem" }}>
@@ -906,14 +994,14 @@ export default function AdminClient() {
       <section className="panel admin-dash-panel" style={{ padding: "1rem 1.1rem" }}>
         <h2 style={{ marginTop: 0, marginBottom: ".35rem", fontSize: "clamp(1.15rem, 2.5vw, 1.35rem)" }}>{getTabLabel(tab)}</h2>
         <p style={{ marginTop: 0, marginBottom: "1rem", color: "var(--muted)", fontSize: ".88rem" }}>
-          {tab === "Portfolio" && "Projects, ordering, and media."}
+          {tab === "Portfolio" && "Projects, ordering, and media. Drag ⋮⋮ handles to reorder within each type."}
           {tab === "Hero" && "Homepage banner headline, copy, and background video."}
           {tab === "Highlight" && "Featured project on the home page (first portfolio item)." }
-          {tab === "Services" && "Service cards and ordering."}
-          {tab === "Clients" && "Client logos and carousel."}
+          {tab === "Services" && "Service cards and ordering. Drag ⋮⋮ handles to reorder."}
+          {tab === "Clients" && "Client logos and carousel. Drag ⋮⋮ handles to reorder."}
           {tab === "About" && "Vision, style, and trust blocks."}
-          {tab === "Team" && "Team member profiles, photos, and bios for /team and About."}
-          {tab === "Contact" && "Email, phone, and location shown on the site."}
+          {tab === "Team" && "Team profiles and bios. Drag ⋮⋮ handles to reorder."}
+          {tab === "Contact" && "Site contact details and inquiries submitted from the home page form."}
           {tab === "Hiring" && "/hiring job post, apply link, and nav visibility."}
         </p>
         {sectionForm}

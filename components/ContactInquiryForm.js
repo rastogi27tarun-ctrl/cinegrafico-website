@@ -1,22 +1,68 @@
 "use client";
 
 import { useState } from "react";
+import {
+  DEFAULT_INQUIRY_WHATSAPP,
+  buildInquiryWhatsAppMessage,
+  buildWhatsAppUrl,
+  whatsappDigits
+} from "../lib/whatsapp";
 
-export default function ContactInquiryForm({ companyEmail }) {
+export default function ContactInquiryForm({ whatsappNumber = DEFAULT_INQUIRY_WHATSAPP }) {
   const [clientEmail, setClientEmail] = useState("");
   const [project, setProject] = useState("");
   const [budget, setBudget] = useState("");
+  const [status, setStatus] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const waDigits = whatsappDigits(whatsappNumber) || DEFAULT_INQUIRY_WHATSAPP;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const to = encodeURIComponent(companyEmail || "cinegraficostudios@gmail.com");
-    const subject = encodeURIComponent("Project inquiry");
-    const body = encodeURIComponent(
-      `From (your email): ${clientEmail || "(not provided)"}\n\n` +
-        `Project:\n${project || "(not provided)"}\n\n` +
-        `Budget:\n${budget || "(not provided)"}\n`
-    );
-    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+    setStatus("");
+    setSubmitting(true);
+
+    const payload = {
+      email: clientEmail.trim(),
+      project: project.trim(),
+      budget: budget.trim()
+    };
+
+    try {
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setStatus(data.error || "Could not send your inquiry. Please try again.");
+        return;
+      }
+
+      const openWhatsApp = window.confirm(
+        "Your inquiry has been saved.\n\nWould you like to continue the conversation on WhatsApp?"
+      );
+
+      if (openWhatsApp) {
+        const message = buildInquiryWhatsAppMessage(payload);
+        window.open(buildWhatsAppUrl(waDigits, message), "_blank", "noopener,noreferrer");
+      }
+
+      setStatus(
+        openWhatsApp
+          ? "Thanks — we opened WhatsApp with your inquiry details."
+          : "Thanks — we received your inquiry and will be in touch soon."
+      );
+      setClientEmail("");
+      setProject("");
+      setBudget("");
+    } catch {
+      setStatus("Network error. Please check your connection and try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -27,9 +73,11 @@ export default function ContactInquiryForm({ companyEmail }) {
           type="email"
           name="clientEmail"
           autoComplete="email"
+          required
           value={clientEmail}
           onChange={(e) => setClientEmail(e.target.value)}
           placeholder="you@company.com"
+          disabled={submitting}
         />
       </label>
       <label className="home-contact-field">
@@ -40,6 +88,7 @@ export default function ContactInquiryForm({ companyEmail }) {
           value={project}
           onChange={(e) => setProject(e.target.value)}
           placeholder="Scope, timeline, deliverables…"
+          disabled={submitting}
         />
       </label>
       <label className="home-contact-field">
@@ -50,10 +99,16 @@ export default function ContactInquiryForm({ companyEmail }) {
           value={budget}
           onChange={(e) => setBudget(e.target.value)}
           placeholder="Range or ballpark"
+          disabled={submitting}
         />
       </label>
-      <button type="submit" className="button home-contact-inquiry-submit">
-        Inquiry
+      {status ? (
+        <p className="home-contact-inquiry-status" role="status">
+          {status}
+        </p>
+      ) : null}
+      <button type="submit" className="button home-contact-inquiry-submit" disabled={submitting}>
+        {submitting ? "Sending…" : "Inquiry"}
       </button>
     </form>
   );

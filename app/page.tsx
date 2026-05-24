@@ -208,7 +208,7 @@ export default async function Home() {
                 </div>
                 <div className="home-contact-inquiry-box">
                   <h3 className="home-contact-inquiry-title">Send an inquiry</h3>
-                  <ContactInquiryForm companyEmail={contact?.email || "cinegraficostudios@gmail.com"} />
+                  <ContactInquiryForm whatsappNumber={contact?.whatsapp || "+91-9839611055"} />
                 </div>
               </div>
             </div>
