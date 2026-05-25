@@ -2720,17 +2720,10 @@ body::after {
   text-align: left;
 }
 
-.public-page #clients > .container {
-  width: 100%;
-  max-width: 1600px;
-  margin-left: 0;
-  margin-right: auto;
-  padding-left: 1.25rem;
-  padding-right: 2rem;
-}
-
 .public-page #clients .clients-carousel {
   max-width: min(1180px, 100%);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .client-slide {
