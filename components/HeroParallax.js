@@ -86,7 +86,7 @@ export default function HeroParallax({ hero, clients }) {
           </div>
         </div>
 
-        <a href="#project-highlight" className="home-hero-scroll-cue">
+        <a href="#clients" className="home-hero-scroll-cue">
           Scroll <span aria-hidden>+</span>
         </a>
       </motion.div>
