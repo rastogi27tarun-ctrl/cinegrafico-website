@@ -9,7 +9,7 @@ export default async function TeamPage() {
   return (
     <>
       <PublicHeader />
-      <main className="section">
+      <main className="section public-page public-inner-page">
         <div className="container">
           <div className="section-start-chip">
             <span className="section-start-label">Team</span>

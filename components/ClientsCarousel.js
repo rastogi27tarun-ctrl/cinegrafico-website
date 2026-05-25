@@ -100,8 +100,7 @@ export default function ClientsCarousel({ clients }) {
             <h2 className="clients-heading">Trusted by brands that value cinematic quality.</h2>
           </div>
           <p className="clients-subcopy">
-            Scroll through our partners. The centered client stays in focus to create a premium, story-led carousel
-            experience.
+            Scroll through the brands that trust us to shape their visual stories.
           </p>
         </div>
 

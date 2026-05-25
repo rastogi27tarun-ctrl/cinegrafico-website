@@ -113,6 +113,38 @@ const SHARED_CONTENT = {
     ["client-seed-4", "Spotify", ASSETS.clients.spotify],
     ["client-seed-5", "Samsung", ASSETS.clients.samsung]
   ],
+  testimonials: [
+    [
+      "testimonial-seed-0",
+      "Aman Verma",
+      "Verma",
+      "Founder",
+      "Professional, passionate and phenomenal at what they do.",
+      5,
+      "",
+      false
+    ],
+    [
+      "testimonial-seed-1",
+      "Rohit Sharma",
+      "Tata Motors",
+      "Marketing Head",
+      "Cinegrafico transformed our vision into something that actually felt alive. The team gets emotion.",
+      5,
+      "",
+      true
+    ],
+    [
+      "testimonial-seed-2",
+      "Sneha Kapoor",
+      "Nykaa",
+      "Brand Director",
+      "They brought a level of storytelling that elevated our entire campaign.",
+      5,
+      "",
+      false
+    ]
+  ],
   portfolioItems: [
     ["portfolio-seed-0", "Brand Launch Film", "A cinematic launch video crafted for social-first distribution.", ASSETS.portfolio.brandLaunch.video, ASSETS.portfolio.brandLaunch.poster, { projectType: "Films" }],
     ["portfolio-seed-1", "Product Hero Spot", "High-impact product storytelling with studio lighting and dynamic edits.", ASSETS.portfolio.productHero.video, ASSETS.portfolio.productHero.poster, { projectType: "Films" }],
@@ -232,6 +264,15 @@ async function main() {
       where: { id },
       update: { name, logoUrl, position: i },
       create: { id, name, logoUrl, position: i }
+    });
+  }
+
+  for (let i = 0; i < SHARED_CONTENT.testimonials.length; i += 1) {
+    const [id, name, company, role, testimonial, rating, imageUrl, featured] = SHARED_CONTENT.testimonials[i];
+    await prisma.testimonial.upsert({
+      where: { id },
+      update: { name, company, role, testimonial, rating, imageUrl, featured, position: i },
+      create: { id, name, company, role, testimonial, rating, imageUrl, featured, position: i }
     });
   }
 

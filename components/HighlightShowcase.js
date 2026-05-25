@@ -41,8 +41,8 @@ export default function HighlightShowcase({ item }) {
   const copySize = orientation === "vertical" ? "clamp(1.05rem,2.2vw,1.2rem)" : "clamp(1rem,1.8vw,1.12rem)";
 
   return (
-    <div style={{ display: "grid", gap: "1rem", ...layoutStyle }}>
-      <div className="panel" style={{ overflow: "hidden" }}>
+    <div className="highlight-showcase-layout" style={{ ...layoutStyle }}>
+      <div className="panel highlight-showcase-media" style={{ overflow: "hidden" }}>
         {hasVideo && isYouTube ? (
           <iframe
             src={toYouTubeEmbedUrl(item.videoUrl)}
@@ -77,7 +77,7 @@ export default function HighlightShowcase({ item }) {
       </div>
 
       <div
-        className="panel"
+        className="panel highlight-showcase-copy"
         style={{
           padding: "clamp(1.1rem,2.5vw,1.65rem)",
           display: "flex",

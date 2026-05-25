@@ -19,7 +19,7 @@ export default function RelatedPhotosGallery({ photos, title }) {
     <>
       <div style={{ display: "grid", gap: "1rem", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))" }}>
         {photos.map((photoUrl, index) => (
-          <article key={`${title}-related-${index}`} className="panel" style={{ overflow: "hidden" }}>
+          <article key={`${title}-related-${index}`} className="panel public-media-card" style={{ overflow: "hidden" }}>
             <button
               type="button"
               onClick={() => setActiveIndex(index)}

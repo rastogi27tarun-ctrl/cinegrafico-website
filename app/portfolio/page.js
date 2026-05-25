@@ -12,24 +12,24 @@ export default async function PortfolioPage() {
   return (
     <>
       <PublicHeader />
-      <main>
+      <main className="public-page public-inner-page">
         <section className="section">
           <div className="container">
             <div className="section-start-chip">
               <span className="section-start-label">Portfolio</span>
               <span className="section-start-dot-wrap"><span className="section-start-dot" /></span>
             </div>
-            <h1 style={{ marginTop: 0, fontSize: "clamp(2rem,4.5vw,3.2rem)" }}>All Portfolio Items</h1>
-            <p style={{ color: "var(--muted)", marginTop: 0 }}>
+            <h1 className="home-section-title public-page-title">All Portfolio Items</h1>
+            <p className="public-page-lede" style={{ color: "var(--muted)", marginTop: 0 }}>
               Explore the complete collection of projects.
             </p>
 
             {portfolioSections.map(({ type, items }) => (
                 <section key={type} style={{ marginBottom: "1.25rem" }}>
                   <h2 style={{ marginTop: 0 }}>{type}</h2>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "1rem" }}>
+                  <div className="public-card-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "1rem" }}>
                     {items.map((item) => (
-                      <article key={item.id} className="panel" style={{ overflow: "hidden" }}>
+                      <article key={item.id} className="panel public-media-card" style={{ overflow: "hidden" }}>
                         {item.videoUrl && isYouTubeUrl(item.videoUrl) ? (
                           <iframe
                             src={toYouTubeEmbedUrl(item.videoUrl)}

@@ -18,7 +18,7 @@ export default async function HiringPage() {
   return (
     <>
       <PublicHeader />
-      <main className="section">
+      <main className="section public-page public-inner-page">
         <div className="container" style={{ maxWidth: "720px" }}>
           <div className="section-start-chip">
             <span className="section-start-label">Careers</span>
@@ -26,7 +26,7 @@ export default async function HiringPage() {
           </div>
 
           {!visible ? (
-            <article className="panel" style={{ padding: "1.25rem" }}>
+            <article className="panel public-page-card" style={{ padding: "1.25rem" }}>
               <h1 style={{ marginTop: 0 }}>Hiring</h1>
               <p style={{ color: "var(--muted)", marginBottom: 0, lineHeight: 1.7 }}>
                 We&apos;re not listing open roles on the site right now. Check back later or reach out through{" "}
@@ -34,7 +34,7 @@ export default async function HiringPage() {
               </p>
             </article>
           ) : (
-            <article className="panel" style={{ padding: "1.25rem" }}>
+            <article className="panel public-page-card" style={{ padding: "1.25rem" }}>
               <h1 style={{ marginTop: 0 }}>{roleTitle}</h1>
               {profileDescription ? (
                 <section style={{ marginBottom: "1.25rem" }}>

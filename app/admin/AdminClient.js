@@ -22,7 +22,8 @@ const NAV_SECTIONS = [
     items: [
       { id: "Services", label: "Services" },
       { id: "Portfolio", label: "Portfolio" },
-      { id: "Clients", label: "Clients" }
+      { id: "Clients", label: "Clients" },
+      { id: "Testimonials", label: "Testimonials" }
     ]
   },
   {
@@ -58,6 +59,7 @@ export default function AdminClient() {
   const [services, setServices] = useState([]);
   const [portfolio, setPortfolio] = useState([]);
   const [clients, setClients] = useState([]);
+  const [testimonials, setTestimonials] = useState([]);
   const [team, setTeam] = useState([]);
   const [newPortfolioTitle, setNewPortfolioTitle] = useState("");
   const [newPortfolioDescription, setNewPortfolioDescription] = useState("");
@@ -80,7 +82,7 @@ export default function AdminClient() {
         return null;
       }
     };
-    const [h, a, c, hi, s, p, cl, tm, inq] = await Promise.all([
+    const [h, a, c, hi, s, p, cl, te, tm, inq] = await Promise.all([
       fetchJson("/api/cms/hero"),
       fetchJson("/api/cms/about"),
       fetchJson("/api/cms/contact"),
@@ -88,6 +90,7 @@ export default function AdminClient() {
       fetchJson("/api/cms/services"),
       fetchJson("/api/cms/portfolio"),
       fetchJson("/api/cms/clients"),
+      fetchJson("/api/cms/testimonials"),
       fetchJson("/api/cms/team"),
       fetchJson("/api/cms/inquiries")
     ]);
@@ -110,6 +113,7 @@ export default function AdminClient() {
     setServices(Array.isArray(s) ? s : []);
     setPortfolio(Array.isArray(p) ? p : []);
     setClients(Array.isArray(cl) ? cl : []);
+    setTestimonials(Array.isArray(te) ? te : []);
     setTeam(Array.isArray(tm) ? tm : []);
     setInquiries(Array.isArray(inq) ? inq : []);
   };
@@ -906,6 +910,182 @@ export default function AdminClient() {
       );
     }
 
+    if (tab === "Testimonials") {
+      return (
+        <div className="admin-testimonials" style={{ display: "grid", gap: ".75rem" }}>
+          <AdminSortableList
+            items={testimonials}
+            onReorder={setTestimonials}
+            onPersist={(items) => persistListOrder("testimonials", items, setTestimonials, "Testimonials order saved")}
+          >
+            {(item, i) => (
+              <div className="panel" style={{ padding: ".75rem" }}>
+                <Field
+                  label={`Testimonial ${i + 1} Name`}
+                  value={item.name || ""}
+                  onChange={(v) => setTestimonials(testimonials.map((t) => (t.id === item.id ? { ...t, name: v } : t)))}
+                />
+                <Field
+                  label="Company"
+                  value={item.company || ""}
+                  onChange={(v) => setTestimonials(testimonials.map((t) => (t.id === item.id ? { ...t, company: v } : t)))}
+                />
+                <Field
+                  label="Role"
+                  value={item.role || ""}
+                  onChange={(v) => setTestimonials(testimonials.map((t) => (t.id === item.id ? { ...t, role: v } : t)))}
+                />
+                <Field
+                  label="Testimonial"
+                  value={item.testimonial || ""}
+                  onChange={(v) => setTestimonials(testimonials.map((t) => (t.id === item.id ? { ...t, testimonial: v } : t)))}
+                  textarea
+                  rows={5}
+                />
+                <div style={{ marginBottom: ".65rem" }}>
+                  <label>Rating</label>
+                  <select
+                    className="admin-form-select"
+                    value={String(item.rating ?? 5)}
+                    onChange={(e) =>
+                      setTestimonials(testimonials.map((t) => (t.id === item.id ? { ...t, rating: Number(e.target.value) } : t)))
+                    }
+                    aria-label={`Rating for ${item.name || "testimonial"}`}
+                  >
+                    {[5, 4, 3, 2, 1].map((rating) => (
+                      <option key={rating} value={rating}>
+                        {rating} star{rating === 1 ? "" : "s"}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <Field
+                  label="Image URL"
+                  value={item.imageUrl || ""}
+                  onChange={(v) => setTestimonials(testimonials.map((t) => (t.id === item.id ? { ...t, imageUrl: v } : t)))}
+                />
+                <div className="admin-file-row">
+                  <label>Upload image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const imageUrl = await safeUploadFile(file, `${item.name || "Testimonial"} image`);
+                      if (!imageUrl) return;
+                      setTestimonials(testimonials.map((t) => (t.id === item.id ? { ...t, imageUrl } : t)));
+                      setStatus(`Image uploaded for ${item.name || "testimonial"}. Click Save to publish.`);
+                    }}
+                  />
+                </div>
+                {item.imageUrl ? (
+                  <div style={{ marginBottom: ".65rem" }}>
+                    <span style={{ fontSize: ".78rem", color: "var(--muted)" }}>Preview</span>
+                    <img
+                      src={item.imageUrl}
+                      alt=""
+                      style={{
+                        display: "block",
+                        marginTop: ".35rem",
+                        width: "min(180px, 100%)",
+                        aspectRatio: "16 / 10",
+                        objectFit: "cover",
+                        borderRadius: "12px",
+                        border: "1px solid var(--line)"
+                      }}
+                    />
+                  </div>
+                ) : null}
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: ".55rem",
+                    marginBottom: ".75rem",
+                    cursor: "pointer"
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={Boolean(item.featured)}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setTestimonials(
+                        testimonials.map((t) => ({
+                          ...t,
+                          featured: t.id === item.id ? checked : checked ? false : t.featured
+                        }))
+                      );
+                    }}
+                  />
+                  Featured testimonial (center card)
+                </label>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: ".5rem" }}>
+                  <button
+                    className="button"
+                    type="button"
+                    onClick={async () => {
+                      const result = await requestJson(
+                        `/api/cms/testimonials/${item.id}`,
+                        { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(item) },
+                        `Testimonial ${i + 1} saved`
+                      );
+                      if (result.ok) await loadAll();
+                    }}
+                  >
+                    Save
+                  </button>
+                  <button
+                    className="button"
+                    type="button"
+                    onClick={async () => {
+                      await requestJson(
+                        `/api/cms/testimonials/${item.id}`,
+                        { method: "DELETE" },
+                        `Testimonial ${i + 1} removed`,
+                        true
+                      );
+                    }}
+                    style={{ background: "rgba(255,80,80,0.25)", color: "#fff" }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            )}
+          </AdminSortableList>
+          <button
+            className="button"
+            type="button"
+            onClick={async () => {
+              await requestJson(
+                "/api/cms/testimonials",
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    name: "New Client",
+                    company: "Company name",
+                    role: "Role",
+                    testimonial: "Write the testimonial here.",
+                    rating: 5,
+                    imageUrl: "",
+                    featured: testimonials.length === 0,
+                    position: testimonials.length
+                  })
+                },
+                "Testimonial added",
+                true
+              );
+            }}
+          >
+            Add Testimonial
+          </button>
+        </div>
+      );
+    }
+
     return (
       <div style={{ display: "grid", gap: ".75rem" }}>
         <AdminSortableList
@@ -962,7 +1142,7 @@ export default function AdminClient() {
         }}>Add Client</button>
       </div>
     );
-  }, [tab, hero, about, contact, inquiries, hiring, services, portfolio, clients, team, newPortfolioTitle, newPortfolioDescription, newPortfolioType]);
+  }, [tab, hero, about, contact, inquiries, hiring, services, portfolio, clients, testimonials, team, newPortfolioTitle, newPortfolioDescription, newPortfolioType]);
 
   return (
     <div style={{ display: "grid", gap: "1rem" }}>
@@ -1017,6 +1197,7 @@ export default function AdminClient() {
           {tab === "Highlight" && "Featured project on the home page (first portfolio item)." }
           {tab === "Services" && "Service cards and ordering. Drag ⋮⋮ handles to reorder."}
           {tab === "Clients" && "Client logos and carousel. Drag ⋮⋮ handles to reorder."}
+          {tab === "Testimonials" && "Client testimonials for the home page. Drag ⋮⋮ handles to reorder and mark one as featured."}
           {tab === "About" && "Vision, style, and trust blocks."}
           {tab === "Team" && "Team profiles and bios. Drag ⋮⋮ handles to reorder."}
           {tab === "Contact" && "Site contact details and inquiries submitted from the home page form."}

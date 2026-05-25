@@ -20,9 +20,9 @@ export default async function PortfolioDetailPage({ params }) {
     return (
       <>
         <PublicHeader />
-        <main className="section">
+        <main className="section public-page public-inner-page">
           <div className="container">
-            <article className="panel" style={{ padding: "1rem" }}>
+            <article className="panel public-page-card" style={{ padding: "1rem" }}>
               <h1 style={{ marginTop: 0 }}>Project not found</h1>
             </article>
           </div>
@@ -36,13 +36,13 @@ export default async function PortfolioDetailPage({ params }) {
   return (
     <>
       <PublicHeader />
-      <main className="section">
+      <main className="section public-page public-inner-page">
         <div className="container" style={{ display: "grid", gap: "1rem" }}>
           <div className="section-start-chip">
             <span className="section-start-label">Portfolio</span>
             <span className="section-start-dot-wrap"><span className="section-start-dot" /></span>
           </div>
-          <article className="panel" style={{ overflow: "hidden" }}>
+          <article className="panel public-media-card public-detail-card" style={{ overflow: "hidden" }}>
             {item.videoUrl && isYouTubeUrl(item.videoUrl) ? (
               <iframe
                 src={toYouTubeEmbedUrl(item.videoUrl)}

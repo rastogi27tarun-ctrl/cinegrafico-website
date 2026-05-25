@@ -3,11 +3,10 @@
 import { useEffect, useState } from "react";
 
 const SECTION_LINKS = [
-  { id: "project-highlight", label: "Project in Highlight" },
-  { id: "services", label: "Services" },
+  { id: "portfolio", label: "Work" },
   { id: "about", label: "About" },
-  { id: "portfolio", label: "Portfolio" },
-  { id: "clients", label: "Clients" },
+  { id: "services", label: "Services" },
+  { id: "testimonials", label: "Journal" },
   { id: "contact", label: "Contact" }
 ];
 
@@ -82,7 +81,7 @@ export default function PublicHeader() {
     <header className="public-header">
       <div className="container public-header-inner">
         <a href="/" className="public-header-brand">
-          <img src="/assets/cinegrafico-logo.png" alt="logo" className="public-header-logo" />
+          <img src="/assets/cinegrafico-studio-logo-white.png" alt="Cinegrafico Studios logo" className="public-header-logo" />
           Cinegrafico Studios
         </a>
         <button
@@ -122,7 +121,7 @@ export default function PublicHeader() {
             className={`main-tab-link ${pathname.startsWith("/team") ? "is-active" : ""}`}
             onClick={closeMobileMenu}
           >
-            <span>Team</span>
+            <span>Studio</span>
             <span className={`main-tab-dot-wrap ${pathname.startsWith("/team") ? "is-active" : ""}`}>
               <span className={`main-tab-dot ${pathname.startsWith("/team") ? "is-active" : ""}`} />
             </span>
@@ -140,6 +139,9 @@ export default function PublicHeader() {
             </a>
           ) : null}
         </nav>
+        <a href="/#contact" className="public-header-inquiry" onClick={closeMobileMenu}>
+          Inquiry <span aria-hidden>-&gt;</span>
+        </a>
       </div>
     </header>
   );

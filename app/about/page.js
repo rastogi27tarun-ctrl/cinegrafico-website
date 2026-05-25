@@ -45,17 +45,17 @@ export default async function AboutPage() {
   return (
     <>
       <PublicHeader />
-      <main className="section">
+      <main className="section public-page public-inner-page">
         <div className="container" style={{ display: "grid", gap: "1rem", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))" }}>
-          <article className="panel" style={{ padding: "1rem" }}>
+          <article className="panel public-page-card" style={{ padding: "1rem" }}>
             <h2>Vision</h2>
             <p style={{ color: "var(--muted)" }} dangerouslySetInnerHTML={{ __html: renderStyledText(about?.vision) }} />
           </article>
-          <article className="panel" style={{ padding: "1rem" }}>
+          <article className="panel public-page-card" style={{ padding: "1rem" }}>
             <h2>Style</h2>
             <p style={{ color: "var(--muted)" }} dangerouslySetInnerHTML={{ __html: renderStyledText(about?.style) }} />
           </article>
-          <article className="panel" style={{ padding: "1rem" }}>
+          <article className="panel public-page-card" style={{ padding: "1rem" }}>
             <h2>Why clients trust us</h2>
             <p style={{ color: "var(--muted)" }} dangerouslySetInnerHTML={{ __html: renderStyledText(about?.trust) }} />
           </article>
@@ -68,7 +68,7 @@ export default async function AboutPage() {
           <h2 style={{ marginTop: 0 }}>Team</h2>
           <div style={{ display: "grid", gap: "1rem", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))" }}>
             {teamWithExtraSlot.map((member) => (
-              <article key={member.slug} className="panel team-card">
+              <article key={member.slug} className="panel team-card public-page-card">
                 {member.slug ? (
                   <a
                     href={`/about/team?member=${member.slug}`}
