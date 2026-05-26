@@ -7,6 +7,7 @@ import HighlightShowcase from "../components/HighlightShowcase";
 import ClientsCarousel from "../components/ClientsCarousel";
 import PortfolioCarousel from "../components/PortfolioCarousel";
 import ContactInquiryForm from "../components/ContactInquiryForm";
+import TestimonialsCarousel from "../components/TestimonialsCarousel";
 import { getPublicCmsData } from "../lib/cms";
 import { getPortfolioSections } from "../lib/portfolio";
 
@@ -42,39 +43,6 @@ function resolveServiceSkin(title) {
   return "";
 }
 
-const FALLBACK_TESTIMONIALS = [
-  {
-    id: "fallback-testimonial-1",
-    testimonial: "Professional, passionate and phenomenal at what they do.",
-    name: "Aman Verma",
-    company: "Verma",
-    role: "Founder",
-    rating: 5,
-    imageUrl: "",
-    featured: false
-  },
-  {
-    id: "fallback-testimonial-2",
-    testimonial: "Cinegrafico transformed our vision into something that actually felt alive. The team gets emotion.",
-    name: "Rohit Sharma",
-    company: "Tata Motors",
-    role: "Marketing Head",
-    rating: 5,
-    imageUrl: "",
-    featured: true
-  },
-  {
-    id: "fallback-testimonial-3",
-    testimonial: "They brought a level of storytelling that elevated our entire campaign.",
-    name: "Sneha Kapoor",
-    company: "Nykaa",
-    role: "Brand Director",
-    rating: 5,
-    imageUrl: "",
-    featured: false
-  }
-];
-
 function normalizeTestimonial(item) {
   const rating = Number(item?.rating ?? 5);
   return {
@@ -86,42 +54,6 @@ function normalizeTestimonial(item) {
     rating: Number.isFinite(rating) ? Math.min(5, Math.max(1, Math.round(rating))) : 5,
     imageUrl: item?.imageUrl || "",
     featured: Boolean(item?.featured)
-  };
-}
-
-function getTestimonialCards(items) {
-  const source = Array.isArray(items) ? items : [];
-  const pool = (source.length ? source : FALLBACK_TESTIMONIALS).map(normalizeTestimonial);
-  if (pool.length === 0) return { cards: [], current: 0, total: 0 };
-
-  const featuredIndex = pool.findIndex((item) => item.featured);
-  const centerIndex = featuredIndex >= 0 ? featuredIndex : Math.min(1, pool.length - 1);
-
-  if (pool.length === 1) {
-    return { cards: [{ item: pool[0], slot: 2 }], current: 1, total: 1 };
-  }
-
-  if (pool.length === 2) {
-    const otherIndex = centerIndex === 0 ? 1 : 0;
-    const cards = centerIndex === 0
-      ? [{ item: pool[centerIndex], slot: 2 }, { item: pool[otherIndex], slot: 3 }]
-      : [{ item: pool[otherIndex], slot: 1 }, { item: pool[centerIndex], slot: 2 }];
-    return { cards, current: centerIndex + 1, total: pool.length };
-  }
-
-  const leftIndex = centerIndex === 0 ? 1 : centerIndex - 1;
-  const rightIndex = centerIndex === pool.length - 1 ? centerIndex - 1 : centerIndex + 1;
-  const fallbackLeftIndex = centerIndex === pool.length - 1 ? centerIndex - 2 : leftIndex;
-  const fallbackRightIndex = centerIndex === 0 ? 2 : rightIndex;
-
-  return {
-    cards: [
-      { item: pool[fallbackLeftIndex], slot: 1 },
-      { item: pool[centerIndex], slot: 2 },
-      { item: pool[fallbackRightIndex], slot: 3 }
-    ],
-    current: centerIndex + 1,
-    total: pool.length
   };
 }
 
@@ -138,7 +70,7 @@ export default async function Home() {
   });
   const highlight = portfolio?.[0] || null;
   const portfolioSections = getPortfolioSections(portfolio);
-  const testimonialDisplay = getTestimonialCards(testimonials);
+  const testimonialItems = Array.isArray(testimonials) ? testimonials.map(normalizeTestimonial) : [];
 
   return (
     <>
@@ -250,46 +182,7 @@ export default async function Home() {
               </p>
             </div>
 
-            <div className="testimonials-stage" aria-label="Client testimonials">
-              <div className="testimonials-nav" aria-hidden="true">
-                <span className="testimonial-arrow">&lsaquo;</span>
-                <span className="testimonial-arrow">&rsaquo;</span>
-                <span className="testimonial-count">
-                  {String(testimonialDisplay.current).padStart(2, "0")} / {String(testimonialDisplay.total).padStart(2, "0")}
-                </span>
-              </div>
-              {testimonialDisplay.cards.map(({ item: testimonial, slot }) => (
-                <article
-                  key={testimonial.id}
-                  className={`testimonial-card testimonial-card-${slot} ${
-                    slot === 2 ? "is-featured" : ""
-                  } testimonial-tone-${slot === 1 ? "studio" : slot === 3 ? "portrait" : "featured"}`}
-                >
-                  <span className="testimonial-stars" aria-label="5 out of 5 stars">
-                    {"\u2605".repeat(testimonial.rating)}
-                  </span>
-                  <span className="testimonial-card-quote" aria-hidden="true">&ldquo;</span>
-                  <p className="testimonial-card-copy">{testimonial.testimonial}</p>
-                  <span className="testimonial-divider" />
-                  <div className="testimonial-card-footer">
-                    <div>
-                      <h3>{testimonial.name}</h3>
-                      <p>{[testimonial.role, testimonial.company].filter(Boolean).join(", ")}</p>
-                    </div>
-                    <span className="testimonial-brand">{testimonial.company || "Client"}</span>
-                  </div>
-                  <div
-                    className={`testimonial-card-scene ${testimonial.imageUrl ? "has-image" : ""}`}
-                    style={testimonial.imageUrl ? { backgroundImage: `url(${testimonial.imageUrl})` } : undefined}
-                    aria-hidden="true"
-                  >
-                    <span className="testimonial-light testimonial-light-left" />
-                    <span className="testimonial-light testimonial-light-right" />
-                    <span className="testimonial-subject" />
-                  </div>
-                </article>
-              ))}
-            </div>
+            <TestimonialsCarousel testimonials={testimonialItems} />
           </div>
         </RevealSection>
 

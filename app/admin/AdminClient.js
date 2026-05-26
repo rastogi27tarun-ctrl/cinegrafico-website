@@ -656,7 +656,7 @@ export default function AdminClient() {
       return (
         <div className="admin-portfolio" style={{ display: "grid", gap: "1rem" }}>
           <p className="admin-sortable-hint" style={{ margin: 0 }}>
-            Drag the ⋮⋮ handle on any project to reorder within its type. Order saves automatically and updates the public site.
+            Drag the ⋮⋮ handle on any project to reorder within its type, then click Save layout to update the public site.
           </p>
           <details className="admin-portfolio-add panel" open>
             <summary className="admin-portfolio-summary admin-portfolio-summary--add">Add a project</summary>
@@ -732,7 +732,7 @@ export default function AdminClient() {
                       next = mergePortfolioSectionOrder(prev, type, reordered);
                       return next;
                     });
-                    await persistListOrder("portfolio", next, setPortfolio, "Portfolio order saved");
+                    return await persistListOrder("portfolio", next, setPortfolio, "Portfolio order saved");
                   }}
                 >
                   {(item) => (
@@ -1192,14 +1192,14 @@ export default function AdminClient() {
       <section className="panel admin-dash-panel" style={{ padding: "1rem 1.1rem" }}>
         <h2 style={{ marginTop: 0, marginBottom: ".35rem", fontSize: "clamp(1.15rem, 2.5vw, 1.35rem)" }}>{getTabLabel(tab)}</h2>
         <p style={{ marginTop: 0, marginBottom: "1rem", color: "var(--muted)", fontSize: ".88rem" }}>
-          {tab === "Portfolio" && "Projects, ordering, and media. Drag ⋮⋮ handles to reorder within each type."}
+          {tab === "Portfolio" && "Projects, ordering, and media. Drag ⋮⋮ handles to reorder within each type, then save the layout."}
           {tab === "Hero" && "Homepage banner headline, copy, and background video."}
           {tab === "Highlight" && "Featured project on the home page (first portfolio item)." }
-          {tab === "Services" && "Service cards and ordering. Drag ⋮⋮ handles to reorder."}
-          {tab === "Clients" && "Client logos and carousel. Drag ⋮⋮ handles to reorder."}
-          {tab === "Testimonials" && "Client testimonials for the home page. Drag ⋮⋮ handles to reorder and mark one as featured."}
+          {tab === "Services" && "Service cards and ordering. Drag ⋮⋮ handles to reorder, then save the layout."}
+          {tab === "Clients" && "Client logos and carousel. Drag ⋮⋮ handles to reorder, then save the layout."}
+          {tab === "Testimonials" && "Client testimonials for the home page. Drag ⋮⋮ handles to reorder, save the layout, and mark one as featured."}
           {tab === "About" && "Vision, style, and trust blocks."}
-          {tab === "Team" && "Team profiles and bios. Drag ⋮⋮ handles to reorder."}
+          {tab === "Team" && "Team profiles and bios. Drag ⋮⋮ handles to reorder, then save the layout."}
           {tab === "Contact" && "Site contact details and inquiries submitted from the home page form."}
           {tab === "Hiring" && "/hiring job post, apply link, and nav visibility."}
         </p>
