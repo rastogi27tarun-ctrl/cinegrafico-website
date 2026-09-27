@@ -1,4 +1,5 @@
 import PublicHeader from "../../components/PublicHeader";
+import SiteFooter from "../../components/SiteFooter";
 import TeamMemberCard from "../../components/TeamMemberCard";
 import { getPublicCmsData } from "../../lib/cms";
 import { resolveTeamImage } from "../../lib/team";
@@ -23,6 +24,7 @@ export default async function TeamPage() {
           </div>
         </div>
       </main>
+      <SiteFooter />
     </>
   );
 }

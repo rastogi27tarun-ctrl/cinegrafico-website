@@ -1,4 +1,5 @@
 import PublicHeader from "../../components/PublicHeader";
+import SiteFooter from "../../components/SiteFooter";
 import { getPublicCmsData } from "../../lib/cms";
 
 export const metadata = {
@@ -57,6 +58,7 @@ export default async function HiringPage() {
           )}
         </div>
       </main>
+      <SiteFooter />
     </>
   );
 }

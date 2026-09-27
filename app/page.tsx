@@ -8,6 +8,7 @@ import ClientsCarousel from "../components/ClientsCarousel";
 import PortfolioCarousel from "../components/PortfolioCarousel";
 import ContactInquiryForm from "../components/ContactInquiryForm";
 import TestimonialsCarousel from "../components/TestimonialsCarousel";
+import SiteFooter from "../components/SiteFooter";
 import { getPublicCmsData } from "../lib/cms";
 import { getPortfolioSections } from "../lib/portfolio";
 
@@ -231,7 +232,7 @@ export default async function Home() {
                       </div>
                     ) : null}
                   </dl>
-                  <p className="home-contact-availability">Available for Q2 and Q3 projects</p>
+                  <p className="home-contact-availability">Available for new projects</p>
                   {contact?.location ? (
                     <p className="home-contact-location">
                       <span className="home-contact-location-label">Location</span>
@@ -248,6 +249,7 @@ export default async function Home() {
           </div>
         </RevealSection>
       </main>
+      <SiteFooter />
     </>
   );
 }

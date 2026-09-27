@@ -6,7 +6,7 @@ const SECTION_LINKS = [
   { id: "portfolio", label: "Work" },
   { id: "about", label: "About" },
   { id: "services", label: "Services" },
-  { id: "testimonials", label: "Journal" },
+  { id: "testimonials", label: "Testimonials" },
   { id: "contact", label: "Contact" }
 ];
 

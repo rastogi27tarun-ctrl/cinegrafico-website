@@ -1,4 +1,5 @@
 import PublicHeader from "../../../components/PublicHeader";
+import SiteFooter from "../../../components/SiteFooter";
 import { db } from "../../../lib/db";
 import { isYouTubeUrl, toYouTubeEmbedUrl } from "../../../lib/media";
 import RelatedPhotosGallery from "../../../components/RelatedPhotosGallery";
@@ -27,6 +28,7 @@ export default async function PortfolioDetailPage({ params }) {
             </article>
           </div>
         </main>
+        <SiteFooter />
       </>
     );
   }
@@ -73,6 +75,7 @@ export default async function PortfolioDetailPage({ params }) {
           </article>
         </div>
       </main>
+      <SiteFooter />
     </>
   );
 }

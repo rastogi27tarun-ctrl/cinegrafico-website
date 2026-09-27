@@ -1,4 +1,5 @@
 import PublicHeader from "../../components/PublicHeader";
+import SiteFooter from "../../components/SiteFooter";
 import { getPublicCmsData } from "../../lib/cms";
 import { resolveTeamImage } from "../../lib/team";
 
@@ -98,6 +99,7 @@ export default async function AboutPage() {
           </div>
         </div>
       </main>
+      <SiteFooter />
     </>
   );
 }

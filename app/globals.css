@@ -3213,3 +3213,55 @@ body::after {
 .admin-sortable--nested .admin-drag-handle {
   margin-top: 0.45rem;
 }
+
+.site-footer {
+  position: relative;
+  border-top: 1px solid rgba(255, 232, 191, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 213, 152, 0.045), rgba(255, 255, 255, 0.012)),
+    #020203;
+  color: var(--muted);
+}
+
+.site-footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-top: 1.4rem;
+  padding-bottom: 1.4rem;
+}
+
+.site-footer-brand,
+.site-footer-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.site-footer-copyright,
+.site-footer-domain,
+.site-footer-links a {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.site-footer-domain,
+.site-footer-links a {
+  color: #d7a963;
+  transition: color 180ms ease;
+}
+
+.site-footer-domain:hover,
+.site-footer-links a:hover {
+  color: #fff7e8;
+}
+
+@media (max-width: 760px) {
+  .site-footer-inner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+}
