@@ -3265,3 +3265,247 @@ body::after {
     gap: 0.8rem;
   }
 }
+
+
+/* Mobile viewing pass — high-impact narrow-screen fixes */
+.public-header-nav-inquiry {
+  display: none;
+}
+
+.home-contact-company-item dd,
+.home-contact-company-item a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.public-card-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+}
+
+@media (max-width: 760px) {
+  /* Prevent clients heading from forcing horizontal scroll */
+  .clients-heading,
+  .public-page .clients-heading {
+    white-space: normal;
+    max-width: 100%;
+  }
+
+  /* Highlight showcase: override inline 2-col grid */
+  .highlight-showcase-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Vertical mobile nav instead of horizontal scroll strip */
+  .public-header-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.65rem;
+  }
+
+  .public-header-brand {
+    min-width: 0;
+    letter-spacing: 0.14em;
+    white-space: normal;
+    line-height: 1.15;
+  }
+
+  .public-header-toggle {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  .public-header-nav {
+    display: none;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.15rem;
+    width: 100%;
+    margin-top: 0.15rem;
+    padding: 0.55rem;
+    border: 1px solid rgba(255, 232, 191, 0.16);
+    border-radius: 14px;
+    background: rgba(4, 4, 5, 0.94);
+    overflow: visible;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+  }
+
+  .public-header-nav.is-open {
+    display: flex;
+    overflow-x: visible;
+  }
+
+  .public-header-nav .main-tab-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 44px;
+    padding: 0.65rem 0.75rem;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    white-space: nowrap;
+  }
+
+  .public-header-nav .main-tab-link:hover,
+  .public-header-nav .main-tab-link.is-active {
+    background: rgba(255, 213, 152, 0.08);
+  }
+
+  .public-header-nav-inquiry {
+    display: flex;
+    margin-top: 0.25rem;
+    border: 1px solid rgba(255, 213, 152, 0.45);
+    color: #f9e6c4;
+  }
+
+  /* Hero: keep CTA readable; tame portrait frame height */
+  .public-page .home-hero {
+    min-height: auto;
+  }
+
+  .home-hero-shell {
+    gap: 1.25rem;
+    padding-top: 1.35rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .public-page .home-hero-content {
+    max-width: 100%;
+  }
+
+  .public-page .home-hero-content h1 {
+    max-width: none;
+  }
+
+  .public-page .home-hero-content p:not(.home-hero-kicker) {
+    max-width: none;
+    font-size: 0.95rem;
+  }
+
+  .home-hero-cta {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .home-hero-frame {
+    width: min(260px, 78vw);
+    max-height: 52vh;
+    aspect-ratio: 4 / 5;
+    justify-self: center;
+  }
+
+  .home-hero-trust-strip {
+    padding-top: 0.75rem;
+  }
+
+  .home-hero-trust-logos {
+    gap: 1rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Section titles / body spacing */
+  .public-page .home-section-title,
+  .public-page .clients-heading,
+  .public-page-title {
+    overflow-wrap: anywhere;
+  }
+
+  .home-about-intro p,
+  .home-services-grid .service-card p,
+  .home-about-card p {
+    font-size: 0.95rem;
+  }
+
+  .home-services-grid,
+  .home-about-grid,
+  .home-team-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Contact form fields: 16px avoids iOS zoom */
+  .home-contact-inquiry-form input,
+  .home-contact-inquiry-form textarea {
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  .home-contact-inquiry-form textarea {
+    min-height: 6rem;
+  }
+
+  .home-contact-inquiry-submit {
+    min-height: 44px;
+    width: 100%;
+    justify-self: stretch;
+    justify-content: center;
+  }
+
+  /* Footer socials: stack with usable tap targets */
+  .site-footer-inner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding-top: 1.15rem;
+    padding-bottom: 1.35rem;
+  }
+
+  .site-footer-brand,
+  .site-footer-links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+  }
+
+  .site-footer-copyright,
+  .site-footer-domain,
+  .site-footer-links a {
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+  }
+
+  .site-footer-links a,
+  .site-footer-domain {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0;
+  }
+
+  /* Portfolio / carousel controls — usable tap targets */
+  .portfolio-type-group .button {
+    min-height: 40px;
+  }
+}
+
+@media (max-width: 560px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .public-header-brand {
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    max-width: none;
+  }
+
+  .public-header-logo {
+    width: 2.15rem;
+    height: 2.15rem;
+  }
+
+  .home-hero-frame {
+    width: min(220px, 72vw);
+  }
+
+  .home-hero-trust-item img {
+    width: 56px;
+    height: 22px;
+  }
+
+  .testimonial-card-copy,
+  .testimonial-card:not(.is-featured) .testimonial-card-copy {
+    max-width: none;
+  }
+}

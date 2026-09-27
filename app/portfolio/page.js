@@ -28,7 +28,7 @@ export default async function PortfolioPage() {
             {portfolioSections.map(({ type, items }) => (
                 <section key={type} style={{ marginBottom: "1.25rem" }}>
                   <h2 style={{ marginTop: 0 }}>{type}</h2>
-                  <div className="public-card-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "1rem" }}>
+                  <div className="public-card-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,260px),1fr))", gap: "1rem" }}>
                     {items.map((item) => (
                       <article key={item.id} className="panel public-media-card" style={{ overflow: "hidden" }}>
                         {item.videoUrl && isYouTubeUrl(item.videoUrl) ? (

@@ -138,6 +138,13 @@ export default function PublicHeader() {
               </span>
             </a>
           ) : null}
+          <a
+            href="/#contact"
+            className="main-tab-link public-header-nav-inquiry"
+            onClick={closeMobileMenu}
+          >
+            <span>Inquiry</span>
+          </a>
         </nav>
         <a href="/#contact" className="public-header-inquiry" onClick={closeMobileMenu}>
           Inquiry <span aria-hidden>-&gt;</span>
