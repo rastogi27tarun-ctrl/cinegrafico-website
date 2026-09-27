@@ -1,4 +1,5 @@
 import PublicHeader from "../../components/PublicHeader";
+import SiteFooter from "../../components/SiteFooter";
 import { getPublicCmsData } from "../../lib/cms";
 import { isYouTubeUrl, toYouTubeEmbedUrl } from "../../lib/media";
 import { getPortfolioSections } from "../../lib/portfolio";
@@ -86,6 +87,7 @@ export default async function PortfolioPage() {
           </div>
         </section>
       </main>
+      <SiteFooter />
     </>
   );
 }

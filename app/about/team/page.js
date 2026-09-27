@@ -1,4 +1,5 @@
 import PublicHeader from "../../../components/PublicHeader";
+import SiteFooter from "../../../components/SiteFooter";
 import { getContent } from "../../../lib/cms";
 import { resolveTeamImage } from "../../../lib/team";
 
@@ -76,6 +77,7 @@ export default async function TeamMemberPage({ searchParams }) {
           </article>
         </div>
       </main>
+      <SiteFooter />
     </>
   );
 }

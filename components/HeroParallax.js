@@ -53,7 +53,7 @@ export default function HeroParallax({ hero, clients }) {
           <h1>{hero?.heading || "Make your brand feel like a movie."}</h1>
           <p className="home-hero-kicker">Real stories. Real impact.</p>
           <p>{hero?.subheading || "Cinematic visuals, identity, and motion for brands that want to stand out."}</p>
-          <a href="#portfolio" className="button home-hero-cta">{hero?.ctaText || "Watch Reel"}</a>
+          <a href="#contact" className="button home-hero-cta">{hero?.ctaText || "Watch Reel"}</a>
         </motion.div>
 
         <motion.div className="home-hero-frame" style={{ y: yText }}>
