@@ -1,4 +1,5 @@
 import "./globals.css";
+import { Analytics } from '@vercel/analytics/next';
 
 const siteTitle = "Cinegrafico Studios | Cinematic Brand Films, Motion & Design";
 const siteDescription = "Boutique studio for animation, VFX, motion graphics, design, photography, and cinematography — Lucknow and remote worldwide.";
@@ -38,7 +39,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
