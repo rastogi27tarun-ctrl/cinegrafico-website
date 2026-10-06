@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
-import { isYouTubeUrl, toYouTubeEmbedUrl } from "../lib/media";
+import { isYouTubeUrl, optimizeImageUrl, optimizeImageSrcSet } from "../lib/media";
+import YouTubeFacade from "./YouTubeFacade";
 import { getPortfolioCardSummary } from "../lib/highlight";
 import Link from "next/link";
 
@@ -95,27 +96,33 @@ export default function PortfolioCarousel({ items, ariaLabel }) {
           >
             <div className="portfolio-card-media">
               {item.videoUrl && isYouTubeUrl(item.videoUrl) ? (
-                <iframe
-                  src={toYouTubeEmbedUrl(item.videoUrl)}
+                <YouTubeFacade
+                  url={item.videoUrl}
                   title={item.title || "Portfolio video"}
                   className="portfolio-preview-video"
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
                 />
               ) : item.videoUrl ? (
                 <video
                   src={item.videoUrl}
-                  poster={item.posterUrl || undefined}
+                  poster={item.posterUrl ? optimizeImageUrl(item.posterUrl, 800) : undefined}
                   muted
                   loop
                   playsInline
-                  preload="auto"
+                  preload={item.posterUrl ? "none" : "metadata"}
                   className="portfolio-preview-video"
                 />
               ) : resolvePortfolioPoster(item) ? (
-                <img src={resolvePortfolioPoster(item)} alt={item.title || "Portfolio item"} className="portfolio-preview-image" />
+                <img
+                  src={optimizeImageUrl(resolvePortfolioPoster(item), 800)}
+                  srcSet={optimizeImageSrcSet(resolvePortfolioPoster(item), [400, 600, 800, 1200])}
+                  sizes="(max-width: 760px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  alt={item.title || "Portfolio item"}
+                  className="portfolio-preview-image"
+                  width={800}
+                  height={500}
+                  loading="lazy"
+                  decoding="async"
+                />
               ) : (
                 <div className="portfolio-preview-empty" />
               )}

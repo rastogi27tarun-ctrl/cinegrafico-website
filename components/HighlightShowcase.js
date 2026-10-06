@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { isYouTubeUrl, toYouTubeEmbedUrl } from "../lib/media";
+import { isYouTubeUrl, toYouTubeEmbedUrl, optimizeImageUrl, optimizeImageSrcSet } from "../lib/media";
 import { getHighlightBody } from "../lib/highlight";
 
 export default function HighlightShowcase({ item }) {
@@ -56,7 +56,7 @@ export default function HighlightShowcase({ item }) {
         ) : hasVideo ? (
           <video
             src={item.videoUrl}
-            poster={item.posterUrl || undefined}
+            poster={item.posterUrl ? optimizeImageUrl(item.posterUrl, 1600) : undefined}
             style={{ width: "100%", aspectRatio: previewAspectRatio, objectFit: "contain", objectPosition: "center", background: "rgba(8, 8, 12, 0.92)" }}
             autoPlay
             muted
@@ -66,7 +66,11 @@ export default function HighlightShowcase({ item }) {
           />
         ) : hasImage ? (
           <img
-            src={item.posterUrl}
+            src={optimizeImageUrl(item.posterUrl, 1600)}
+            srcSet={optimizeImageSrcSet(item.posterUrl, [640, 960, 1280, 1600, 2000])}
+            sizes="(max-width: 900px) 100vw, 75vw"
+            loading="lazy"
+            decoding="async"
             alt={item?.title || "Highlighted project"}
             style={{ width: "100%", aspectRatio: previewAspectRatio, objectFit: "contain", objectPosition: "center", background: "rgba(8, 8, 12, 0.92)", display: "block" }}
             onLoad={onImageLoad}

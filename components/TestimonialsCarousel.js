@@ -1,5 +1,7 @@
 "use client";
 
+import { optimizeImageUrl } from "../lib/media";
+
 import { useMemo, useState } from "react";
 
 const FALLBACK_TESTIMONIALS = [
@@ -152,7 +154,7 @@ export default function TestimonialsCarousel({ testimonials }) {
           </div>
           <div
             className={`testimonial-card-scene ${testimonial.imageUrl ? "has-image" : ""}`}
-            style={testimonial.imageUrl ? { backgroundImage: `url(${testimonial.imageUrl})` } : undefined}
+            style={testimonial.imageUrl ? { backgroundImage: `url(${optimizeImageUrl(testimonial.imageUrl, 900)})` } : undefined}
             aria-hidden="true"
           >
             <span className="testimonial-light testimonial-light-left" />

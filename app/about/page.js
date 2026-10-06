@@ -2,6 +2,7 @@ import PublicHeader from "../../components/PublicHeader";
 import SiteFooter from "../../components/SiteFooter";
 import { getPublicCmsData } from "../../lib/cms";
 import { resolveTeamImage } from "../../lib/team";
+import { optimizeImageUrl } from "../../lib/media";
 
 function escapeHtml(value) {
   return String(value || "")
@@ -79,7 +80,7 @@ export default async function AboutPage() {
                     title={`Open ${member.name} description`}
                   >
                     {resolveTeamImage(member) ? (
-                      <img src={resolveTeamImage(member)} alt={member.name || "Team member"} className="team-photo" />
+                      <img src={optimizeImageUrl(resolveTeamImage(member), 640)} alt={member.name || "Team member"} className="team-photo" loading="lazy" decoding="async" />
                     ) : (
                       <div className="team-photo" />
                     )}

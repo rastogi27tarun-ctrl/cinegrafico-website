@@ -2,6 +2,7 @@ import PublicHeader from "../../../components/PublicHeader";
 import SiteFooter from "../../../components/SiteFooter";
 import { getContent } from "../../../lib/cms";
 import { resolveTeamImage } from "../../../lib/team";
+import { optimizeImageUrl } from "../../../lib/media";
 
 const TEAM_CONTENT = {
   "creative-director": {
@@ -60,7 +61,7 @@ export default async function TeamMemberPage({ searchParams }) {
           <article className="panel" style={{ padding: "1.1rem", maxWidth: "760px" }}>
             {member.image ? (
               <img
-                src={member.image}
+                src={optimizeImageUrl(member.image, 640)}
                 alt={member.name}
                 style={{
                   width: "min(320px, 100%)",

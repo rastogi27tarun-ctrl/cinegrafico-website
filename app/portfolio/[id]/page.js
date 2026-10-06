@@ -1,7 +1,7 @@
 import PublicHeader from "../../../components/PublicHeader";
 import SiteFooter from "../../../components/SiteFooter";
 import { db } from "../../../lib/db";
-import { isYouTubeUrl, toYouTubeEmbedUrl } from "../../../lib/media";
+import { isYouTubeUrl, toYouTubeEmbedUrl, optimizeImageUrl, optimizeImageSrcSet } from "../../../lib/media";
 import RelatedPhotosGallery from "../../../components/RelatedPhotosGallery";
 import { getHighlightBody } from "../../../lib/highlight";
 
@@ -56,9 +56,9 @@ export default async function PortfolioDetailPage({ params }) {
                 allowFullScreen
               />
             ) : item.videoUrl ? (
-              <video src={item.videoUrl} poster={item.posterUrl || undefined} controls style={{ width: "100%", aspectRatio: "16/9", objectFit: "cover", display: "block" }} />
+              <video src={item.videoUrl} poster={item.posterUrl ? optimizeImageUrl(item.posterUrl, 1600) : undefined} preload="metadata" controls style={{ width: "100%", aspectRatio: "16/9", objectFit: "cover", display: "block" }} />
             ) : item.posterUrl ? (
-              <img src={item.posterUrl} alt={item.title || "Portfolio item"} style={{ width: "100%", aspectRatio: "16/9", objectFit: "contain", background: "rgba(8,8,12,.92)", display: "block" }} />
+              <img src={optimizeImageUrl(item.posterUrl, 1600)} srcSet={optimizeImageSrcSet(item.posterUrl, [640, 960, 1280, 1600, 2000])} sizes="(max-width: 1200px) 100vw, 1200px" fetchPriority="high" decoding="async" alt={item.title || "Portfolio item"} style={{ width: "100%", aspectRatio: "16/9", objectFit: "contain", background: "rgba(8,8,12,.92)", display: "block" }} />
             ) : (
               <div style={{ width: "100%", aspectRatio: "16/9", background: "rgba(255,255,255,.04)" }} />
             )}

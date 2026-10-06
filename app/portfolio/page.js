@@ -1,7 +1,8 @@
 import PublicHeader from "../../components/PublicHeader";
 import SiteFooter from "../../components/SiteFooter";
 import { getPublicCmsData } from "../../lib/cms";
-import { isYouTubeUrl, toYouTubeEmbedUrl } from "../../lib/media";
+import { isYouTubeUrl, optimizeImageUrl, optimizeImageSrcSet } from "../../lib/media";
+import YouTubeFacade from "../../components/YouTubeFacade";
 import { getPortfolioSections } from "../../lib/portfolio";
 import Link from "next/link";
 import { getPortfolioCardSummary } from "../../lib/highlight";
@@ -25,32 +26,34 @@ export default async function PortfolioPage() {
               Explore the complete collection of projects.
             </p>
 
-            {portfolioSections.map(({ type, items }) => (
+            {portfolioSections.map(({ type, items }, sectionIndex) => (
                 <section key={type} style={{ marginBottom: "1.25rem" }}>
                   <h2 style={{ marginTop: 0 }}>{type}</h2>
                   <div className="public-card-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,260px),1fr))", gap: "1rem" }}>
-                    {items.map((item) => (
+                    {items.map((item, itemIndex) => (
                       <article key={item.id} className="panel public-media-card" style={{ overflow: "hidden" }}>
                         {item.videoUrl && isYouTubeUrl(item.videoUrl) ? (
-                          <iframe
-                            src={toYouTubeEmbedUrl(item.videoUrl)}
+                          <YouTubeFacade
+                            url={item.videoUrl}
                             title={item.title || "Portfolio video"}
                             style={{ width: "100%", aspectRatio: "16/10", border: 0, display: "block" }}
-                            loading="lazy"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            allowFullScreen
                           />
                         ) : item.videoUrl ? (
                           <video
                             src={item.videoUrl}
-                            poster={item.posterUrl || undefined}
+                            poster={item.posterUrl ? optimizeImageUrl(item.posterUrl, 800) : undefined}
+                            preload={item.posterUrl ? "none" : "metadata"}
                             controls
                             style={{ width: "100%", aspectRatio: "16/10", objectFit: "cover", display: "block" }}
                           />
                         ) : item.posterUrl ? (
                           <img
-                            src={item.posterUrl}
+                            src={optimizeImageUrl(item.posterUrl, 800)}
+                            srcSet={optimizeImageSrcSet(item.posterUrl, [400, 600, 800, 1200])}
+                            sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, 33vw"
+                            loading={sectionIndex === 0 && itemIndex < 3 ? "eager" : "lazy"}
+                            fetchPriority={sectionIndex === 0 && itemIndex === 0 ? "high" : undefined}
+                            decoding="async"
                             alt={item.title || "Portfolio item"}
                             style={{ width: "100%", aspectRatio: "16/10", objectFit: "contain", background: "rgba(8,8,12,.92)", display: "block" }}
                           />

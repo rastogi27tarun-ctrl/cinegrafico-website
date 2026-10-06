@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { optimizeImageUrl } from "../lib/media";
 
 export default function TeamMemberCard({ member, imageSrc }) {
   const [open, setOpen] = useState(false);
@@ -19,7 +20,7 @@ export default function TeamMemberCard({ member, imageSrc }) {
         aria-label={`${subtitle}${open ? ", hide" : ", show"} role and bio`}
       >
         {imageSrc ? (
-          <img src={imageSrc} alt={subtitle} className="team-photo" />
+          <img src={optimizeImageUrl(imageSrc, 640)} alt={subtitle} className="team-photo" loading="lazy" decoding="async" />
         ) : (
           <div className="team-photo" aria-hidden />
         )}
