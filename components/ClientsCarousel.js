@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { optimizeImageUrl } from "../lib/media";
 
 export default function ClientsCarousel({ clients }) {
   const trackRef = useRef(null);
@@ -114,9 +115,13 @@ export default function ClientsCarousel({ clients }) {
               <article key={`${c.id}-${i}`} className={`client-slide ${highlighted ? "is-center" : ""}`}>
                 {showLogo ? (
                   <img
-                    src={c.logoUrl}
+                    src={optimizeImageUrl(c.logoUrl, 400)}
                     alt={`${name} logo`}
                     className="client-slide-logo"
+                    width={190}
+                    height={68}
+                    loading="lazy"
+                    decoding="async"
                     onError={() => {
                       setFailedLogoIds((prev) => ({ ...prev, [logoKey]: true }));
                     }}

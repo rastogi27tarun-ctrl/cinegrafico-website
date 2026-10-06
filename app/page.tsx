@@ -60,15 +60,6 @@ function normalizeTestimonial(item) {
 
 export default async function Home() {
   const { hero, about, contact, services, portfolio, clients, testimonials } = await getPublicCmsData();
-  console.log("CMS DATA →", {
-    hero,
-    about,
-    contact,
-    services,
-    portfolio,
-    clients,
-    testimonials
-  });
   const highlight = portfolio?.[0] || null;
   const portfolioSections = getPortfolioSections(portfolio);
   const testimonialItems = Array.isArray(testimonials) ? testimonials.map(normalizeTestimonial) : [];

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { optimizeImageUrl, optimizeImageSrcSet } from "../lib/media";
 
 export default function RelatedPhotosGallery({ photos, title }) {
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -27,7 +28,11 @@ export default function RelatedPhotosGallery({ photos, title }) {
               aria-label={`Open related photo ${index + 1}`}
             >
               <img
-                src={photoUrl}
+                src={optimizeImageUrl(photoUrl, 600)}
+                srcSet={optimizeImageSrcSet(photoUrl, [300, 450, 600, 900])}
+                sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, 25vw"
+                loading="lazy"
+                decoding="async"
                 alt={`${title || "Project"} related ${index + 1}`}
                 style={{ width: "100%", aspectRatio: "4/5", objectFit: "cover", display: "block" }}
               />
@@ -51,7 +56,7 @@ export default function RelatedPhotosGallery({ photos, title }) {
           }}
         >
           <img
-            src={activePhoto}
+            src={optimizeImageUrl(activePhoto, 2000)}
             alt={`${title || "Project"} full view`}
             onClick={(e) => e.stopPropagation()}
             style={{ maxWidth: "min(96vw, 1400px)", maxHeight: "92vh", width: "auto", height: "auto", borderRadius: "12px", boxShadow: "0 24px 64px rgba(0,0,0,.45)" }}
